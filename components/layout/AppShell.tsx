@@ -12,6 +12,7 @@ export interface AppShellUser {
   email: string
   role: AuthRole
   avatarUrl?: string | null
+  unreadNotifications?: number
   university?: {
     id: string
     name: string

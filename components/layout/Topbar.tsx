@@ -1,10 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { Bell, Menu } from "lucide-react"
+import { Menu } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { AppShellUser } from "./AppShell"
 import { LogoutButton } from "./LogoutButton"
+import { NotificationBell } from "./NotificationBell"
 
 export function Topbar({ user, onMenuClick }: { user: AppShellUser; onMenuClick: () => void }) {
   const pathname = usePathname()
@@ -42,10 +43,7 @@ export function Topbar({ user, onMenuClick }: { user: AppShellUser; onMenuClick:
           </div>
         )}
 
-        <button className="relative p-2 text-slate-400 hover:text-white rounded-full hover:bg-white/5 transition-colors">
-          <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-slate-900"></span>
-        </button>
+        <NotificationBell userId={user.id} initialUnread={user.unreadNotifications ?? 0} />
 
         <div className="flex items-center gap-2 cursor-pointer pl-2 lg:pl-4 lg:border-l border-white/10">
           <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 shrink-0">

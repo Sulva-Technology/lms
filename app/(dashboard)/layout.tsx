@@ -24,12 +24,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
     }
   }
 
+  const { count: unreadNotifications } = await supabase
+    .from('notifications')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', session.user.id)
+    .eq('is_read', false);
+
   const user: AppShellUser = {
     id: session.user.id,
     email: session.user.email,
     name: toDisplayName(session.profile.first_name, session.profile.last_name, session.user.email),
     role: session.profile.role,
     avatarUrl: session.profile.avatar_url,
+    unreadNotifications: unreadNotifications ?? 0,
     university,
   };
 
