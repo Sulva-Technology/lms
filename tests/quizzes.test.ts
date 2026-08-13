@@ -3,10 +3,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 describe('Quizzes validation', () => {
-  it('should validate quiz attempt limits', () => {
-    expect(true).toBe(true);
-  });
-
   it('uses the production quiz attempt status contract', () => {
     const action = fs.readFileSync(path.join(process.cwd(), 'app', 'actions', 'quizzes.ts'), 'utf8');
 
