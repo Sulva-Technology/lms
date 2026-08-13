@@ -1,0 +1,23 @@
+-- Indexes for Tenant Isolation & Fast Lookups
+CREATE INDEX idx_profiles_uni ON profiles(university_id);
+CREATE INDEX idx_profiles_role ON profiles(role);
+CREATE INDEX idx_faculties_uni ON faculties(university_id);
+CREATE INDEX idx_departments_uni ON departments(university_id);
+CREATE INDEX idx_programs_uni ON programs(university_id);
+CREATE INDEX idx_programs_dept ON programs(department_id);
+CREATE INDEX idx_courses_uni ON courses(university_id);
+CREATE INDEX idx_courses_dept ON courses(department_id);
+CREATE INDEX idx_course_sections_uni ON course_sections(university_id);
+CREATE INDEX idx_course_sections_course ON course_sections(course_id);
+CREATE INDEX idx_course_lecturers_section ON course_lecturers(course_section_id);
+CREATE INDEX idx_course_lecturers_lect ON course_lecturers(lecturer_id);
+CREATE INDEX idx_enrollments_student ON course_enrollments(student_id);
+CREATE INDEX idx_enrollments_section ON course_enrollments(course_section_id);
+CREATE INDEX idx_lessons_module ON lessons(module_id);
+CREATE INDEX idx_attendance_section ON attendance_records(course_section_id);
+CREATE INDEX idx_attendance_student ON attendance_records(student_id);
+CREATE INDEX idx_submissions_assignment ON assignment_submissions(assignment_id);
+CREATE INDEX idx_submissions_student ON assignment_submissions(student_id);
+CREATE INDEX idx_grades_student ON grades(student_id);
+CREATE INDEX idx_notifications_user ON notifications(user_id);
+CREATE INDEX idx_events_user ON calendar_events(user_id);

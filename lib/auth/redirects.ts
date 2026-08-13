@@ -1,0 +1,1 @@
+export { getRoleRedirectPath } from './roles';
