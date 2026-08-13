@@ -34,9 +34,13 @@ export class DiscussionService {
     return data;
   }
 
-  async markAsAnswered(universityId: string, discussionId: string) {
+  async markAsAnswered(universityId: string, discussionId: string, answeredBy?: string) {
     const { error } = await this.supabase.from('discussions')
-      .update({ is_answered: true })
+      .update({
+        is_answered: true,
+        answered_by: answeredBy || null,
+        answered_at: new Date().toISOString(),
+      })
       .eq('id', discussionId)
       .eq('university_id', universityId);
 
