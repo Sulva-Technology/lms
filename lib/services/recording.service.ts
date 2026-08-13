@@ -62,11 +62,32 @@ export class RecordingService {
   }
   
   async togglePublish(userId: string, universityId: string, recordingId: string, isPublished: boolean) {
+    // Recordings are created by the provider webhook, not by a person, so
+    // `created_by` is usually null. Authorize on teaching the section instead.
+    const { data: recording } = await this.supabase.from('live_class_recordings')
+      .select('id, university_id, live_classes(course_section_id)')
+      .eq('id', recordingId)
+      .maybeSingle();
+
+    if (!recording) throw new Error('Recording not found');
+    if (recording.university_id !== universityId) throw new Error('Unauthorized');
+
+    const liveClass = Array.isArray((recording as any).live_classes)
+      ? (recording as any).live_classes[0]
+      : (recording as any).live_classes;
+
+    const { data: assignment } = await this.supabase.from('course_lecturers')
+      .select('id')
+      .eq('course_section_id', liveClass?.course_section_id)
+      .eq('lecturer_id', userId)
+      .maybeSingle();
+
+    if (!assignment) throw new Error('Unauthorized: Lecturer not assigned to this course section');
+
     const { error } = await this.supabase.from('live_class_recordings')
       .update({ is_published: isPublished })
-      .eq('id', recordingId)
-      .eq('created_by', userId); // simple ownership check
-      
+      .eq('id', recordingId);
+
     if (error) throw error;
 
     await this.supabase.from('audit_logs').insert({

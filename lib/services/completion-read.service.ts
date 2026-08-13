@@ -150,10 +150,14 @@ export class StudentReadService {
     if (sectionIds.length === 0) return [];
     const { data, error } = await this.supabase
       .from("live_class_recordings")
-      .select("id,recording_url,duration,status,created_at,live_classes(topic,title,start_time,course_sections(courses(code,title)))")
+      .select("id,recording_url,playback_url,duration,status,is_published,created_at,live_classes(topic,title,start_time,course_section_id,course_sections(courses(code,title)))")
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data || []).filter((item: any) => sectionIds.includes(one(item.live_classes)?.course_section_id) || true);
+    // Students see only published recordings from sections they are enrolled in.
+    return (data || []).filter(
+      (item: any) =>
+        item.is_published && sectionIds.includes(one(item.live_classes)?.course_section_id),
+    );
   }
 
   async getQuizzes(studentId: string, sectionIds: string[]) {
@@ -230,7 +234,7 @@ export class LecturerReadService {
     if (sectionIds.length === 0) return [];
     const { data, error } = await this.supabase
       .from("live_class_recordings")
-      .select("id,recording_url,duration,status,created_at,live_classes(topic,title,start_time,course_section_id,course_sections(courses(code,title)))")
+      .select("id,recording_url,playback_url,duration,status,is_published,created_at,live_classes(topic,title,start_time,course_section_id,course_sections(courses(code,title)))")
       .order("created_at", { ascending: false });
     if (error) throw error;
     return (data || []).filter((item: any) => sectionIds.includes(one(item.live_classes)?.course_section_id));
