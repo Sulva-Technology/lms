@@ -3,6 +3,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { requireRole } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
+import { STORAGE_BUCKETS } from "@/lib/storage/paths";
 import { ArrowLeft, PlayCircle } from "lucide-react";
 import Link from "next/link";
 
@@ -21,11 +22,24 @@ export default async function LessonPage({ params }: { params: Promise<{ courseI
 
   const { data: lesson, error } = await supabase
     .from("lessons")
-    .select("id,title,content,resource_type,duration_seconds,is_published,course_modules(course_id,title),lesson_progress(is_completed,last_accessed),video_assets(id,playback_id,playback_url,thumbnail_url,status,duration)")
+    .select("id,title,content,resource_type,duration_seconds,is_published,course_modules(course_id,title),lesson_progress(is_completed,last_accessed),video_assets(id,playback_id,playback_url,thumbnail_url,status,duration,storage_path,file_name)")
     .eq("id", lessonId)
     .single();
 
   if (error) return <ErrorState message={error.message} />;
+
+  // Lesson video lives in a private bucket, so playback needs a short-lived
+  // signed URL minted per request rather than a stored public URL.
+  const videoAsset = (lesson.video_assets || [])[0] as any;
+  let videoUrl: string | null = videoAsset?.playback_url || null;
+
+  if (enrollment && videoAsset?.storage_path) {
+    const { data: signed } = await supabase.storage
+      .from(STORAGE_BUCKETS.LESSON_VIDEO)
+      .createSignedUrl(videoAsset.storage_path, 60 * 60 * 4);
+    videoUrl = signed?.signedUrl || null;
+  }
+
   const courseModule = Array.isArray(lesson.course_modules) ? lesson.course_modules[0] : lesson.course_modules;
 
   return (
@@ -46,7 +60,7 @@ export default async function LessonPage({ params }: { params: Promise<{ courseI
       ) : !lesson.is_published ? (
         <EmptyState title="Lesson not published" description="This lesson is still being prepared by your lecturer." />
       ) : (
-        <LessonWorkspace lesson={lesson} courseId={courseId} />
+        <LessonWorkspace lesson={lesson} courseId={courseId} videoUrl={videoUrl} />
       )}
     </div>
   );

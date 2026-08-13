@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { Archive, FilePlus2, Layers3, Loader2, Plus, Save, Video } from "lucide-react";
 import { archiveLessonAction, archiveModuleAction, attachLessonMaterialAction, upsertLessonAction, upsertModuleAction } from "@/app/actions/learning";
 import { Drawer } from "@/components/ui/drawer";
+import { LessonVideoUploader } from "./LessonVideoUploader";
 
 type Module = Record<string, any>;
 
@@ -133,19 +134,26 @@ export function CourseContentManager({ course, modules }: Props) {
               {(module.lessons || []).length === 0 ? (
                 <p className="rounded-xl border border-dashed border-white/10 p-4 text-sm text-slate-500">No lessons in this module yet.</p>
               ) : (module.lessons || []).map((lesson: any) => (
-                <div key={lesson.id} className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="font-semibold text-white">{lesson.title}</p>
-                    <p className="mt-1 text-xs text-slate-400">{lesson.resource_type} · {lesson.is_published ? "Published" : "Draft"}</p>
+                <div key={lesson.id} className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="font-semibold text-white">{lesson.title}</p>
+                      <p className="mt-1 text-xs text-slate-400">{lesson.resource_type} · {lesson.is_published ? "Published" : "Draft"}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setSelectedLesson(lesson); setDrawer("material"); }} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10">
+                        <Video size={13} /> Material
+                      </button>
+                      <button onClick={() => archiveLesson(lesson.id)} className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
+                        <Archive size={13} /> Archive
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => { setSelectedLesson(lesson); setDrawer("material"); }} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10">
-                      <Video size={13} /> Material
-                    </button>
-                    <button onClick={() => archiveLesson(lesson.id)} className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
-                      <Archive size={13} /> Archive
-                    </button>
-                  </div>
+                  <LessonVideoUploader
+                    lessonId={lesson.id}
+                    courseId={course.id}
+                    video={(lesson.video_assets || [])[0] || null}
+                  />
                 </div>
               ))}
             </div>

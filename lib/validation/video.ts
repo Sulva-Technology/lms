@@ -16,3 +16,14 @@ export const updateVideoStatusSchema = z.object({
   playbackId: z.string().optional(),
   playbackUrl: z.string().url().optional(),
 });
+
+/** Links an object already uploaded to the private lesson-video bucket. */
+export const attachLessonVideoSchema = z.object({
+  lessonId: z.string().uuid(),
+  courseId: z.string().uuid(),
+  storagePath: z.string().min(1),
+  fileName: z.string().min(1).max(255),
+  fileSize: z.number().int().nonnegative(),
+  contentType: z.string().min(1),
+  durationSeconds: z.number().int().nonnegative().optional(),
+});

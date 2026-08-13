@@ -5,10 +5,18 @@ import { motion } from "motion/react";
 import { CheckCircle2, FileText, Loader2, MessageSquareText, PlayCircle, Save } from "lucide-react";
 import { saveStudentNoteAction, updateLessonProgressAction } from "@/app/actions/learning";
 
-export function LessonWorkspace({ lesson, courseId }: { lesson: any; courseId: string }) {
+export function LessonWorkspace({
+  lesson,
+  courseId,
+  videoUrl,
+}: {
+  lesson: any;
+  courseId: string;
+  /** Signed playback URL minted on the server; null when no video is attached. */
+  videoUrl: string | null;
+}) {
   const progress = lesson.lesson_progress?.[0];
   const video = lesson.video_assets?.[0];
-  const videoUrl = video?.playback_url || video?.playback_id || "";
   const [completed, setCompleted] = React.useState(Boolean(progress?.is_completed));
   const [pending, setPending] = React.useState(false);
   const [noteState, setNoteState] = React.useState("");
@@ -40,8 +48,15 @@ export function LessonWorkspace({ lesson, courseId }: { lesson: any; courseId: s
         >
           <div className="aspect-video bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.22),transparent_55%)]">
             {videoUrl ? (
-              <video controls className="h-full w-full bg-black object-contain" poster={video?.thumbnail_url || undefined}>
-                <source src={videoUrl} />
+              <video
+                controls
+                controlsList="nodownload"
+                className="h-full w-full bg-black object-contain"
+                poster={video?.thumbnail_url || undefined}
+                onEnded={() => { if (!completed) void markComplete(); }}
+              >
+                <source src={videoUrl} type={video?.content_type || undefined} />
+                Your browser cannot play this video.
               </video>
             ) : (
               <div className="flex h-full items-center justify-center text-center">
