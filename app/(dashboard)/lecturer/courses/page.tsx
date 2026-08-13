@@ -4,7 +4,7 @@ import { ErrorState } from "@/components/ui/error-state";
 import { requireRole } from "@/lib/auth/guards";
 import { CoreReadService } from "@/lib/services/core-read.service";
 import { createClient } from "@/lib/supabase/server";
-import { BookOpen, Plus } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 export default async function LecturerCoursesPage() {
   const session = await requireRole("lecturer");
@@ -22,17 +22,11 @@ export default async function LecturerCoursesPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="font-outfit text-3xl font-bold text-white flex items-center gap-3">
-            <BookOpen className="text-violet-500" /> My Assigned Courses
-          </h1>
-          <p className="text-slate-400 mt-2">Manage assigned courses, content, and enrolled students.</p>
-        </div>
-        <button className="bg-violet-600 hover:bg-violet-500 text-white px-5 py-2.5 rounded-full flex items-center gap-2 transition-colors">
-          <Plus size={16} />
-          <span className="font-medium text-sm">Add Material</span>
-        </button>
+      <div>
+        <h1 className="font-outfit text-3xl font-bold text-white flex items-center gap-3">
+          <BookOpen className="text-violet-500" /> My Assigned Courses
+        </h1>
+        <p className="text-slate-400 mt-2">Manage assigned courses, content, and enrolled students.</p>
       </div>
 
       {courses.length === 0 ? (

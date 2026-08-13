@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Course } from "@/types/student";
 import { BookOpen, Clock, PlayCircle } from "lucide-react";
 import Image from "next/image";
+import { gradientFor } from "@/lib/ui/identity";
 
 interface Props {
   course: Course;
@@ -21,13 +22,19 @@ export function StudentCourseCard({ course, idx }: Props) {
     >
       <div className="relative h-48 w-full overflow-hidden">
         <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent transition-colors z-10" />
-        <Image 
-          src={`https://picsum.photos/seed/${course.imageSeed}/400/300`} 
-          alt={course.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          referrerPolicy="no-referrer"
-        />
+        {course.thumbnailUrl ? (
+          <Image
+            src={course.thumbnailUrl}
+            alt={course.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <div
+            className="h-full w-full transition-transform duration-700 group-hover:scale-105"
+            style={{ background: gradientFor(course.code || course.title) }}
+          />
+        )}
         <div className="absolute top-4 left-4 z-20 glass-panel px-3 py-1.5 rounded-full text-xs font-medium border-white/20 text-white">
           Core Module
         </div>

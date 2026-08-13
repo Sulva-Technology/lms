@@ -5,6 +5,7 @@ import { AssignedCourse } from "@/types/lecturer";
 import Link from "next/link";
 import Image from "next/image";
 import { Users, Clock, Settings, BookPlus } from "lucide-react";
+import { gradientFor } from "@/lib/ui/identity";
 
 interface Props {
   course: AssignedCourse;
@@ -22,7 +23,11 @@ export function LecturerCourseCard({ course, delay = 0 }: Props) {
     >
       <div className="h-24 relative w-full overflow-hidden">
         <div className="absolute inset-0 bg-slate-900/60 z-10 mix-blend-multiply transition-colors group-hover:bg-slate-900/40"></div>
-        <Image src={`https://picsum.photos/seed/${course.imageSeed}/400/200`} alt={course.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+        {course.thumbnailUrl ? (
+          <Image src={course.thumbnailUrl} alt={course.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+        ) : (
+          <div className="h-full w-full" style={{ background: gradientFor(course.code || course.title) }} />
+        )}
         <div className="absolute top-4 left-4 z-20">
            <span className="px-2 py-1 rounded bg-indigo-500/80 backdrop-blur text-white text-xs font-bold font-outfit">{course.code}</span>
         </div>

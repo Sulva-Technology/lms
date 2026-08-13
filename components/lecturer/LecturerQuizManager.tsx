@@ -5,7 +5,8 @@ import { motion } from "motion/react";
 import { CheckCircle2, Clock3, Eye, FileQuestion, Loader2, Plus, Send, Sparkles, XCircle } from "lucide-react";
 import { Drawer } from "@/components/ui/drawer";
 import { EmptyState } from "@/components/ui/empty-state";
-import { publishQuizAction, upsertQuizAction, upsertQuizQuestionAction } from "@/app/actions/quizzes";
+import { deleteQuizQuestionAction, publishQuizAction, upsertQuizAction, upsertQuizQuestionAction } from "@/app/actions/quizzes";
+import { useRouter } from "next/navigation";
 
 interface LecturerQuizManagerProps {
   sections: Array<{ id: string; label: string; courseCode: string; courseTitle: string }>;
@@ -21,6 +22,7 @@ export function LecturerQuizManager({ sections, quizzes, stats }: LecturerQuizMa
   const [activeQuiz, setActiveQuiz] = React.useState<any>(null);
   const [message, setMessage] = React.useState("");
   const [pending, setPending] = React.useState(false);
+  const router = useRouter();
 
   const visibleQuizzes = selectedSection === "all"
     ? quizzes
@@ -77,6 +79,20 @@ export function LecturerQuizManager({ sections, quizzes, stats }: LecturerQuizMa
     setPending(true);
     await publishQuizAction({ quizId: quiz.id, isPublished: !quiz.is_published });
     setPending(false);
+    router.refresh();
+  }
+
+  async function removeQuestion(quiz: any, questionId: string) {
+    setPending(true);
+    setMessage("");
+    const result = await deleteQuizQuestionAction({ questionId });
+    setPending(false);
+
+    if (result?.error) {
+      setMessage(result.error);
+      return;
+    }
+    router.refresh();
   }
 
   return (
@@ -161,6 +177,28 @@ export function LecturerQuizManager({ sections, quizzes, stats }: LecturerQuizMa
                   </div>
                 </div>
               </div>
+              {(quiz.questions || []).length > 0 && (
+                <ul className="mt-5 grid gap-2 border-t border-white/10 pt-4">
+                  {(quiz.questions || []).map((question: any, questionIndex: number) => (
+                    <li
+                      key={question.id}
+                      className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3"
+                    >
+                      <span className="min-w-0 text-sm text-slate-200">
+                        <span className="mr-2 text-xs font-semibold text-slate-500">Q{questionIndex + 1}</span>
+                        {question.question_text}
+                      </span>
+                      <button
+                        onClick={() => removeQuestion(quiz, question.id)}
+                        disabled={pending}
+                        className="shrink-0 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 transition hover:bg-red-500/20 disabled:opacity-60"
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <div className="mt-5 flex flex-wrap gap-3 border-t border-white/10 pt-4">
                 <button onClick={() => { setActiveQuiz(quiz); setDrawer("quiz"); }} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/10">
                   Edit quiz

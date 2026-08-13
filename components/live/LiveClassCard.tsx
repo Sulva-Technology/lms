@@ -5,6 +5,7 @@ import { LiveSession } from "@/types/live-class";
 import { Calendar, Clock, Users, Video, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Avatar } from "@/components/ui/avatar";
 
 interface Props {
   session: LiveSession;
@@ -51,11 +52,7 @@ export function LiveClassCard({ session, role }: Props) {
 
         <div className="mt-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-             {session.lecturerAvatar ? (
-               <Image src={session.lecturerAvatar} alt={session.lecturerName} width={28} height={28} className="rounded-full" />
-             ) : (
-               <div className="w-7 h-7 rounded-full bg-slate-800 flex items-center justify-center text-xs font-medium">{session.lecturerName.charAt(0)}</div>
-             )}
+             <Avatar name={session.lecturerName} src={session.lecturerAvatar} size={28} />
              <span className="text-sm text-slate-300">{session.lecturerName}</span>
           </div>
 

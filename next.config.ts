@@ -3,21 +3,25 @@ import type {NextConfig} from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   eslint: {
-    ignoreDuringBuilds: true,
+    // Lint runs as its own gate in `npm run verify`; do not let a build hide it.
+    ignoreDuringBuilds: false,
   },
   typescript: {
     ignoreBuildErrors: false,
   },
-  // Allow access to remote image placeholder.
+  // Uploaded images (course thumbnails, avatars) are served from Supabase
+  // Storage. No third-party placeholder hosts are allowed.
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**', // This allows any path under the hostname
-      },
-    ],
+    remotePatterns: process.env.NEXT_PUBLIC_SUPABASE_URL
+      ? [
+          {
+            protocol: 'https',
+            hostname: new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname,
+            port: '',
+            pathname: '/storage/v1/object/**',
+          },
+        ]
+      : [],
   },
   output: 'standalone',
   transpilePackages: ['motion'],

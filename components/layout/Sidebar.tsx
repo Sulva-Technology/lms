@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "motion/react"
 import { BookOpen, GraduationCap, Building, LayoutTemplate } from "lucide-react"
 import { AppShellUser } from "./AppShell"
 import { LogoutButton } from "./LogoutButton"
+import { Avatar } from "@/components/ui/avatar"
 
 export function Sidebar({ user }: { user: AppShellUser }) {
   const pathname = usePathname()
@@ -18,7 +19,6 @@ export function Sidebar({ user }: { user: AppShellUser }) {
   const BrandIcon = user.role === "super_admin" ? LayoutTemplate : 
                     user.role === "admin" ? Building : 
                     user.role === "lecturer" ? BookOpen : GraduationCap
-  const avatarUrl = user.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1e293b&color=fff`
 
   return (
     <motion.aside 
@@ -89,7 +89,7 @@ export function Sidebar({ user }: { user: AppShellUser }) {
       {!collapsed && (
         <div className="p-4 border-t border-white/10 shrink-0">
           <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5 flex items-center gap-3">
-            <img src={avatarUrl} alt={user.name} className="w-8 h-8 rounded-full border border-white/10" />
+            <Avatar name={user.name} src={user.avatarUrl} size={32} />
             <div className="overflow-hidden">
                <p className="text-xs font-semibold text-white truncate">{user.name}</p>
                <p className="text-[10px] text-slate-400 truncate capitalize">{user.role.replace("_", " ")}</p>
@@ -100,7 +100,7 @@ export function Sidebar({ user }: { user: AppShellUser }) {
       )}
       {collapsed && (
         <div className="p-4 border-t border-white/10 shrink-0 flex flex-col items-center gap-3">
-          <img src={avatarUrl} alt={user.name} className="w-8 h-8 rounded-full border border-white/10" title={user.name} />
+          <Avatar name={user.name} src={user.avatarUrl} size={32} className="mx-auto" />
           <LogoutButton collapsed />
         </div>
       )}

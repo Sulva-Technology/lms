@@ -9,8 +9,6 @@ const one = <T>(value: T | T[] | null | undefined): T | null => {
   return value ?? null;
 };
 
-const initialsAvatar = (name: string) =>
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1e293b&color=fff`;
 
 function liveStatus(start: string, end?: string | null): 'scheduled' | 'live' | 'completed' {
   const now = Date.now();
@@ -67,8 +65,10 @@ export class CoreReadService {
       return {
         id: section?.id || row.course_section_id || row.id,
         title: course?.title || 'Untitled Course',
+        code: course?.code,
         instructor: section?.name || one(section?.semesters)?.name || 'Current semester',
         progress: 0,
+        thumbnailUrl: course?.thumbnail_url || null,
         imageSeed: course?.code || course?.id || `student-course-${index}`,
         totalChapters: 0,
         completedChapters: 0,
@@ -178,7 +178,8 @@ export class CoreReadService {
         courseTitle: course?.title || 'Live Class',
         topic: session.topic || session.title,
         lecturerName,
-        lecturerAvatar: lecturer?.avatar_url || initialsAvatar(lecturerName),
+        // Left null when unset; the card renders a generated initials tile.
+        lecturerAvatar: lecturer?.avatar_url || undefined,
         status,
         startTime: formatDate(session.start_time),
         duration: durationLabel(session.start_time, session.end_time, session.duration),
@@ -279,7 +280,7 @@ export class CoreReadService {
   async getLecturerCourses(lecturerId: string): Promise<AssignedCourse[]> {
     const { data: assignments, error } = await this.supabase
       .from('course_lecturers')
-      .select('course_section_id, course_sections ( id, name, courses ( id, code, title ) )')
+      .select('course_section_id, course_sections ( id, name, courses ( id, code, title, thumbnail_url ) )')
       .eq('lecturer_id', lecturerId);
 
     if (error) throw error;
@@ -298,6 +299,7 @@ export class CoreReadService {
         title: course?.title || section?.name || 'Assigned Course',
         enrolledStudents: enrollmentCounts[row.course_section_id] || 0,
         nextClassTime: nextClasses[row.course_section_id] ? formatDate(nextClasses[row.course_section_id]) : undefined,
+        thumbnailUrl: course?.thumbnail_url || null,
         imageSeed: course?.code || course?.id || `lecturer-course-${index}`,
       };
     });

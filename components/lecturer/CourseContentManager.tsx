@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { motion } from "motion/react";
 import { Archive, FilePlus2, Layers3, Loader2, Plus, Save, Video } from "lucide-react";
-import { archiveLessonAction, archiveModuleAction, attachLessonMaterialAction, upsertLessonAction, upsertModuleAction } from "@/app/actions/learning";
+import { archiveLessonAction, archiveModuleAction, attachLessonMaterialAction, detachLessonMaterialAction, upsertLessonAction, upsertModuleAction } from "@/app/actions/learning";
 import { Drawer } from "@/components/ui/drawer";
 import { LessonVideoUploader } from "./LessonVideoUploader";
 
@@ -64,6 +64,17 @@ export function CourseContentManager({ course, modules }: Props) {
 
   function archiveModule(moduleId: string) {
     run(async () => archiveModuleAction({ id: moduleId }), () => setItems((current) => current.filter((module) => module.id !== moduleId)), "Module archived.");
+  }
+
+  function detachMaterial(lessonId: string, materialId: string) {
+    run(async () => detachLessonMaterialAction({ id: materialId }), () => {
+      setItems((current) => current.map((module) => ({
+        ...module,
+        lessons: (module.lessons || []).map((lesson: any) => lesson.id === lessonId
+          ? { ...lesson, lesson_materials: (lesson.lesson_materials || []).filter((material: any) => material.id !== materialId) }
+          : lesson),
+      })));
+    }, "Material removed.");
   }
 
   function archiveLesson(lessonId: string) {
@@ -149,6 +160,27 @@ export function CourseContentManager({ course, modules }: Props) {
                       </button>
                     </div>
                   </div>
+                  {(lesson.lesson_materials || []).length > 0 && (
+                    <ul className="grid gap-2">
+                      {(lesson.lesson_materials || []).map((material: any) => (
+                        <li key={material.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-2.5">
+                          <span className="min-w-0 truncate text-sm text-slate-300">
+                            {material.url ? (
+                              <a href={material.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">{material.title}</a>
+                            ) : material.title}
+                            <span className="ml-2 text-xs text-slate-500">{material.material_type}</span>
+                          </span>
+                          <button
+                            onClick={() => detachMaterial(lesson.id, material.id)}
+                            disabled={pending}
+                            className="shrink-0 rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-300 transition hover:bg-red-500/20 disabled:opacity-60"
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                   <LessonVideoUploader
                     lessonId={lesson.id}
                     courseId={course.id}

@@ -34,7 +34,7 @@ export class QuizManagementService {
         published_at,
         course_section_id,
         course_sections(courses(code,title)),
-        quiz_questions(id,points,quiz_options(id)),
+        quiz_questions(id,question_text,points,order_index,quiz_options(id)),
         quiz_attempts(id,status,score,percentage,completed_at,submitted_at)
       `)
       .in("course_section_id", sectionIds)
@@ -51,6 +51,7 @@ export class QuizManagementService {
         courseCode: course?.code || "Course",
         courseTitle: course?.title || "Assigned section",
         questionCount: questions.length,
+        questions: [...questions].sort((a: any, b: any) => (a.order_index || 0) - (b.order_index || 0)),
         optionCount: questions.reduce((sum: number, question: any) => sum + (question.quiz_options || []).length, 0),
         attemptCount: attempts.length,
         averageScore: attempts.length

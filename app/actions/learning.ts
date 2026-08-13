@@ -6,23 +6,6 @@ import { requireUser, requireRole } from '@/lib/auth/guards';
 import { createLessonSchema, createModuleSchema, lessonMaterialSchema, updateProgressSchema, studentNoteSchema } from '@/lib/validation/learning';
 import { revalidatePath } from 'next/cache';
 
-export async function getStudentCoursesAction(semesterId?: string) {
-    const supabase = await createClient();
-    const session = await requireUser();
-    const service = new LearningService(supabase as any);
-    return service.getEnrolledCourses(session.user!.id, semesterId);
-}
-
-export async function getCourseContentAction(courseId: string) {
-    const supabase = await createClient();
-    const session = await requireUser();
-    const service = new LearningService(supabase as any);
-    
-    // Student filters unpublished lessons. Lecturers/Admins view all.
-    const isStudent = session.profile?.role === 'student';
-    return service.getCourseContent(courseId, isStudent);
-}
-
 export async function updateLessonProgressAction(payload: { lessonId: string, isCompleted: boolean }) {
     const supabase = await createClient();
     const session = await requireUser();

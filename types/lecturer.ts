@@ -12,6 +12,8 @@ export interface AssignedCourse {
   title: string;
   enrolledStudents: number;
   nextClassTime?: string;
+  /** Uploaded cover image. When absent the card falls back to a generated gradient. */
+  thumbnailUrl?: string | null;
   imageSeed: string;
 }
 

@@ -1,8 +1,11 @@
 export interface Course {
   id: string;
   title: string;
+  code?: string;
   instructor: string;
   progress: number;
+  /** Uploaded cover image. When absent the card falls back to a generated gradient. */
+  thumbnailUrl?: string | null;
   imageSeed: string;
   totalChapters: number;
   completedChapters: number;

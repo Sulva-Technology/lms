@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "motion/react"
 import { X, LayoutTemplate, Building, BookOpen, GraduationCap } from "lucide-react"
 import { AppShellUser } from "./AppShell"
 import { LogoutButton } from "./LogoutButton"
+import { Avatar } from "@/components/ui/avatar"
 
 interface MobileNavProps {
   user: AppShellUser
@@ -19,7 +20,6 @@ interface MobileNavProps {
 export function MobileNav({ user, isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname()
   const navItems = getNavigationForRole(user.role)
-  const avatarUrl = user.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1e293b&color=fff`
   
   // We take the first 4 items for the bottom tab bar (mobile)
   const tabItems = navItems.slice(0, 4)
@@ -120,7 +120,7 @@ export function MobileNav({ user, isOpen, onClose }: MobileNavProps) {
               
               <div className="p-4 border-t border-white/10 shrink-0">
                 <div className="flex items-center gap-3 mb-4 px-2">
-                  <img src={avatarUrl} alt={user.name} className="w-10 h-10 rounded-full border border-white/10" />
+                  <Avatar name={user.name} src={user.avatarUrl} size={40} />
                   <div className="flex-1 overflow-hidden">
                     <p className="text-sm font-semibold text-white truncate">{user.name}</p>
                     <p className="text-xs text-slate-400 truncate">{user.email}</p>

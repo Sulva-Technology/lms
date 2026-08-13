@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation"
 import { AppShellUser } from "./AppShell"
 import { LogoutButton } from "./LogoutButton"
 import { NotificationBell } from "./NotificationBell"
+import { Avatar } from "@/components/ui/avatar"
 
 export function Topbar({ user, onMenuClick }: { user: AppShellUser; onMenuClick: () => void }) {
   const pathname = usePathname()
-  const avatarUrl = user.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=1e293b&color=fff`
   
   // Basic breadcrumb generation based on path
   const pathSegments = pathname.split('/').filter(Boolean)
@@ -46,9 +46,7 @@ export function Topbar({ user, onMenuClick }: { user: AppShellUser; onMenuClick:
         <NotificationBell userId={user.id} initialUnread={user.unreadNotifications ?? 0} />
 
         <div className="flex items-center gap-2 cursor-pointer pl-2 lg:pl-4 lg:border-l border-white/10">
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 shrink-0">
-            <img src={avatarUrl} alt={user.name} className="w-full h-full object-cover" />
-          </div>
+          <Avatar name={user.name} src={user.avatarUrl} size={32} />
         </div>
 
         <LogoutButton collapsed className="hidden sm:inline-flex" />
