@@ -1,6 +1,9 @@
 import { updateStudentSettingsAction } from "@/app/actions/settings";
 import { GenericList } from "@/components/academic/GenericList";
 import { requireRole } from "@/lib/auth/guards";
+import { ProfileForm } from "@/components/settings/ProfileForm";
+import { STORAGE_BUCKETS } from "@/lib/storage/paths";
+import { env } from "@/lib/env";
 import { SettingsIcon } from "lucide-react";
 
 export default async function StudentSettingsPage() {
@@ -17,7 +20,15 @@ export default async function StudentSettingsPage() {
   }
 
   return (
-    <GenericList title="Settings" description="Personalize notification and display preferences." icon={SettingsIcon}>
+    <GenericList title="Settings" description="Personalize your profile, notifications, and display preferences." icon={SettingsIcon}>
+      <ProfileForm
+        profile={{
+          first_name: session.profile.first_name,
+          last_name: session.profile.last_name,
+          avatar_url: session.profile.avatar_url,
+        }}
+        publicBaseUrl={`${env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKETS.PROFILE_IMAGES}`}
+      />
       <form action={save} className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-6 grid gap-5 max-w-2xl">
         <label className="grid gap-2 text-sm text-slate-300">
           Display name

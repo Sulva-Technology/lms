@@ -1,5 +1,5 @@
+import { GradeItemManager } from "@/components/lecturer/GradeItemManager";
 import { GenericList } from "@/components/academic/GenericList";
-import { DataTable } from "@/components/ui/data-table";
 import { EmptyState } from "@/components/ui/empty-state";
 import { requireRole } from "@/lib/auth/guards";
 import { readOr } from "@/lib/safe-read";
@@ -9,26 +9,39 @@ import { Award } from "lucide-react";
 
 export default async function LecturerGradebookPage() {
   const session = await requireRole("lecturer");
-  const service = new LecturerReadService((await createClient()) as any);
-  const sectionIds = await readOr(service.getSectionIds(session.user.id), []);
-  const items = await readOr(service.getGradebook(sectionIds), []);
+  const supabase = await createClient();
+  const service = new LecturerReadService(supabase as any);
+
+  const sectionIds = await readOr(service.getSectionIds(session.user.id), [] as string[]);
+  const items = await readOr(service.getGradebook(sectionIds), [] as any[]);
+
+  const sectionRows = await readOr(
+    supabase
+      .from("course_sections")
+      .select("id,name,courses(code,title)")
+      .in("id", sectionIds)
+      .then(({ data }: { data: any[] | null }) => data || []) as Promise<any[]>,
+    [] as any[],
+  );
+
+  const sections = sectionRows.map((row: any) => {
+    const course = Array.isArray(row.courses) ? row.courses[0] : row.courses;
+    return { id: row.id, label: course?.code ? `${course.code} — ${row.name}` : row.name };
+  });
 
   return (
-    <GenericList title="Gradebook" description="Grade items and recorded scores for assigned sections." icon={Award}>
-      {items.length === 0 ? (
-        <EmptyState title="No grade items" description="Create grade items or grade submissions to populate the gradebook." />
-      ) : (
-        <DataTable
-          data={items}
-          keyExtractor={(item: any) => item.id}
-          columns={[
-            { key: "item", header: "Item", cell: (item: any) => <span className="font-medium text-white">{item.name || item.title}</span> },
-            { key: "course", header: "Course", cell: (item: any) => item.course_sections?.courses?.code || "Course" },
-            { key: "max", header: "Max", cell: (item: any) => item.max_score || 100 },
-            { key: "weight", header: "Weight", cell: (item: any) => `${item.weight || item.weight_percentage || 0}%` },
-            { key: "graded", header: "Grades", cell: (item: any) => (item.grades || []).length },
-          ]}
+    <GenericList
+      title="Gradebook"
+      description="Grade items and recorded scores for assigned sections."
+      icon={Award}
+    >
+      {sections.length === 0 ? (
+        <EmptyState
+          title="No assigned sections"
+          description="Ask an admin to assign course sections to your profile."
         />
+      ) : (
+        <GradeItemManager sections={sections} items={items} />
       )}
     </GenericList>
   );
