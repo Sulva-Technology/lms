@@ -13,7 +13,13 @@ export class SubmissionService {
     if (!data) throw new Error('Unauthorized: Student not enrolled in this course');
   }
 
-  async submitAssignment(universityId: string, studentId: string, assignmentId: string, content?: string, fileUrls?: string[]) {
+  async submitAssignment(
+    universityId: string,
+    studentId: string,
+    assignmentId: string,
+    content?: string,
+    files?: Array<{ path: string; fileName: string; fileSize: number; fileType: string }>,
+  ) {
     const { data: assignment } = await this.supabase.from('assignments')
       .select('course_section_id, due_date, allow_late_submissions, max_resubmissions, is_published')
       .eq('id', assignmentId)
@@ -47,7 +53,8 @@ export class SubmissionService {
       assignment_id: assignmentId,
       student_id: studentId,
       content,
-      file_urls: fileUrls || [],
+      file_urls: (files || []).map((file) => file.path),
+      file_metadata: files || [],
       status: 'submitted',
       is_late: isLate,
       attempt_count: previous ? previous.attempt_count + 1 : 1,
@@ -69,6 +76,7 @@ export class SubmissionService {
       entity_id: submission.id
     });
 
-    return submission;
+    // The caller needs the section to notify assigned lecturers.
+    return { ...submission, course_section_id: assignment.course_section_id };
   }
 }

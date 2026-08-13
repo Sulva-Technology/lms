@@ -25,7 +25,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ assignm
     }
 
     const service = new SubmissionService(supabase as any);
-    const result = await service.submitAssignment(profile.university_id, session.user.id, assignmentId, parsed.data.content, parsed.data.fileUrls);
+    const result = await service.submitAssignment(profile.university_id, session.user.id, assignmentId, parsed.data.content, parsed.data.files);
 
     return NextResponse.json({ data: result }, { status: 200 });
   } catch (error: any) {
