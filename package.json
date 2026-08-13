@@ -17,7 +17,8 @@
     "check:rls": "tsx scripts/check-rls.ts",
     "verify": "npm run check:env && npm run check:links && npm run check:rls && npm run lint && npm run typecheck && npm run test && npm run build",
     "db:seed": "node -e 'console.log(\"Run supabase db reset to apply seeds locally\")'",
-    "db:seed:auth": "tsx scripts/seed-demo-users.ts"
+    "db:seed:auth": "tsx scripts/seed-demo-users.ts",
+    "db:seed:demo": "tsx scripts/comprehensive-seed.ts"
   },
   "dependencies": {
     "@google/genai": "^1.17.0",

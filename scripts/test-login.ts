@@ -1,9 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+import { anonClient } from './lib/clients';
 
-const supabaseUrl = "https://uzhqvkshtphytiopjqkb.supabase.co";
-const supabaseAnonKey = "REDACTED_ROTATED_CREDENTIAL";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = anonClient();
 
 async function test() {
   const email = 'superadmin@example.com';

@@ -1,14 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+import { adminClient } from './lib/clients';
 
-const supabaseUrl = "https://uzhqvkshtphytiopjqkb.supabase.co";
-const serviceRoleKey = "REDACTED_ROTATED_CREDENTIAL";
-
-const admin = createClient(supabaseUrl, serviceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+const admin = adminClient();
 
 async function check() {
   console.log("Checking auth users...");

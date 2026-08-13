@@ -1,14 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+import { adminClient } from './lib/clients';
 
-const supabaseUrl = "https://uzhqvkshtphytiopjqkb.supabase.co";
-const serviceRoleKey = "REDACTED_ROTATED_CREDENTIAL";
-
-const admin = createClient(supabaseUrl, serviceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+const admin = adminClient();
 
 async function seed() {
   console.log("--- Starting Comprehensive Seed ---");
@@ -80,6 +72,9 @@ async function seed() {
   }
 
   // 3. Create users correctly via Admin API
+  const LECTURER_ID = users.find((user) => user.role === 'lecturer')!.id;
+  const STUDENT_ID = users.find((user) => user.role === 'student')!.id;
+
   console.log("Creating users via Admin API...");
   for (const user of users) {
     const { data: authUser, error: createError } = await admin.auth.admin.createUser({
@@ -119,7 +114,135 @@ async function seed() {
     }
   }
 
+  await seedAcademicContent(REAL_UNI_ID, LECTURER_ID, STUDENT_ID);
+
   console.log("--- Seed Finished ---");
+}
+
+/**
+ * Builds one complete course the demo logins can actually exercise: faculty ->
+ * department -> program -> course -> section, with the lecturer assigned, the
+ * student enrolled, and published content on top.
+ *
+ * Every step is upsert-or-find so the script can be re-run safely.
+ */
+async function seedAcademicContent(universityId: string, lecturerId: string, studentId: string) {
+  console.log("Seeding academic content...");
+
+  const findOrCreate = async (table: string, match: Record<string, any>, insert: Record<string, any>) => {
+    let query = admin.from(table).select('id');
+    for (const [column, value] of Object.entries(match)) query = query.eq(column, value);
+
+    const { data: existing } = await query.maybeSingle();
+    if (existing) return existing.id as string;
+
+    const { data, error } = await admin.from(table).insert({ ...match, ...insert }).select('id').single();
+    if (error) {
+      console.error(`Failed to seed ${table}:`, error.message);
+      return null;
+    }
+    return data.id as string;
+  };
+
+  const semesterId = await findOrCreate('semesters',
+    { university_id: universityId, name: '2026 First Semester' },
+    { start_date: '2026-09-01', end_date: '2027-01-31', is_active: true });
+
+  const facultyId = await findOrCreate('faculties',
+    { university_id: universityId, name: 'Faculty of Computing' },
+    { code: 'FOC' });
+
+  const departmentId = facultyId && await findOrCreate('departments',
+    { university_id: universityId, faculty_id: facultyId, name: 'Computer Science' },
+    { code: 'CSC' });
+
+  const programId = departmentId && await findOrCreate('programs',
+    { university_id: universityId, department_id: departmentId, name: 'BSc Computer Science' },
+    { code: 'BSC-CS', duration_years: 4 });
+
+  const courseId = departmentId && await findOrCreate('courses',
+    { university_id: universityId, code: 'CSC101' },
+    { department_id: departmentId, program_id: programId, title: 'Introduction to Programming',
+      description: 'Fundamentals of programming, algorithms, and problem solving.', credits: 3, level: 100 });
+
+  if (!courseId || !semesterId) {
+    console.error('Could not seed the demo course; stopping content seed.');
+    return;
+  }
+
+  const sectionId = await findOrCreate('course_sections',
+    { university_id: universityId, course_id: courseId, name: 'Group A' },
+    { semester_id: semesterId, capacity: 120 });
+
+  if (!sectionId) return;
+
+  await findOrCreate('course_lecturers',
+    { course_section_id: sectionId, lecturer_id: lecturerId },
+    { university_id: universityId, is_primary: true });
+
+  await findOrCreate('course_enrollments',
+    { course_section_id: sectionId, student_id: studentId },
+    { university_id: universityId, status: 'active' });
+
+  const moduleId = await findOrCreate('course_modules',
+    { course_id: courseId, title: 'Week 1 — Getting Started' },
+    { university_id: universityId, description: 'Setting up your tools and writing a first program.', order_index: 0 });
+
+  if (moduleId) {
+    await findOrCreate('lessons',
+      { module_id: moduleId, title: 'What is a program?' },
+      { university_id: universityId, content: 'A program is a sequence of instructions a computer can execute.',
+        resource_type: 'video', order_index: 0, is_published: true });
+
+    await findOrCreate('lessons',
+      { module_id: moduleId, title: 'Your first script' },
+      { university_id: universityId, content: 'Write, run, and debug a short script end to end.',
+        resource_type: 'document', order_index: 1, is_published: true });
+  }
+
+  const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  await findOrCreate('assignments',
+    { course_section_id: sectionId, title: 'Assignment 1 — Hello, world' },
+    { university_id: universityId, description: 'Write a program that prints a greeting, then explain each line.',
+      due_date: dueDate, total_points: 100, is_published: true, allow_late_submissions: true, max_resubmissions: 2 });
+
+  const quizId = await findOrCreate('quizzes',
+    { course_section_id: sectionId, title: 'Week 1 knowledge check' },
+    { university_id: universityId, description: 'Two quick questions on the week 1 material.',
+      total_points: 20, time_limit_minutes: 15, is_published: true, published_at: new Date().toISOString() });
+
+  if (quizId) {
+    const questionId = await findOrCreate('quiz_questions',
+      { quiz_id: quizId, question_text: 'What does a compiler do?' },
+      { university_id: universityId, question_type: 'multiple_choice', points: 10, order_index: 0 });
+
+    if (questionId) {
+      await findOrCreate('quiz_options',
+        { question_id: questionId, option_text: 'Translates source code into machine code' },
+        { is_correct: true });
+      await findOrCreate('quiz_options',
+        { question_id: questionId, option_text: 'Stores files on disk' },
+        { is_correct: false });
+    }
+  }
+
+  await findOrCreate('announcements',
+    { course_section_id: sectionId, title: 'Welcome to CSC101' },
+    { university_id: universityId, content: 'Read the week 1 material before our first live class.',
+      author_id: lecturerId, is_published: true });
+
+  const discussionId = await findOrCreate('discussions',
+    { course_section_id: sectionId, title: 'Which editor should I use?' },
+    { university_id: universityId, author_id: studentId,
+      content: 'Is there an editor you recommend for the assignments?' });
+
+  if (discussionId) {
+    await findOrCreate('discussion_replies',
+      { discussion_id: discussionId, content: 'Any editor is fine. Start with the one in the setup guide.' },
+      { university_id: universityId, author_id: lecturerId, is_endorsed: true });
+  }
+
+  console.log('Seeded demo course CSC101 with content, enrollment, and discussion.');
 }
 
 seed();
