@@ -1,8 +1,33 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { NotificationPayload } from '@/types/notification';
+import { NotificationEmailBuilder, NotificationPayload } from '@/types/notification';
+import { isEmailConfigured, sendEmail } from '@/lib/email/send';
 
 export class NotificationService {
   constructor(private supabase: SupabaseClient<any>) {}
+
+  /**
+   * Emails the given recipients unless they opted out in their profile
+   * preferences. Fire-and-forget: never blocks or fails the notification write.
+   */
+  private async emailRecipients(userIds: string[], build: NotificationEmailBuilder): Promise<void> {
+    if (userIds.length === 0 || !isEmailConfigured()) return;
+
+    const { data: recipients } = await this.supabase
+      .from('profiles')
+      .select('id,email,first_name,last_name,preferences')
+      .in('id', userIds);
+
+    for (const recipient of recipients || []) {
+      if (!recipient.email) continue;
+      if (recipient.preferences?.emailNotifications === false) continue;
+
+      const name = [recipient.first_name, recipient.last_name].filter(Boolean).join(' ') || 'there';
+      const body = build({ email: recipient.email, name });
+      if (!body) continue;
+
+      await sendEmail({ to: recipient.email, ...body });
+    }
+  }
 
   async createNotification(payload: NotificationPayload) {
     const { data, error } = await this.supabase.from('notifications').insert({
@@ -16,10 +41,15 @@ export class NotificationService {
     }).select().single();
 
     if (error) throw new Error(error.message);
+
+    if (payload.email) {
+      await this.emailRecipients([payload.userId], payload.email);
+    }
+
     return data;
   }
 
-  async sendToCourseStudents(universityId: string, courseSectionId: string, title: string, message: string, type: string, linkUrl?: string) {
+  async sendToCourseStudents(universityId: string, courseSectionId: string, title: string, message: string, type: string, linkUrl?: string, email?: NotificationEmailBuilder) {
     const { data: students } = await this.supabase.from('course_enrollments')
       .select('student_id')
       .eq('course_section_id', courseSectionId)
@@ -38,6 +68,10 @@ export class NotificationService {
 
     const { error } = await this.supabase.from('notifications').insert(payloads);
     if (error) throw new Error(error.message);
+
+    if (email) {
+      await this.emailRecipients(students.map((student) => student.student_id), email);
+    }
   }
 
   async sendToUniversityUsers(universityId: string, title: string, message: string, type: string, linkUrl?: string) {
