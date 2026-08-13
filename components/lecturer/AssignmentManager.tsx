@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Archive, Edit3, FileText, Loader2, Plus, Save, Send } from "lucide-react";
+import { Archive, ClipboardCheck, Edit3, FileText, Loader2, Plus, Save, Send } from "lucide-react";
+import Link from "next/link";
 import { archiveAssignmentAction, createAssignmentAction, toggleAssignmentPublishAction, updateAssignmentAction } from "@/app/actions/assignments";
 import { DataTable } from "@/components/ui/data-table";
 import { Drawer } from "@/components/ui/drawer";
@@ -87,6 +88,7 @@ export function AssignmentManager({ courses, assignments }: { courses: Course[];
           { key: "status", header: "Status", cell: (item) => item.is_published ? "Published" : "Draft" },
           { key: "actions", header: "", align: "right", cell: (item) => (
             <div className="flex justify-end gap-2">
+              <Link href={`/lecturer/assignments/${item.id}/submissions`} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"><ClipboardCheck size={13} /> Submissions</Link>
               <button onClick={() => { setEditing(item); setDrawerOpen(true); }} className="rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"><Edit3 size={13} /></button>
               <button onClick={() => publish(item)} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20"><Send size={13} /> {item.is_published ? "Unpublish" : "Publish"}</button>
               <button onClick={() => archive(item)} className="rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20"><Archive size={13} /></button>

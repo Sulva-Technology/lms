@@ -6,6 +6,7 @@ import { readOr } from "@/lib/safe-read";
 import { StudentReadService } from "@/lib/services/completion-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { FileText } from "lucide-react";
+import Link from "next/link";
 
 export default async function StudentAssignmentsPage() {
   const session = await requireRole("student");
@@ -22,7 +23,7 @@ export default async function StudentAssignmentsPage() {
           data={assignments}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "title", header: "Assignment", cell: (item: any) => <span className="font-medium text-white">{item.title}</span> },
+            { key: "title", header: "Assignment", cell: (item: any) => <Link href={`/student/assignments/${item.id}`} className="font-medium text-white hover:text-blue-300">{item.title}</Link> },
             { key: "course", header: "Course", cell: (item: any) => item.course },
             { key: "due", header: "Due", cell: (item: any) => new Date(item.dueDate).toLocaleString() },
             { key: "points", header: "Points", cell: (item: any) => item.points },

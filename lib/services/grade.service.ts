@@ -15,7 +15,7 @@ export class GradeService {
   async gradeSubmission(universityId: string, lecturerId: string, submissionId: string, score: number, feedback?: string, feedbackFileUrls?: string[]) {
     // 1. Get submission and assignment to check limits and auth
     const { data: submission } = await this.supabase.from('assignment_submissions')
-      .select('id, assignment_id, assignments(course_section_id, total_points)')
+      .select('id, student_id, assignment_id, assignments(course_section_id, total_points, title)')
       .eq('id', submissionId)
       .single();
       
@@ -47,32 +47,31 @@ export class GradeService {
 
     if (updateError) throw updateError;
 
-    // 3. Upsert to grades table (general grades table for final calculations)
-    // Find grade item or create it
+    // 3. Mirror the score into the generic gradebook. The grade item is keyed
+    // to the assignment so repeated grading updates one row instead of
+    // creating a new grade item per call.
     let { data: gradeItem } = await this.supabase.from('grade_items')
       .select('id')
-      .eq('course_section_id', (assignment as any).course_section_id)
-      .eq('name', 'Assignment: ' + submissionId) // simplistic approach, usually links to assignment title
-      .single();
+      .eq('assignment_id', submission.assignment_id)
+      .maybeSingle();
 
     if (!gradeItem) {
-        const { data: newgi } = await this.supabase.from('grade_items').insert({
+        const { data: createdItem } = await this.supabase.from('grade_items').insert({
             university_id: universityId,
             course_section_id: (assignment as any).course_section_id,
-            name: 'Assignment',
+            assignment_id: submission.assignment_id,
+            name: (assignment as any).title || 'Assignment',
             weight: 10,
             max_score: (assignment as any).total_points
         }).select().single();
-        gradeItem = newgi;
+        gradeItem = createdItem;
     }
 
-    // This handles upserting into the generic `grades` table
-    const { data: studentSub } = await this.supabase.from('assignment_submissions').select('student_id').eq('id', submissionId).single();
-    if (studentSub && gradeItem) {
+    if (gradeItem && submission.student_id) {
         await this.supabase.from('grades').upsert({
             university_id: universityId,
             grade_item_id: gradeItem.id,
-            student_id: studentSub.student_id,
+            student_id: submission.student_id,
             score: score,
             graded_by: lecturerId,
             graded_at: now
@@ -88,6 +87,13 @@ export class GradeService {
       entity_id: submissionId
     });
 
-    return updatedSub;
+    // Callers notify the student, so surface who and what was graded.
+    return {
+      ...updatedSub,
+      student_id: submission.student_id,
+      assignment_id: submission.assignment_id,
+      assignment_title: (assignment as any).title,
+      total_points: (assignment as any).total_points,
+    };
   }
 }
