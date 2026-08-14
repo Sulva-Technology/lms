@@ -56,19 +56,27 @@ export class GradeService {
       .maybeSingle();
 
     if (!gradeItem) {
-        const { data: createdItem } = await this.supabase.from('grade_items').insert({
+        const { data: createdItem, error: itemError } = await this.supabase.from('grade_items').insert({
             university_id: universityId,
             course_section_id: (assignment as any).course_section_id,
             assignment_id: submission.assignment_id,
+            // `title` and `weight_percentage` are the original NOT NULL columns;
+            // `name` and `weight` were added later and both pairs must be set.
+            title: (assignment as any).title || 'Assignment',
             name: (assignment as any).title || 'Assignment',
             weight: 10,
+            weight_percentage: 10,
             max_score: (assignment as any).total_points
         }).select().single();
+
+        // Previously unchecked, so a policy gap left the gradebook silently
+        // empty while the submission still reported a successful grade.
+        if (itemError) throw itemError;
         gradeItem = createdItem;
     }
 
     if (gradeItem && submission.student_id) {
-        await this.supabase.from('grades').upsert({
+        const { error: gradeError } = await this.supabase.from('grades').upsert({
             university_id: universityId,
             grade_item_id: gradeItem.id,
             student_id: submission.student_id,
@@ -76,6 +84,10 @@ export class GradeService {
             graded_by: lecturerId,
             graded_at: now
         }, { onConflict: 'grade_item_id,student_id' });
+
+        // Previously unchecked, which hid a missing-column failure and left the
+        // gradebook silently empty while the submission looked graded.
+        if (gradeError) throw gradeError;
     }
 
     // 4. Audit Log

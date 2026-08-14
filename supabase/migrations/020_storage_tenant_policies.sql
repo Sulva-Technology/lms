@@ -14,10 +14,15 @@
 
 -- ---------------------------------------------------------------------------
 -- 1. Retire the duplicate bucket set.
+--
+-- Supabase Storage installs a `storage.protect_delete()` trigger that rejects
+-- direct DELETE against storage.objects and storage.buckets, so these rows
+-- cannot be removed from a migration. Dropping their policies is enough:
+-- storage.objects has RLS enabled and denies by default, so with no policy the
+-- vui_* buckets become unreachable for every role except the service key.
+-- Delete the empty buckets from the dashboard or Storage API afterwards if you
+-- want them gone entirely.
 -- ---------------------------------------------------------------------------
-DELETE FROM storage.objects WHERE bucket_id IN ('vui_public', 'vui_materials', 'vui_submissions', 'vui_profiles');
-DELETE FROM storage.buckets WHERE id IN ('vui_public', 'vui_materials', 'vui_submissions', 'vui_profiles');
-
 DROP POLICY IF EXISTS "Users can upload their own profile image" ON storage.objects;
 DROP POLICY IF EXISTS "Profile images are public" ON storage.objects;
 DROP POLICY IF EXISTS "Lecturers can upload materials" ON storage.objects;

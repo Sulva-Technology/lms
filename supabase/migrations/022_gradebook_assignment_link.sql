@@ -15,3 +15,9 @@ CREATE INDEX IF NOT EXISTS idx_grade_items_section ON grade_items (course_sectio
 -- `grades` is upserted on (grade_item_id, student_id); make that conflict
 -- target real so the upsert cannot silently duplicate.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_grades_item_student ON grades (grade_item_id, student_id);
+
+-- GradeService records who graded and when when it mirrors a submission score
+-- into the gradebook. Those columns never existed, so the upsert failed
+-- silently and the gradebook stayed empty.
+ALTER TABLE grades ADD COLUMN IF NOT EXISTS graded_by UUID REFERENCES profiles(id) ON DELETE SET NULL;
+ALTER TABLE grades ADD COLUMN IF NOT EXISTS graded_at TIMESTAMPTZ;

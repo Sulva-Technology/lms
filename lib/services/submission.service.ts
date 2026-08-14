@@ -38,11 +38,13 @@ export class SubmissionService {
       throw new Error('Submission deadline has passed and late submissions are not allowed.');
     }
 
+    // maybeSingle: a first submission has no previous row, and `single()` turns
+    // that into an error the caller then has to ignore.
     const { data: previous } = await this.supabase.from('assignment_submissions')
       .select('id, attempt_count')
       .eq('assignment_id', assignmentId)
       .eq('student_id', studentId)
-      .single();
+      .maybeSingle();
 
     if (previous && previous.attempt_count >= assignment.max_resubmissions) {
       throw new Error('Maximum number of resubmissions reached.');

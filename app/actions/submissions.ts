@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { requireRole } from '@/lib/auth/guards';
 import { SubmissionService } from '@/lib/services/submission.service';
 import { NotificationService } from '@/lib/services/notification.service';
@@ -69,7 +70,9 @@ async function notifyLecturers(supabase: any, session: any, assignmentId: string
     const assignmentTitle = assignment?.title || 'an assignment';
     const url = `${env.NEXT_PUBLIC_APP_URL}/lecturer/assignments/${assignmentId}/submissions`;
 
-    const notifications = new NotificationService(supabase);
+    // Service-role: `notifications` has no INSERT policy, because a user must
+    // never be able to write rows addressed to somebody else.
+    const notifications = new NotificationService(createAdminClient() as any);
     for (const lecturer of lecturers) {
         await notifications.createNotification({
             universityId: session.profile.university_id!,

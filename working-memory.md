@@ -15,6 +15,22 @@
 - Integrations: Daily (live classes), Resend (email), Upstash Redis (rate limiting), Supabase Realtime (notifications).
 - Deployment assumptions: Vercel-compatible standalone output.
 
+## Confirmed Facts (2026-08-14 local end-to-end verification)
+- The whole migration set `001`–`030` plus `supabase/seed.sql` was replayed from scratch against a local Supabase stack in Docker (`npx supabase db reset`) and applies cleanly.
+- Migration `020` originally failed on every database: Supabase Storage installs a `storage.protect_delete()` trigger that rejects direct `DELETE` on `storage.objects`. The migration no longer deletes the legacy `vui_*` rows; it drops their policies instead, which closes the leak without a destructive step. The earlier "back up storage before applying 020" warning no longer applies.
+- `service_role` and `authenticated` had no grants on any public table. Supabase used to auto-grant new tables; new projects do not, and the legacy behaviour is removed on 2026-10-30. Migration `026_data_api_grants.sql` makes the grants explicit. Without it a freshly provisioned project fails with "permission denied for table ...".
+- `grades` never had `graded_by` / `graded_at`, and `GradeService` wrote both without checking the error, so the gradebook mirror failed silently on every grading. Fixed in migration `022` plus an error check.
+- Students had no UPDATE policy on `assignment_submissions`, so resubmission always failed with "Cannot coerce the result to a single JSON object" despite the UI offering it. Fixed in migration `027`.
+- Lecturers had no write access to `grade_items` / `grades` (migration `028`), `discussions` / `discussion_replies` (migration `029`), or `announcements` / `quiz_questions` / `quiz_options` (migration `030`). Every one of those features was dead at the database layer.
+- `attendance_records` had only a partial unique index on `(session_id, student_id)`, which Postgres will not use as an `ON CONFLICT` arbiter, so every roll call failed. Replaced with a full unique index in migration `029`.
+- `notifications` has no INSERT policy by design, so notification writes now go through the service-role client. Previously every cross-user notification failed.
+- `/auth/callback` only handled the PKCE `code` parameter, so every emailed link (invite, magic link, recovery) landed on `/login?error=auth_callback_failed`. It now also handles `token_hash` + `type`.
+- `scripts/seed-demo-users.ts` read `process.env` directly and could not see `.env`, so the documented `npm run db:seed:auth` never worked from a env file. It now uses the shared loader.
+- `supabase/seed.sql` referenced three columns that do not exist (`course_lecturers.role`, `grades.graded_by` before migration 022, and omitted the NOT NULL `live_class_recordings.provider`/`asset_id`), so seeding always failed partway.
+- `scripts/comprehensive-seed.ts` guessed four column names that do not exist (`semesters` needs `academic_session_id`; `programs` has no `duration_years`; `courses` has no `level`; `quiz_options` needs `university_id`).
+- New `npm run check:writes` signs in as the demo lecturer and student and exercises 21 write paths plus negative cases against a real database. All 21 pass on a freshly reset stack.
+- Verified interactively in the browser against the local stack: student submission, resubmission, lecturer grading, gradebook mirror, and the lecturer notification.
+
 ## Confirmed Facts (2026-08-13 production readiness pass)
 - The repository now has git history; the first commit is `e207552`. Before this pass it had zero commits.
 - `scripts/comprehensive-seed.ts`, `scripts/check-data.ts`, and `scripts/test-login.ts` contained a hardcoded live Supabase project URL, anon key, and **service-role key**. They now read from the environment via `scripts/lib/clients.ts`, and `tests/secrets.test.ts` fails the build if a Supabase JWT reappears anywhere in the repo. The leaked service-role key still exists in the baseline commit and must be rotated in the Supabase dashboard.
@@ -63,14 +79,16 @@
 
 ## Risks / Watchouts
 - **The Supabase service-role key in commit `e207552` must be rotated.** It grants full RLS bypass to anyone who reads the history.
-- Migration `020` **deletes the `vui_*` buckets and every object inside them.** Back up storage before applying it anywhere with real user data.
-- Migrations `020`–`025` are unapplied; file upload, lesson video, grading without duplicate grade items, discussion resolution, and the realtime bell all depend on them.
+- Migrations `020`–`030` are unapplied on the hosted project. Storage, resubmission, grading, discussions, attendance, announcements and quiz authoring all depend on them.
+- `check:rls` is static and cannot catch an admin-only write policy on a lecturer-facing feature. Run `npm run check:writes` against a seeded database after any policy change.
+- The local stack's `storage-api` container reports unhealthy on this machine even though it serves requests; `npx supabase start --ignore-health-check -x studio,edge-runtime,logflare,vector,imgproxy` works around it.
 - Without `DAILY_API_KEY`, scheduling a live class fails at the provider call.
 - Supabase Storage serves video as a single file with no adaptive bitrate; large lecture recordings will be slow on poor connections.
 - 4 high advisories remain in `next/node_modules/sharp` (bundled libvips) plus moderate ones in Next's transitive `postcss`. Both are pinned inside Next; forcing `sharp@0.35` risks breaking image optimization, so they are tracked for the next Next upgrade rather than forced.
 
 ## Next Actions
 - Rotate the Supabase service-role key, then update `SUPABASE_SERVICE_ROLE_KEY` in every environment.
+- Delete `.env.local` when finished with the local stack; while it exists the app and every script talk to Docker instead of the hosted project.
 - Apply migrations `015`–`025` to the target Supabase project, taking a storage backup first.
 - Configure `DAILY_API_KEY`, `RESEND_API_KEY`, `EMAIL_FROM`, and the Upstash pair before serving real users.
 - Run `npm run db:seed:auth` then `npm run db:seed:demo`, and browser-test the four demo logins end to end.

@@ -1,19 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
+// Reads credentials through the shared loader so `.env` / `.env.local` work the
+// same way here as they do for the app.
+import { adminClient } from './lib/clients';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !serviceRoleKey) {
-  console.error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required.');
-  process.exit(1);
-}
-
-const admin = createClient(supabaseUrl, serviceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+const admin = adminClient();
 
 const users = [
   {

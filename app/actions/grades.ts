@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { requireRole } from '@/lib/auth/guards';
 import { GradeService } from '@/lib/services/grade.service';
 import { NotificationService } from '@/lib/services/notification.service';
@@ -37,7 +38,8 @@ export async function gradeSubmissionAction(submissionId: string, payload: any) 
     try {
         if (result?.student_id) {
             const assignmentUrl = `/student/assignments/${result.assignment_id}`;
-            const notifications = new NotificationService(supabase as any);
+            // Service-role: `notifications` has no INSERT policy by design.
+            const notifications = new NotificationService(createAdminClient() as any);
 
             await notifications.createNotification({
                 universityId: session.profile.university_id!,

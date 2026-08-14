@@ -127,6 +127,8 @@ page render. There is no external video provider.
 
 ## Supabase Notes
 
-Migrations are the source of truth for schema, indexes, archival contracts, and RLS. Apply all migrations through `025_realtime_notifications.sql` before promoting this app to production. Migrations `020`–`025` ship unapplied; `020` is destructive and deletes the legacy `vui_*` storage buckets. See [docs/RUNBOOK.md](docs/RUNBOOK.md) for what each one blocks.
+Migrations are the source of truth for schema, indexes, archival contracts, and RLS. Apply all migrations through `030_lecturer_content_write_policies.sql` before promoting this app to production. Migrations `020`–`030` ship unapplied. See [docs/RUNBOOK.md](docs/RUNBOOK.md) for what each one blocks.
+
+The full migration set plus `supabase/seed.sql` was replayed from scratch against a local Supabase stack on 2026-08-14, and `npm run check:writes` exercises every feature's write path against a real database.
 
 The RLS audit is static by design: it catches missing policy coverage before deployment. It does not prove that the target Supabase project has received the latest migrations, so deployment runbooks should still verify migration status in the target environment.

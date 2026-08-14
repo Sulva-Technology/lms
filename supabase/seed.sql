@@ -2,7 +2,7 @@
 
 -- 1. Create a dummy University
 INSERT INTO universities (id, name, domain, logo_url)
-VALUES ('00000000-0000-0000-0000-000000000001', 'VUI Demo University', 'vui.edu', 'https://picsum.photos/200')
+VALUES ('00000000-0000-0000-0000-000000000001', 'VUI Demo University', 'vui.edu', NULL)
 ON CONFLICT DO NOTHING;
 
 -- 2. Create Users (We'll use auth.users later if needed, but profiles are here)
@@ -79,8 +79,8 @@ VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000010', '00000000-0000-0000-0000-0000000
 ON CONFLICT DO NOTHING;
 
 -- Lecturer Assignment
-INSERT INTO course_lecturers (id, university_id, course_section_id, lecturer_id, role)
-VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000011', '00000000-0000-0000-0000-000000000001', 'aaaa0000-aaaa-aaaa-aaaa-aaaa00000008', '44444444-4444-4444-4444-444444444444', 'primary')
+INSERT INTO course_lecturers (id, university_id, course_section_id, lecturer_id, is_primary)
+VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000011', '00000000-0000-0000-0000-000000000001', 'aaaa0000-aaaa-aaaa-aaaa-aaaa00000008', '44444444-4444-4444-4444-444444444444', true)
 ON CONFLICT DO NOTHING;
 
 -- 5. Course Content
@@ -163,12 +163,12 @@ INSERT INTO notifications (id, university_id, user_id, title, content, type, lin
 VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000028', '00000000-0000-0000-0000-000000000001', '55555555-5555-5555-5555-555555555555', 'Lab 1 is open', 'Programming Lab 1 is ready for submission.', 'assignment', '/student/assignments')
 ON CONFLICT DO NOTHING;
 
-INSERT INTO live_class_recordings (id, university_id, live_class_id, recording_url, duration, status)
-VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000029', '00000000-0000-0000-0000-000000000001', 'aaaa0000-aaaa-aaaa-aaaa-aaaa00000015', 'https://demo.daily.co/recordings/demo-daily-room', 3600, 'ready')
+INSERT INTO live_class_recordings (id, university_id, live_class_id, provider, asset_id, provider_recording_id, recording_url, duration, status, is_published)
+VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000029', '00000000-0000-0000-0000-000000000001', 'aaaa0000-aaaa-aaaa-aaaa-aaaa00000015', 'daily', 'demo-recording-1', 'demo-recording-1', 'https://demo.daily.co/recordings/demo-daily-room', 3600, 'ready', true)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO files (id, university_id, uploader_id, file_name, file_size, file_type, storage_path, is_public)
-VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000030', '00000000-0000-0000-0000-000000000001', '44444444-4444-4444-4444-444444444444', 'swe101-syllabus.pdf', 524288, 'application/pdf', 'course-resources/swe101-syllabus.pdf', false)
+VALUES ('aaaa0000-aaaa-aaaa-aaaa-aaaa00000030', '00000000-0000-0000-0000-000000000001', '44444444-4444-4444-4444-444444444444', 'swe101-syllabus.pdf', 524288, 'application/pdf', '00000000-0000-0000-0000-000000000001/materials/44444444-4444-4444-4444-444444444444/swe101-syllabus.pdf', false)
 ON CONFLICT DO NOTHING;
 
 -- Platform operations

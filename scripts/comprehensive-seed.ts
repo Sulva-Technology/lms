@@ -144,8 +144,17 @@ async function seedAcademicContent(universityId: string, lecturerId: string, stu
     return data.id as string;
   };
 
+  const sessionId = await findOrCreate('academic_sessions',
+    { university_id: universityId, name: '2026/2027' },
+    { start_date: '2026-09-01', end_date: '2027-07-31', is_active: true });
+
+  if (!sessionId) {
+    console.error('Could not seed the academic session; stopping content seed.');
+    return;
+  }
+
   const semesterId = await findOrCreate('semesters',
-    { university_id: universityId, name: '2026 First Semester' },
+    { university_id: universityId, academic_session_id: sessionId, name: '2026 First Semester' },
     { start_date: '2026-09-01', end_date: '2027-01-31', is_active: true });
 
   const facultyId = await findOrCreate('faculties',
@@ -158,12 +167,12 @@ async function seedAcademicContent(universityId: string, lecturerId: string, stu
 
   const programId = departmentId && await findOrCreate('programs',
     { university_id: universityId, department_id: departmentId, name: 'BSc Computer Science' },
-    { code: 'BSC-CS', duration_years: 4 });
+    { code: 'BSC-CS', description: 'Four-year undergraduate programme in computer science.' });
 
   const courseId = departmentId && await findOrCreate('courses',
     { university_id: universityId, code: 'CSC101' },
-    { department_id: departmentId, program_id: programId, title: 'Introduction to Programming',
-      description: 'Fundamentals of programming, algorithms, and problem solving.', credits: 3, level: 100 });
+    { department_id: departmentId, title: 'Introduction to Programming',
+      description: 'Fundamentals of programming, algorithms, and problem solving.', credits: 3 });
 
   if (!courseId || !semesterId) {
     console.error('Could not seed the demo course; stopping content seed.');
@@ -219,10 +228,10 @@ async function seedAcademicContent(universityId: string, lecturerId: string, stu
     if (questionId) {
       await findOrCreate('quiz_options',
         { question_id: questionId, option_text: 'Translates source code into machine code' },
-        { is_correct: true });
+        { university_id: universityId, is_correct: true });
       await findOrCreate('quiz_options',
         { question_id: questionId, option_text: 'Stores files on disk' },
-        { is_correct: false });
+        { university_id: universityId, is_correct: false });
     }
   }
 
