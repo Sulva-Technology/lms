@@ -150,3 +150,34 @@ Migrations are not automatically reversible. `020` is destructive — it deletes
 `RESEND_API_KEY`, `DAILY_API_KEY`, and the Upstash token are all rotated in the provider dashboard, then updated in the deployment's environment settings. No code change is required.
 
 To rotate Supabase keys, use Project Settings → API → "Reset". Everything reads them from the environment; no key is committed.
+
+## 9. Wildcard school subdomains
+
+Each school is served at `<subdomain>.<NEXT_PUBLIC_ROOT_DOMAIN>`. The subdomain is
+the tenant routing key (`universities.subdomain`), resolved from the `Host` header
+in middleware, which then injects `x-university-id` / `x-university-subdomain` for
+the rest of the request.
+
+1. In Vercel → Project → Domains, add both the apex domain and `*.<root domain>`.
+2. At the DNS provider, add the records Vercel shows: an A/ALIAS record for the
+   apex and a `CNAME *` record pointing at `cname.vercel-dns.com`.
+3. Set `NEXT_PUBLIC_ROOT_DOMAIN` (for example `sulva.com`) in Vercel for all
+   environments. Vercel issues the wildcard TLS certificate automatically.
+4. In Supabase → Authentication → URL Configuration, add `https://*.<root domain>/**`
+   to the redirect allow list. Invite and password-reset links land on the school's
+   own host and are rejected without this entry.
+5. Locally, leave `NEXT_PUBLIC_ROOT_DOMAIN=localhost:3000`; browsers resolve
+   `anything.localhost` without a hosts-file entry.
+
+Creating a school is a super-admin-only action at `/superadmin/universities` on the
+root domain. It inserts the tenant and emails an invite to the school's first admin,
+whose link lands on that school's own subdomain. If the invite fails to send, the
+school row is rolled back so no tenant is left without an administrator.
+
+School hosts never serve `/superadmin`, and a session belonging to another school is
+signed out on arrival. Setting a school's status to `suspended` or `archived` takes
+its subdomain offline within the 60-second tenant cache TTL.
+
+Reserved subdomains that can never be assigned: `www, app, api, admin, superadmin,
+mail, smtp, ftp, static, assets, cdn, docs, blog, status, support, dashboard, login,
+auth, dev, staging, test, demo, vercel`.

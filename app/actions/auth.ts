@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { loginSchema, forgotPasswordSchema, resetPasswordSchema } from '@/lib/validation/auth';
 import { getRoleRedirectPath } from '@/lib/auth/redirects';
 import { normalizeRoleParam } from '@/lib/auth/roles';
+import { getTenantContext } from '@/lib/tenant/context';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getAuthErrorMessage } from '@/utils/auth-errors';
@@ -27,7 +28,7 @@ export async function loginAction(formData: FormData) {
       return { error: getAuthErrorMessage(error) };
     }
 
-    let profile: { role: string | null } | null = null;
+    let profile: { role: string | null; university_id: string | null } | null = null;
     let profileError: unknown = null;
 
     try {
@@ -36,7 +37,7 @@ export async function loginAction(formData: FormData) {
       const adminClient = createAdminClient();
       const result = await adminClient
         .from('profiles')
-        .select('role')
+        .select('role, university_id')
         .eq('id', data.user.id)
         .maybeSingle();
       profile = result.data;
@@ -49,7 +50,7 @@ export async function loginAction(formData: FormData) {
       console.error('Admin profile fetch during login failed:', profileError);
       const fallback = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, university_id')
         .eq('id', data.user.id)
         .maybeSingle();
       profile = fallback.data;
@@ -61,6 +62,20 @@ export async function loginAction(formData: FormData) {
     if (profileError && !role) {
       console.error('Error fetching user profile during login:', profileError);
       return { error: getAuthErrorMessage(profileError) };
+    }
+
+    // A school host only accepts accounts belonging to that school. The platform
+    // domain only accepts the platform operator.
+    const tenant = await getTenantContext();
+    if (role !== 'super_admin') {
+      if (tenant && profile && profile.university_id !== tenant.universityId) {
+        await supabase.auth.signOut();
+        return { error: 'This account belongs to a different school.' };
+      }
+      if (!tenant) {
+        await supabase.auth.signOut();
+        return { error: 'Sign in from your school web address instead of the platform site.' };
+      }
     }
 
     if (!role) {

@@ -8,6 +8,8 @@ export interface UserInvitePayload {
   universityId?: string | null;
   firstName?: string;
   lastName?: string;
+  /** Origin the invite link should land on, e.g. https://unilag.sulva.com. */
+  baseUrl?: string;
 }
 
 /**
@@ -16,7 +18,7 @@ export interface UserInvitePayload {
  */
 export async function sendUserInvite(payload: UserInvitePayload) {
   const adminClient = createAdminClient();
-  const appUrl = env.NEXT_PUBLIC_APP_URL;
+  const appUrl = payload.baseUrl || env.NEXT_PUBLIC_APP_URL;
   const normalizedUniversityId = payload.role === 'super_admin' ? null : payload.universityId;
 
   // Issue invite with raw metadata overriding the defaults

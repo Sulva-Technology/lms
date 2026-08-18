@@ -2,6 +2,11 @@
 
 import { requireRole } from '@/lib/auth/guards';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { sendUserInvite } from '@/lib/auth/invites';
+import { isValidSubdomain, slugifySubdomain } from '@/lib/tenant/host';
+import { tenantOrigin } from '@/lib/tenant/url';
+import { env } from '@/lib/env';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -23,8 +28,20 @@ const universityStatusSchema = z.object({
 
 const universitySchema = z.object({
   name: z.string().min(2),
+  subdomain: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(2)
+    .max(63)
+    .refine((value) => isValidSubdomain(value), {
+      message: 'Subdomain must be lowercase letters, numbers, and hyphens, and not a reserved name.',
+    }),
   domain: z.string().min(2).optional().or(z.literal('')),
   status: z.enum(['active', 'trialing', 'suspended', 'archived']).default('trialing'),
+  adminEmail: z.string().email(),
+  adminFirstName: z.string().trim().optional().or(z.literal('')),
+  adminLastName: z.string().trim().optional().or(z.literal('')),
 });
 
 const universitySubscriptionSchema = z.object({
@@ -73,17 +90,51 @@ export async function updateUniversityStatusAction(payload: any) {
 export async function createUniversityAction(payload: any) {
   const supabase = await createClient();
   await requireRole('super_admin');
-  const parsed = universitySchema.safeParse(payload);
+
+  const normalized = {
+    ...payload,
+    subdomain: slugifySubdomain(String(payload?.subdomain || payload?.name || '')),
+  };
+  const parsed = universitySchema.safeParse(normalized);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-  const { error } = await supabase.from('universities').insert({
-    name: parsed.data.name,
-    domain: parsed.data.domain || null,
-    status: parsed.data.status,
-  });
-  if (error) return { error: error.message };
+  const { data: created, error } = await supabase
+    .from('universities')
+    .insert({
+      name: parsed.data.name,
+      subdomain: parsed.data.subdomain,
+      domain: parsed.data.domain || null,
+      status: parsed.data.status,
+    })
+    .select('id,subdomain')
+    .single();
+
+  if (error) {
+    if (error.code === '23505') return { error: 'That subdomain is already taken.' };
+    return { error: error.message };
+  }
+
+  const url = tenantOrigin(created.subdomain, env.NEXT_PUBLIC_ROOT_DOMAIN);
+
+  try {
+    await sendUserInvite({
+      email: parsed.data.adminEmail,
+      role: 'admin',
+      universityId: created.id,
+      firstName: parsed.data.adminFirstName || undefined,
+      lastName: parsed.data.adminLastName || undefined,
+      baseUrl: url,
+    });
+  } catch (inviteError) {
+    // A school with no reachable administrator is worse than no school at all,
+    // so undo the tenant rather than leaving an orphan behind.
+    await createAdminClient().from('universities').delete().eq('id', created.id);
+    const message = inviteError instanceof Error ? inviteError.message : 'Failed to invite the school administrator.';
+    return { error: `School was not created: ${message}` };
+  }
+
   revalidatePath('/superadmin/universities');
-  return { success: true };
+  return { success: true, url };
 }
 
 export async function updateUniversitySubscriptionAction(payload: any) {
