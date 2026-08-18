@@ -1,39 +1,65 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "motion/react"
-import { Shield } from "lucide-react"
+import { DatabaseZap, Fingerprint, Lock } from "lucide-react"
+import { Reveal, SectionHeading } from "./primitives"
 
-export function SecuritySection() {
+export interface SecuritySectionProps {
+  title?: string
+  description?: string
+}
+
+const GUARANTEES = [
+  {
+    icon: DatabaseZap,
+    title: "Separated at the database",
+    body: "Every row belongs to one institution, and the database enforces it — not the page that happens to be rendering.",
+  },
+  {
+    icon: Fingerprint,
+    title: "Roles decide what loads",
+    body: "What a person can see is settled before the data is fetched, so a link to the wrong page returns nothing rather than something.",
+  },
+  {
+    icon: Lock,
+    title: "Encrypted in transit and at rest",
+    body: "Files, recordings and results are stored under paths scoped to the institution that owns them.",
+  },
+]
+
+export function SecuritySection({ title, description }: SecuritySectionProps) {
   return (
-    <section id="security" className="py-24 px-6 border-y border-white/5 bg-slate-900/20 text-center relative overflow-hidden">
-       {/* Decorative glow */}
-       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none"></div>
-       
-       <div className="max-w-4xl mx-auto relative z-10">
-         <Shield className="w-12 h-12 text-slate-400 mx-auto mb-6" />
-         <h2 className="font-outfit text-3xl font-semibold mb-4 text-white">Enterprise-grade security, by default.</h2>
-         <p className="text-lg text-slate-400 mb-12">VUI LMS is built on a Zero-Trust architecture. We support SSO integrations with Active Directory, Google Workspace, and Microsoft Azure.</p>
-         
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 opacity-70">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-2 font-outfit">99.99%</div>
-              <div className="text-sm font-medium text-slate-400 uppercase tracking-widest">Uptime</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-2 font-outfit">SOC 2</div>
-              <div className="text-sm font-medium text-slate-400 uppercase tracking-widest">Type II</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-2 font-outfit">GDPR</div>
-              <div className="text-sm font-medium text-slate-400 uppercase tracking-widest">Compliant</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-2 font-outfit">AES-256</div>
-              <div className="text-sm font-medium text-slate-400 uppercase tracking-widest">Encryption</div>
-            </div>
-         </div>
-       </div>
+    <section
+      id="security"
+      className="border-y border-line bg-canvas-sunken px-5 py-24 sm:px-8 sm:py-28"
+    >
+      <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-20">
+        <SectionHeading
+          align="left"
+          eyebrow="Isolation"
+          title={title ?? "Your institution's records stay yours."}
+          description={
+            description ??
+            "Multi-tenancy is a promise about who can read what. It is worth nothing unless the database keeps it."
+          }
+        />
+
+        <div className="grid gap-4">
+          {GUARANTEES.map(({ icon: Icon, title: heading, body }, index) => (
+            <Reveal key={heading} delay={index * 0.07}>
+              <article className="panel flex gap-5 rounded-card p-6">
+                <span className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-secondary-soft text-secondary-soft-contrast">
+                  <Icon size={18} />
+                </span>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-ink">{heading}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-muted">{body}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
     </section>
   )
 }

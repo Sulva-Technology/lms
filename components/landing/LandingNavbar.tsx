@@ -1,37 +1,82 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "motion/react"
 import Link from "next/link"
-import { Sparkles, LayoutTemplate } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Cta } from "./primitives"
+import { SchoolBrandMark } from "./SchoolBrandMark"
 
-export function LandingNavbar() {
+export interface LandingNavbarProps {
+  /** A school host brands the bar with its own name and logo. */
+  brand?: { name: string; logoUrl?: string | null }
+  links?: Array<{ href: string; label: string }>
+  ctaLabel?: string
+  /** Hidden when the primary call to action is already "sign in". */
+  showSignInLink?: boolean
+}
+
+const PLATFORM_LINKS = [
+  { href: "#problem", label: "Why" },
+  { href: "#how", label: "How it works" },
+  { href: "#platform", label: "Platform" },
+  { href: "#security", label: "Security" },
+]
+
+export function LandingNavbar({
+  brand,
+  links = PLATFORM_LINKS,
+  ctaLabel = "Get started",
+  showSignInLink = true,
+}: LandingNavbarProps) {
+  // The bar is transparent over the hero and only becomes glass once the page
+  // has moved, so the first screen stays uninterrupted.
+  const [lifted, setLifted] = React.useState(false)
+
+  React.useEffect(() => {
+    const onScroll = () => setLifted(window.scrollY > 12)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center font-outfit font-bold text-xl shadow-glow-blue">
-            <LayoutTemplate size={20} className="text-white" />
-          </div>
-          <span className="font-outfit font-bold text-2xl tracking-wide text-white">VUI LMS</span>
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
+        lifted ? "glass border-b" : "border-b border-transparent",
+      )}
+    >
+      <nav className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+        <Link href="/" className="flex min-w-0 items-center gap-3">
+          <SchoolBrandMark name={brand?.name ?? "VUI LMS"} logoUrl={brand?.logoUrl} size={36} />
+          <span className="truncate font-display text-lg font-semibold tracking-tight text-ink">
+            {brand?.name ?? "VUI LMS"}
+          </span>
         </Link>
-        
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-          <Link href="#platform" className="hover:text-white transition-colors">Platform</Link>
-          <Link href="#solutions" className="hover:text-white transition-colors">Solutions</Link>
-          <Link href="#resources" className="hover:text-white transition-colors">Resources</Link>
+
+        <div className="hidden items-center gap-8 text-sm font-medium text-ink-muted md:flex">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="transition-colors hover:text-ink"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="hidden sm:block text-sm font-medium text-slate-300 hover:text-white transition-colors">
-            Sign In
-          </Link>
-          <Link href="/login" className="bg-white text-slate-900 hover:bg-slate-200 font-medium rounded-full px-6 py-2.5 shadow-lg active:scale-95 transition-all outline-none focus:ring-2 focus:ring-slate-300 text-sm flex items-center gap-2">
-            <Sparkles size={16} className="text-blue-600" />
-            Get Started
-          </Link>
+        <div className="flex items-center gap-2 sm:gap-3">
+          {showSignInLink ? (
+            <Cta href="/login" variant="ghost" size="md" className="hidden sm:inline-flex">
+              Sign in
+            </Cta>
+          ) : null}
+          <Cta href="/login" size="md">
+            {ctaLabel}
+          </Cta>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   )
 }

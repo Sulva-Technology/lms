@@ -1,79 +1,78 @@
 "use client"
 
 import * as React from "react"
-import { AuthBackground } from "@/components/auth/AuthBackground"
-import { LayoutTemplate, ArrowLeft } from "lucide-react"
-import { motion, AnimatePresence } from "motion/react"
-import { useRouter, usePathname } from "next/navigation"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { AnimatePresence, motion } from "motion/react"
+import { usePathname, useRouter } from "next/navigation"
+
+const STEPS = [
+  { match: "/university", label: "Institution" },
+  { match: "/role", label: "Role" },
+  { match: "/profile", label: "Profile" },
+]
 
 export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
 
-  const handleBack = () => {
-    router.back()
-  }
-
-  // Determine current step based on pathname
-  let step = 0
-  let maxStep = 3
-  if (pathname.includes('/university')) step = 1
-  else if (pathname.includes('/role')) step = 2
-  else if (pathname.includes('/profile')) step = 3
+  const step = STEPS.findIndex((entry) => pathname.includes(entry.match)) + 1
 
   return (
-    <div className="min-h-screen flex flex-col p-4 lg:p-8 relative">
-      <AuthBackground />
-      
-      {/* Top Navigation */}
-      <header className="w-full max-w-5xl mx-auto flex items-center justify-between z-10 relative mb-8">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-glow-blue shrink-0">
-            <LayoutTemplate className="text-white" size={16} />
-          </div>
-          <span className="font-outfit font-bold text-white text-lg hidden sm:block">VUI LMS</span>
-        </div>
+    <div className="surface-wash flex min-h-screen flex-col px-5 py-6 sm:px-8 sm:py-8">
+      <header className="mx-auto flex w-full max-w-4xl items-center justify-between">
+        <Link href="/" className="font-display text-lg font-semibold tracking-tight text-ink">
+          VUI LMS
+        </Link>
 
-        {step > 0 && (
-          <button 
-            onClick={handleBack}
-            className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 px-4 py-2 rounded-full transition-colors border border-white/5"
+        {step > 0 ? (
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 rounded-pill border border-line-strong px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:text-ink"
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={15} aria-hidden />
             Back
           </button>
-        )}
+        ) : null}
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col justify-center items-center w-full z-10">
-        <div className="w-full max-w-4xl space-y-8">
-          {/* Progress Indicators */}
-          {step > 0 && (
-            <div className="flex justify-center gap-3 mb-8">
-              {[1, 2, 3].map((i) => (
-                <div 
-                  key={i} 
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    i <= step ? 'bg-blue-500 w-12 shadow-glow-blue' : 'bg-slate-800 w-4'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center py-12">
+        {step > 0 ? (
+          <ol className="mb-10 flex items-center justify-center gap-3">
+            {STEPS.map((entry, index) => {
+              const position = index + 1
+              const done = position <= step
+              return (
+                <li key={entry.label} className="flex items-center gap-2">
+                  <span
+                    className={
+                      done
+                        ? "h-1.5 w-12 rounded-pill bg-primary transition-all duration-500"
+                        : "h-1.5 w-5 rounded-pill bg-line-strong transition-all duration-500"
+                    }
+                  />
+                  <span className="sr-only">
+                    {entry.label}
+                    {done ? " (current or complete)" : ""}
+                  </span>
+                </li>
+              )
+            })}
+          </ol>
+        ) : null}
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12, transition: { duration: 0.18 } }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   )

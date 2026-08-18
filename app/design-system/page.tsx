@@ -19,8 +19,11 @@ const designSystemUser: AppShellUser = {
 };
 
 export default function DesignSystemPage() {
+  // Still documents the legacy dark component set, so it keeps the legacy
+  // shell until those components are rebuilt on the token layer.
   return (
-    <AppShell user={designSystemUser}>
+    <div data-theme="dark" className="legacy-shell">
+      <AppShell user={designSystemUser}>
       <div className="max-w-4xl mx-auto space-y-16 pb-20">
         
         <div>
@@ -156,5 +159,6 @@ export default function DesignSystemPage() {
 
       </div>
     </AppShell>
+    </div>
   );
 }

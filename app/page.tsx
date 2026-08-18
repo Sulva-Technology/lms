@@ -1,44 +1,37 @@
-'use client';
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import { MarketingLanding } from '@/components/landing/MarketingLanding';
+import { SchoolLanding } from '@/components/landing/SchoolLanding';
+import { getTenantContext } from '@/lib/tenant/context';
+import { getTenantProfile } from '@/lib/tenant/profile';
+import { env } from '@/lib/env';
 
-import { LandingNavbar } from "@/components/landing/LandingNavbar"
-import { LandingBackground } from "@/components/landing/LandingBackground"
-import { HeroSection } from "@/components/landing/HeroSection"
-import { ProductMockup } from "@/components/landing/ProductMockup"
-import { FeatureGrid } from "@/components/landing/FeatureGrid"
-import { SecuritySection } from "@/components/landing/SecuritySection"
-import { FinalCTA } from "@/components/landing/FinalCTA"
-import { LandingFooter } from "@/components/landing/LandingFooter"
-import { Building2 } from "lucide-react"
+export async function generateMetadata(): Promise<Metadata> {
+  const tenant = await getTenantContext();
+  if (!tenant) return {};
 
-export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-50 overflow-hidden font-sans selection:bg-blue-500/30">
-      <LandingBackground />
-      <LandingNavbar />
+  const profile = await getTenantProfile(tenant.universityId);
+  if (!profile) return {};
 
-      <main>
-        <HeroSection />
-        <ProductMockup />
+  return {
+    title: `${profile.name} | Learning Portal`,
+    description: `Courses, live classes and results for ${profile.name}, powered by VUI LMS.`,
+  };
+}
 
-        {/* Social Proof */}
-        <section className="py-10 border-y border-white/5 bg-white/[0.01]">
-          <div className="max-w-7xl mx-auto px-6 text-center">
-            <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-8">Architecting the future of education at innovative institutions</p>
-            <div className="flex flex-wrap justify-center gap-12 sm:gap-20 opacity-50 grayscale">
-               <div className="flex items-center gap-2 text-xl font-bold font-outfit"><Building2 /> Stanford</div>
-               <div className="flex items-center gap-2 text-xl font-bold font-outfit"><Building2 /> MIT</div>
-               <div className="flex items-center gap-2 text-xl font-bold font-outfit"><Building2 /> Oxford</div>
-               <div className="flex items-center gap-2 text-xl font-bold font-outfit"><Building2 /> Harvard</div>
-            </div>
-          </div>
-        </section>
+/**
+ * The root domain shows the platform. A school host shows the school: the
+ * visitor typed that school's address, so the page should be about it.
+ */
+export default async function LandingPage() {
+  const tenant = await getTenantContext();
+  if (!tenant) return <MarketingLanding />;
 
-        <FeatureGrid />
-        <SecuritySection />
-        <FinalCTA />
-      </main>
+  const profile = await getTenantProfile(tenant.universityId);
+  if (!profile) return <MarketingLanding />;
 
-      <LandingFooter />
-    </div>
-  );
+  const requestHost = (await headers()).get('host');
+  const host = requestHost?.split(':')[0] ?? `${tenant.subdomain}.${env.NEXT_PUBLIC_ROOT_DOMAIN}`;
+
+  return <SchoolLanding profile={profile} host={host} />;
 }

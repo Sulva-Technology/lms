@@ -1,26 +1,25 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "motion/react"
-import { Eye, EyeOff, Loader2, Mail, Lock } from "lucide-react"
+import { Eye, EyeOff, Lock, Mail } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { loginAction } from "@/app/actions/auth"
+import { Field, FormError, SubmitButton, TextInput } from "./fields"
 
 export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
   const [showPassword, setShowPassword] = React.useState(false)
-  
   const [error, setError] = React.useState("")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError("")
     setIsLoading(true)
-    
+
     const formData = new FormData(e.currentTarget)
-    
+
     try {
       const result = await loginAction(formData)
       if (result?.error) {
@@ -46,81 +45,63 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {error && (
-        <motion.div 
-          initial={{ opacity: 0, height: 0, y: -10 }}
-          animate={{ opacity: 1, height: "auto", y: 0 }}
-          className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm flex items-center justify-center font-medium"
-        >
-          {error}
-        </motion.div>
-      )}
+      <FormError>{error}</FormError>
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-300 ml-1">Email</label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Mail size={18} className="text-slate-500 group-focus-within:text-blue-400 transition-colors" />
-          </div>
-          <input
-            name="email"
-            type="email"
-            required
-            className="w-full bg-slate-900/50 border border-slate-800 text-slate-200 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block pl-10 p-3.5 transition-all outline-none"
-            placeholder="you@university.edu"
-          />
-        </div>
-      </div>
+      <Field label="Email" htmlFor="email">
+        <TextInput
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          placeholder="you@institution.edu"
+          icon={<Mail size={17} />}
+        />
+      </Field>
 
-      <div className="space-y-1">
-        <div className="flex items-center justify-between ml-1">
-          <label className="text-sm font-medium text-slate-300">Password</label>
-          <Link href="/forgot-password" className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors">
+      <Field
+        label="Password"
+        htmlFor="password"
+        action={
+          <Link
+            href="/forgot-password"
+            className="text-xs font-medium text-primary transition-opacity hover:opacity-80"
+          >
             Forgot password?
           </Link>
-        </div>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock size={18} className="text-slate-500 group-focus-within:text-blue-400 transition-colors" />
-          </div>
-          <input
+        }
+      >
+        <div className="relative">
+          <TextInput
+            id="password"
             name="password"
             type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
             required
-            className="w-full bg-slate-900/50 border border-slate-800 text-slate-200 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block pl-10 pr-10 p-3.5 transition-all outline-none"
-            placeholder="••••••••"
+            placeholder="Your password"
+            icon={<Lock size={17} />}
+            className="pr-11"
           />
           <button
             type="button"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 transition-colors focus:outline-none"
-            onClick={() => setShowPassword(!showPassword)}
+            onClick={() => setShowPassword((visible) => !visible)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-ink-subtle transition-colors hover:text-ink"
           >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
           </button>
         </div>
-      </div>
+      </Field>
 
-      <div className="flex items-center ml-1">
-        <input 
-          id="remember" 
-          type="checkbox" 
-          className="w-4 h-4 bg-slate-900 border-slate-700 rounded text-blue-600 focus:ring-blue-600 focus:ring-2 focus:ring-offset-slate-900 cursor-pointer"
-        />
-        <label htmlFor="remember" className="ml-2 text-sm text-slate-400 cursor-pointer select-none">
-          Remember me for 30 days
-        </label>
-      </div>
+      <SubmitButton loading={isLoading}>
+        {isLoading ? "Signing in" : "Sign in"}
+      </SubmitButton>
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] transition-all active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100 flex items-center justify-center gap-2 mt-4"
-      >
-        {isLoading ? <Loader2 size={18} className="animate-spin" /> : "Sign in to VUI LMS"}
-      </button>
-
-      <p className="text-center text-sm text-slate-400 mt-6">
-        Don't have an account? <Link href="/onboarding" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">Set up your profile</Link>
+      <p className="text-center text-sm text-ink-muted">
+        Setting up a new institution?{" "}
+        <Link href="/onboarding" className="font-medium text-primary hover:opacity-80">
+          Start here
+        </Link>
       </p>
     </form>
   )

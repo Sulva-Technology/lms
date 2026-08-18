@@ -2,98 +2,112 @@
 
 import * as React from "react"
 import { motion } from "motion/react"
-import { BookOpen, GraduationCap, Video, Users } from "lucide-react"
+import { BookOpen, CalendarDays, GraduationCap, LayoutDashboard, Users } from "lucide-react"
 
+const NAV = [
+  { icon: LayoutDashboard, label: "Overview", active: true },
+  { icon: BookOpen, label: "Courses" },
+  { icon: CalendarDays, label: "Live classes" },
+  { icon: Users, label: "People" },
+  { icon: GraduationCap, label: "Results" },
+]
+
+const COURSES = [
+  { title: "Organic Chemistry II", meta: "Mon · 09:00 · Hall B", progress: 82 },
+  { title: "Thermodynamics", meta: "Tue · 11:30 · Online", progress: 64 },
+  { title: "Research Methods", meta: "Thu · 14:00 · Lab 4", progress: 38 },
+]
+
+/**
+ * A drawn impression of the product, not a screenshot: it stays in the token
+ * layer, so it wears each school's colour like the rest of the page does.
+ */
 export function ProductMockup() {
   return (
-    <motion.div
-      id="solutions"
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full max-w-6xl mx-auto px-6 relative perspective-[1200px] mb-32 z-10"
-    >
-      <motion.div 
-        animate={{ y: [-15, 15, -15] }} 
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        className="relative rounded-t-[32px] overflow-hidden border-t border-x border-white/10 shadow-[0_30px_100px_-20px_rgba(59,130,246,0.5)] bg-slate-900/80 backdrop-blur-2xl"
-        style={{ transform: 'rotateX(8deg)', transformStyle: 'preserve-3d', transformOrigin: 'bottom' }}
+    <section className="px-5 pb-24 sm:px-8 sm:pb-32">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="mx-auto max-w-5xl"
       >
-        {/* Mockup Top Bar */}
-        <div className="h-14 border-b border-white/5 flex items-center px-6 gap-2">
-          <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-            <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-            <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+        <div className="panel overflow-hidden rounded-panel">
+          <div className="flex items-center gap-2 border-b border-line bg-canvas-sunken px-5 py-3.5">
+            <span className="size-2.5 rounded-full bg-line-strong" aria-hidden />
+            <span className="size-2.5 rounded-full bg-line-strong" aria-hidden />
+            <span className="size-2.5 rounded-full bg-line-strong" aria-hidden />
+            <span className="ml-3 truncate rounded-pill bg-canvas px-3 py-1 text-xs text-ink-subtle">
+              your-school.example.edu
+            </span>
           </div>
-          <div className="ml-4 h-6 w-64 bg-slate-800 rounded-md"></div>
-        </div>
-        
-        <div className="relative z-10 w-full aspect-[16/10] sm:aspect-video flex">
-          {/* Sidebar */}
-          <div className="w-[200px] border-r border-white/5 hidden md:block p-6 space-y-8 bg-slate-950/30">
-            <div className="space-y-3">
-              <div className="h-8 w-24 bg-blue-500/20 rounded-lg"></div>
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-8 w-full bg-white/5 rounded-lg"></div>
-              ))}
-            </div>
-            <div className="space-y-3 mt-12">
-              <div className="h-4 w-16 bg-white/10 rounded"></div>
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-8 w-full bg-white/5 rounded-lg"></div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Main Content Area */}
-          <div className="flex-1 p-6 md:p-10 space-y-8 bg-gradient-to-br from-slate-900/50 to-slate-950/80">
-            <div className="flex justify-between items-center">
-              <div className="space-y-2">
-                <div className="h-8 w-48 bg-white/10 rounded-lg"></div>
-                <div className="h-4 w-32 bg-white/5 rounded"></div>
+
+          <div className="grid sm:grid-cols-[13rem_1fr]">
+            <aside className="hidden border-r border-line bg-canvas-sunken/60 p-4 sm:block">
+              <ul className="space-y-1">
+                {NAV.map(({ icon: Icon, label, active }) => (
+                  <li key={label}>
+                    <span
+                      className={
+                        active
+                          ? "flex items-center gap-3 rounded-[10px] bg-primary-soft px-3 py-2.5 text-sm font-medium text-primary-soft-contrast"
+                          : "flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm text-ink-muted"
+                      }
+                    >
+                      <Icon size={16} />
+                      {label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+
+            <div className="p-6 sm:p-8">
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <p className="eyebrow">Semester overview</p>
+                  <p className="mt-2 font-display text-2xl font-semibold text-ink">Good morning, Ada</p>
+                </div>
+                <span className="rounded-pill bg-secondary-soft px-3 py-1 text-xs font-semibold text-secondary-soft-contrast">
+                  3 classes today
+                </span>
               </div>
-              <div className="hidden sm:flex gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/5"></div>
-                <div className="w-10 h-10 rounded-full bg-emerald-500/20"></div>
-              </div>
-            </div>
-            
-            {/* Widget Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              <div className="h-32 bg-slate-800/50 rounded-2xl border border-white/5 p-4 flex flex-col justify-between">
-                <BookOpen className="text-blue-400 w-8 h-8" />
-                <div className="h-4 w-20 bg-white/10 rounded"></div>
-              </div>
-              <div className="h-32 bg-slate-800/50 rounded-2xl border border-white/5 p-4 flex flex-col justify-between">
-                <Video className="text-purple-400 w-8 h-8" />
-                <div className="h-4 w-24 bg-white/10 rounded"></div>
-              </div>
-              <div className="h-32 bg-slate-800/50 rounded-2xl border border-white/5 p-4 flex flex-col justify-between">
-                <GraduationCap className="text-emerald-400 w-8 h-8" />
-                <div className="h-4 w-16 bg-white/10 rounded"></div>
-              </div>
-              <div className="h-32 bg-slate-800/50 rounded-2xl border border-white/5 p-4 flex flex-col justify-between">
-                <Users className="text-orange-400 w-8 h-8" />
-                <div className="h-4 w-20 bg-white/10 rounded"></div>
-              </div>
-            </div>
-            
-            {/* Main graph/content area */}
-            <div className="h-48 md:h-64 bg-slate-800/30 rounded-2xl border border-white/5 p-6 space-y-4">
-              <div className="h-6 w-32 bg-white/10 rounded-lg"></div>
-              <div className="h-full w-full flex items-end gap-2 pb-4">
-                {[40, 70, 45, 90, 65, 85, 60, 100, 50, 75].map((h, i) => (
-                  <div key={i} className="flex-1 bg-gradient-to-t from-blue-600/40 to-blue-400/80 rounded-t-sm" style={{ height: `${h}%` }}></div>
+
+              <div className="mt-7 space-y-3">
+                {COURSES.map((course, index) => (
+                  <motion.div
+                    key={course.title}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: 0.15 + index * 0.08 }}
+                    className="rounded-card border border-line bg-surface px-4 py-4"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-ink">{course.title}</p>
+                        <p className="mt-1 text-xs text-ink-subtle">{course.meta}</p>
+                      </div>
+                      <span className="text-sm font-semibold tabular-nums text-ink-muted">
+                        {course.progress}%
+                      </span>
+                    </div>
+                    <div className="mt-3 h-1 overflow-hidden rounded-pill bg-status-soft">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${course.progress}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.9, delay: 0.3 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                        className="h-full rounded-pill bg-primary"
+                      />
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
           </div>
         </div>
-        
-        {/* Bottom Fade out */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-950 to-transparent pointer-events-none"></div>
       </motion.div>
-    </motion.div>
+    </section>
   )
 }

@@ -6,6 +6,8 @@ export interface TenantRecord {
   subdomain: string;
   status: string;
   logo_url: string | null;
+  primary_color: string | null;
+  secondary_color: string | null;
 }
 
 export type TenantLookup = { ok: true; tenant: TenantRecord | null } | { ok: false };
@@ -31,7 +33,7 @@ export async function resolveTenant(subdomain: string): Promise<TenantLookup> {
     const admin = createAdminClient();
     const { data, error } = await admin
       .from('universities')
-      .select('id,name,subdomain,status,logo_url')
+      .select('id,name,subdomain,status,logo_url,primary_color,secondary_color')
       .eq('subdomain', subdomain)
       .maybeSingle();
 

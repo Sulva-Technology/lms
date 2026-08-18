@@ -1,9 +1,16 @@
 import { AuthLayout } from "@/components/auth/AuthLayout"
 import { VerificationSuccessUI } from "@/components/auth/VerificationSuccessUI"
+import { getTenantBrand } from "@/lib/tenant/brand"
 
-export default function VerifyPage() {
+export default async function VerifyPage() {
+  const brand = await getTenantBrand()
+
   return (
-    <AuthLayout title="Verification" subtitle="Your account setup is almost complete.">
+    <AuthLayout
+      brand={brand ?? undefined}
+      title="Verification"
+      subtitle="Your account setup is almost complete."
+    >
       <VerificationSuccessUI />
     </AuthLayout>
   )

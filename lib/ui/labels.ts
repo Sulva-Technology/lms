@@ -23,6 +23,8 @@ export type LabelSet = {
   facultyPlural: string;
   department: string;
   departmentPlural: string;
+  program: string;
+  programPlural: string;
   term: string;
   termPlural: string;
   enrollment: string;
@@ -45,6 +47,8 @@ const academic: LabelSet = {
   facultyPlural: 'Faculties',
   department: 'Department',
   departmentPlural: 'Departments',
+  program: 'Programme',
+  programPlural: 'Programmes',
   term: 'Semester',
   termPlural: 'Semesters',
   enrollment: 'Enrollment',
@@ -67,6 +71,8 @@ const organization: LabelSet = {
   facultyPlural: 'Divisions',
   department: 'Team',
   departmentPlural: 'Teams',
+  program: 'Learning Track',
+  programPlural: 'Learning Tracks',
   term: 'Cohort',
   termPlural: 'Cohorts',
   enrollment: 'Assignment',

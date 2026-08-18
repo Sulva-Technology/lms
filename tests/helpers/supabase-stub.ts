@@ -19,6 +19,7 @@ const nextId = () => `stub-${++idCounter}`;
  * It supports the query shapes this codebase actually uses:
  *   .from(t).select(cols).eq(c, v).maybeSingle()
  *   .from(t).select(cols).in(c, [v]).order(c, { ascending }).limit(n)
+ *   .from(t).select(cols, { count: 'exact', head: true }).eq(c, v)
  *   .from(t).insert(row).select().single()
  *   .from(t).update(row).eq(c, v).select().single()
  *   .from(t).delete().eq(c, v)
@@ -53,6 +54,8 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
     let sort: { column: string; ascending: boolean } | null = null;
     let take: number | null = null;
     let mode: 'select' | 'insert' | 'update' | 'delete' = 'select';
+    let counting = false;
+    let headOnly = false;
     let payload: Row | Row[] | null = null;
     let settled: Row[] | null = null;
 
@@ -123,7 +126,11 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
     };
 
     const chain: any = {
-      select: () => chain,
+      select: (_columns?: string, options?: { count?: string; head?: boolean }) => {
+        if (options?.count) counting = true;
+        if (options?.head) headOnly = true;
+        return chain;
+      },
       insert: (value: Row | Row[]) => {
         mode = 'insert';
         payload = value;
@@ -185,8 +192,19 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
         const rows = run();
         return { data: rows[0] ?? null, error: null };
       },
-      then: (resolve: (value: { data: Row[]; error: null }) => any, reject?: (reason: any) => any) =>
-        Promise.resolve({ data: run(), error: null }).then(resolve, reject),
+      then: (
+        resolve: (value: { data: Row[] | null; error: null; count?: number }) => any,
+        reject?: (reason: any) => any,
+      ) => {
+        const rows = run();
+        const envelope = counting
+          ? { data: headOnly ? null : rows, error: null, count: rows.length }
+          : { data: rows, error: null };
+        return Promise.resolve(envelope as { data: Row[] | null; error: null; count?: number }).then(
+          resolve,
+          reject,
+        );
+      },
     };
 
     return chain;

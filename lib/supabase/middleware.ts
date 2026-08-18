@@ -33,6 +33,11 @@ const rewriteTo = (request: NextRequest, pathname: string) => {
   return NextResponse.rewrite(url)
 }
 
+const setOrDelete = (headers: Headers, key: string, value: string | null) => {
+  if (value) headers.set(key, value)
+  else headers.delete(key)
+}
+
 export const updateSession = async (request: NextRequest) => {
   try {
     const { pathname } = request.nextUrl
@@ -45,6 +50,9 @@ export const updateSession = async (request: NextRequest) => {
 
     let tenantId: string | null = null
     let tenantSubdomain: string | null = null
+    let tenantName: string | null = null
+    let tenantPrimary: string | null = null
+    let tenantSecondary: string | null = null
 
     if (tenantHost.kind === 'tenant') {
       const lookup = await resolveTenant(tenantHost.subdomain)
@@ -59,6 +67,9 @@ export const updateSession = async (request: NextRequest) => {
       }
       tenantId = lookup.tenant.id
       tenantSubdomain = lookup.tenant.subdomain
+      tenantName = lookup.tenant.name
+      tenantPrimary = lookup.tenant.primary_color
+      tenantSecondary = lookup.tenant.secondary_color
 
       // Platform administration is not reachable from a school host.
       if (pathname.startsWith('/superadmin')) {
@@ -73,10 +84,20 @@ export const updateSession = async (request: NextRequest) => {
     if (tenantId && tenantSubdomain) {
       requestHeaders.set('x-university-id', tenantId)
       requestHeaders.set('x-university-subdomain', tenantSubdomain)
+      // Branding travels with the tenant headers so the root layout can paint
+      // the school's colours without a second lookup of the row we just read.
+      // Percent-encoded: a school name is free text and headers reject control
+      // characters and anything outside latin-1.
+      setOrDelete(requestHeaders, 'x-university-name', tenantName && encodeURIComponent(tenantName))
+      setOrDelete(requestHeaders, 'x-university-primary', tenantPrimary)
+      setOrDelete(requestHeaders, 'x-university-secondary', tenantSecondary)
     } else {
       // A forged header on a root-domain request must never look like a tenant.
       requestHeaders.delete('x-university-id')
       requestHeaders.delete('x-university-subdomain')
+      requestHeaders.delete('x-university-name')
+      requestHeaders.delete('x-university-primary')
+      requestHeaders.delete('x-university-secondary')
     }
 
     if (isPublicPath(pathname)) {

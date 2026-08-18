@@ -19,7 +19,8 @@
     "db:seed": "node -e 'console.log(\"Run supabase db reset to apply seeds locally\")'",
     "db:seed:auth": "tsx scripts/seed-demo-users.ts",
     "db:seed:demo": "tsx scripts/comprehensive-seed.ts",
-    "check:writes": "tsx scripts/check-write-paths.ts"
+    "check:writes": "tsx scripts/check-write-paths.ts",
+    "db:seed:superadmin": "tsx scripts/seed-super-admin.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

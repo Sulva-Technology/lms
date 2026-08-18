@@ -44,5 +44,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
     university,
   };
 
-  return <AppShell user={user}>{children}</AppShell>;
+  // Dashboards are the next rebuild, not this one: `legacy-shell` and the dark
+  // attribute keep them on the palette they were designed against while the
+  // public surfaces move to the token layer.
+  return (
+    <div data-theme="dark" className="legacy-shell">
+      <AppShell user={user}>{children}</AppShell>
+    </div>
+  );
 }

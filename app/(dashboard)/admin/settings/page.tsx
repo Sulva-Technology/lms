@@ -1,4 +1,5 @@
 import { updateUniversitySettingsAction } from "@/app/actions/settings";
+import { BrandingForm } from "@/components/admin/BrandingForm";
 import { GenericList } from "@/components/academic/GenericList";
 import { requireRole } from "@/lib/auth/guards";
 import { readOr } from "@/lib/safe-read";
@@ -8,8 +9,15 @@ import { SettingsIcon } from "lucide-react";
 
 export default async function AdminSettingsPage() {
   const session = await requireRole("department_admin");
-  const settings = await readOr(new AdminReadService((await createClient()) as any).getSettings(session.profile.university_id!), null);
+  const supabase = await createClient();
+  const settings = await readOr(new AdminReadService(supabase as any).getSettings(session.profile.university_id!), null);
   const values = settings?.settings || {};
+
+  const { data: school } = await supabase
+    .from("universities")
+    .select("name, primary_color, secondary_color")
+    .eq("id", session.profile.university_id!)
+    .maybeSingle();
 
   async function save(formData: FormData) {
     "use server";
@@ -23,7 +31,13 @@ export default async function AdminSettingsPage() {
   }
 
   return (
-    <GenericList title="Settings" description="Academic defaults and university operational settings." icon={SettingsIcon}>
+    <GenericList title="Settings" description="Academic defaults, branding, and university operational settings." icon={SettingsIcon}>
+      <BrandingForm
+        schoolName={school?.name ?? "your institution"}
+        initialPrimary={school?.primary_color ?? null}
+        initialSecondary={school?.secondary_color ?? null}
+      />
+
       <form action={save} className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-6 grid gap-5 max-w-3xl">
         <label className="grid gap-2 text-sm text-slate-300">
           Vocabulary

@@ -1,53 +1,265 @@
 @import "tailwindcss";
 
-@theme {
-  --color-glass-surface: rgba(255, 255, 255, 0.03);
-  --color-glass-surface-hover: rgba(255, 255, 255, 0.08);
-  --color-glass-border: rgba(255, 255, 255, 0.1);
-  --color-glass-border-strong: rgba(255, 255, 255, 0.2);
-  --color-accent: #3b82f6;
-  --color-accent-hover: #2563eb;
-  --color-accent-glow: rgba(59, 130, 246, 0.5);
+/* ---------------------------------------------------------------------------
+   Token layer.
 
-  --font-outfit: var(--font-outfit), sans-serif;
-  --font-inter: var(--font-inter), sans-serif;
-  --font-mono: var(--font-mono), monospace;
+   Components never name a colour. They name a role — canvas, surface, ink,
+   primary — and the role resolves per theme. `--brand-*` is not defined here on
+   purpose: it is injected per request by the root layout from the school's
+   stored colours, and every reference carries the platform brand as its
+   fallback so the app still renders on the root domain and before any school
+   has picked a colour.
+
+   Modes are attribute-scoped rather than :root-only, so a single dark section
+   dropped into a light page flips every token inside it.
+--------------------------------------------------------------------------- */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --c-canvas: #f7f6f8;
+  --c-canvas-sunken: #efedf1;
+  --c-surface: #ffffff;
+  --c-surface-raised: #ffffff;
+
+  --c-ink: #160d1b;
+  --c-ink-muted: #6b5e70;
+  --c-ink-subtle: #918697;
+
+  --c-line: rgba(22, 13, 27, 0.09);
+  --c-line-strong: rgba(22, 13, 27, 0.18);
+
+  --c-glass-fill: rgba(255, 255, 255, 0.72);
+  --c-glass-border: rgba(22, 13, 27, 0.07);
+  --c-glass-shadow: 0 28px 70px -38px rgba(22, 13, 27, 0.5);
+
+  --c-info: #1d4ed8;
+  --c-success: #0b6b4f;
+  --c-warn: #a45c07;
+  --c-danger: #b3261e;
+  --c-status-soft: rgba(22, 13, 27, 0.05);
+
+  --wash-strength: 0.16;
+  --shadow-soft: 0 1px 2px rgba(22, 13, 27, 0.04), 0 8px 24px -16px rgba(22, 13, 27, 0.28);
+  --shadow-lift: 0 24px 60px -34px rgba(22, 13, 27, 0.45);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --c-canvas: #160d1b;
+  --c-canvas-sunken: #100915;
+  --c-surface: #1e1426;
+  --c-surface-raised: #261a30;
+
+  --c-ink: #f7f6f8;
+  --c-ink-muted: #b6a8bd;
+  --c-ink-subtle: #8d8095;
+
+  --c-line: rgba(255, 255, 255, 0.1);
+  --c-line-strong: rgba(255, 255, 255, 0.2);
+
+  --c-glass-fill: rgba(255, 255, 255, 0.06);
+  --c-glass-border: rgba(255, 255, 255, 0.12);
+  --c-glass-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.8);
+
+  --c-info: #8ab4ff;
+  --c-success: #5fd0a6;
+  --c-warn: #eab308;
+  --c-danger: #ff8a80;
+  --c-status-soft: rgba(255, 255, 255, 0.07);
+
+  --wash-strength: 0.5;
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -16px rgba(0, 0, 0, 0.6);
+  --shadow-lift: 0 28px 70px -36px rgba(0, 0, 0, 0.85);
+}
+
+@theme inline {
+  --color-canvas: var(--c-canvas);
+  --color-canvas-sunken: var(--c-canvas-sunken);
+  --color-surface: var(--c-surface);
+  --color-surface-raised: var(--c-surface-raised);
+
+  --color-ink: var(--c-ink);
+  --color-ink-muted: var(--c-ink-muted);
+  --color-ink-subtle: var(--c-ink-subtle);
+
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+
+  --color-primary: var(--brand-primary, #690dab);
+  --color-primary-hover: var(--brand-primary-hover, #560a8c);
+  --color-primary-contrast: var(--brand-primary-contrast, #ffffff);
+  --color-primary-soft: var(--brand-primary-soft, #f2eaf8);
+  --color-primary-soft-contrast: var(--brand-primary-soft-contrast, #690dab);
+
+  --color-secondary: var(--brand-secondary, #0b6b4f);
+  --color-secondary-hover: var(--brand-secondary-hover, #085740);
+  --color-secondary-contrast: var(--brand-secondary-contrast, #ffffff);
+  --color-secondary-soft: var(--brand-secondary-soft, #e6f2ed);
+  --color-secondary-soft-contrast: var(--brand-secondary-soft-contrast, #0b6b4f);
+
+  /* Status never follows the tenant: a red that turns purple stops warning. */
+  --color-info: var(--c-info);
+  --color-success: var(--c-success);
+  --color-warn: var(--c-warn);
+  --color-danger: var(--c-danger);
+  --color-status-soft: var(--c-status-soft);
+
+  --color-glass-fill: var(--c-glass-fill);
+  --color-glass-border: var(--c-glass-border);
+
+  --radius-card: 1rem;
+  --radius-panel: 1.5rem;
+  --radius-pill: 999px;
+
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
-  :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  body {
+    background-color: var(--c-canvas);
+    color: var(--c-ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  ::selection {
+    background-color: color-mix(in oklab, var(--brand-primary, #690dab) 24%, transparent);
+    color: var(--c-ink);
+  }
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
 
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
-
-    --radius: 0.5rem;
+  :focus-visible {
+    outline: 2px solid var(--brand-primary, #690dab);
+    outline-offset: 2px;
   }
 }
 
+@layer components {
+  /* One radial brand wash per surface, anchored to the top edge. Sections opt
+     in; it is not painted on every element. */
+  .surface-wash {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .surface-wash::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at 50% 0%,
+      color-mix(in oklab, var(--brand-primary, #690dab) calc(var(--wash-strength) * 100%), transparent),
+      transparent 45%
+    );
+  }
+
+  /* Glass marks the elevated thing — a hero card, a status widget — and is
+     never the default panel treatment. */
+  .glass {
+    background-color: var(--c-glass-fill);
+    border: 1px solid var(--c-glass-border);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    box-shadow: var(--c-glass-shadow);
+  }
+
+  .panel {
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .eyebrow {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-ink-subtle);
+  }
+
+  /* Full-bleed contrast break between light sections. Setting the attribute
+     rather than hard-coding colours means everything inside — including the
+     school's accent — resolves to its dark-mode value. */
+  .contrast-block {
+    background:
+      radial-gradient(
+        circle at 50% 0%,
+        color-mix(in oklab, var(--brand-primary, #690dab) 45%, transparent),
+        transparent 38%
+      ),
+      linear-gradient(
+        135deg,
+        #1a1022 0%,
+        #2d1b36 52%,
+        color-mix(in oklab, var(--brand-primary, #690dab) 85%, #1a1022) 100%
+      );
+    color: var(--c-ink);
+  }
+
+  /* Pre-rebuild dashboards still assume the old dark shell. This keeps them
+     rendering unchanged while the public surfaces move to the token layer. */
+  .legacy-shell {
+    background-color: #020617;
+    color: #f8fafc;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(30, 58, 138, 0.15) 0%, transparent 60%),
+      radial-gradient(circle at 90% 80%, rgba(88, 28, 135, 0.15) 0%, transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--c-line-strong);
+    border-radius: 4px;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Film-grain texture. Inline SVG so it needs no network request. */
+  .noise-overlay {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Legacy utilities.
+
+   The dashboards still in the old dark language rely on these. They are kept
+   verbatim so nothing regresses while those screens are rebuilt, and they are
+   deliberately fixed-colour: nothing here reads the token layer, so removing a
+   class from a rebuilt screen is the only thing that retires it.
+--------------------------------------------------------------------------- */
 @layer utilities {
   .glass-panel {
     @apply bg-slate-900/40 backdrop-blur-xl border border-white/10;
@@ -60,7 +272,7 @@
   .glass-card {
     @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-slate-900/60 transition-colors shadow-lg hover:shadow-xl;
   }
-  
+
   .glass-button {
     @apply bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all;
   }
@@ -84,65 +296,10 @@
   .shadow-glow-emerald {
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
   }
-  
+
   .shadow-glow-red {
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
   }
-
-  /* Film-grain texture. Inline SVG so it needs no network request. */
-  .noise-overlay {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  /* Custom Scrollbar for sleek interfaces */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Hide scrollbar completely but allow scrolling */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-}
-
-body {
-  @apply bg-slate-950 text-slate-50 min-h-screen font-sans antialiased;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(30, 58, 138, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 90% 80%, rgba(88, 28, 135, 0.15) 0%, transparent 60%);
-  background-attachment: fixed;
-}
-
-body::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-body::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Motion/react animations are handled by MotionConfig reducedMotion="user".

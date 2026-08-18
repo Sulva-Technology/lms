@@ -3,6 +3,7 @@
 import { requireRole, requireUser } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { clearTenantCache } from "@/lib/tenant/resolve";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -30,6 +31,20 @@ const universitySettingsSchema = z.object({
   gradingScale: z.string().optional(),
   registrationPolicy: z.string().optional(),
   supportEmail: z.string().email().optional().or(z.literal("")),
+});
+
+// Colours are stored as the admin picked them; the derivation to a readable
+// palette happens at render time, so a brand that fails contrast today can be
+// re-derived by a change to the engine rather than a migration of stored data.
+const HEX_COLOR = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(/^#[0-9a-f]{6}$/, "Use a six-digit hex colour, for example #690dab.");
+
+const schoolBrandingSchema = z.object({
+  primaryColor: HEX_COLOR.nullable().optional(),
+  secondaryColor: HEX_COLOR.nullable().optional(),
 });
 
 const platformSettingSchema = z.object({
@@ -101,6 +116,40 @@ export async function updateUniversitySettingsAction(payload: unknown) {
   }, { onConflict: "university_id" });
   if (error) return { error: error.message };
   revalidatePath("/admin/settings", "layout");
+  return { success: true };
+}
+
+/**
+ * A school admin sets the two accents their institution is rendered in.
+ *
+ * Written with the admin client because RLS on `universities` is super-admin
+ * only and Postgres row policies cannot restrict which columns an update
+ * touches — the guard is the role check plus the fact that only these two
+ * columns and the caller's own university are ever named here.
+ */
+export async function updateSchoolBrandingAction(payload: unknown) {
+  const session = await requireRole("department_admin");
+  const parsed = schoolBrandingSchema.safeParse(payload);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  const universityId = session.profile.university_id;
+  if (!universityId) return { error: "Your account is not attached to an institution." };
+
+  const adminClient = createAdminClient();
+  const { error } = await adminClient
+    .from("universities")
+    .update({
+      primary_color: parsed.data.primaryColor ?? null,
+      secondary_color: parsed.data.secondaryColor ?? null,
+    })
+    .eq("id", universityId);
+
+  if (error) return { error: error.message };
+
+  // Middleware caches the tenant row for a minute; dropping it here means the
+  // admin sees their own change on the next request rather than after the TTL.
+  clearTenantCache();
+  revalidatePath("/", "layout");
   return { success: true };
 }
 

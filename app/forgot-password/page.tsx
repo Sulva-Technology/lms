@@ -1,11 +1,15 @@
 import { AuthLayout } from "@/components/auth/AuthLayout"
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm"
+import { getTenantBrand } from "@/lib/tenant/brand"
 
-export default function ForgotPasswordPage() {
+export default async function ForgotPasswordPage() {
+  const brand = await getTenantBrand()
+
   return (
-    <AuthLayout 
-      title="Reset Password" 
-      subtitle="Enter your email address and we'll send you instructions to reset your password."
+    <AuthLayout
+      brand={brand ?? undefined}
+      title="Reset your password"
+      subtitle="Enter your email address and we will send you instructions to set a new one."
     >
       <ForgotPasswordForm />
     </AuthLayout>

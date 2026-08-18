@@ -2,11 +2,12 @@
 
 import * as React from "react"
 import { motion } from "motion/react"
-import { AlertCircle, Building, Camera, CheckCircle2, GraduationCap, Loader2, ShieldCheck, Upload, User } from "lucide-react"
+import { Building, CheckCircle2, GraduationCap, ShieldCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { completeOnboardingAction } from "@/app/actions/onboarding"
 import { AuthRole } from "@/types/auth"
 import { roleLabels } from "@/lib/auth/roles"
+import { Field, FormError, SubmitButton, TextInput } from "./fields"
 
 interface ProfileSetupFormProps {
   assignedRole: AuthRole | null
@@ -62,145 +63,110 @@ export function ProfileSetupForm({
     }
   }
 
+  const facts = [
+    {
+      icon: ShieldCheck,
+      label: "Assigned role",
+      value: assignedRole ? roleLabels[assignedRole] : "Missing invite data",
+    },
+    {
+      icon: Building,
+      label: "Institution",
+      value:
+        universityName ||
+        (assignedRole === "super_admin" ? "VUI Platform" : "Pending assignment"),
+    },
+  ]
+
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="text-center space-y-2 mb-8">
-        <h1 className="font-outfit text-3xl md:text-4xl font-bold text-white tracking-tight">Complete your profile</h1>
-        <p className="text-slate-400 text-lg">Your role and university are secured from your invitation.</p>
+    <div className="mx-auto max-w-2xl">
+      <div className="text-center">
+        <p className="eyebrow">Almost there</p>
+        <h1 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">
+          Complete your profile
+        </h1>
+        <p className="mt-3 text-base text-ink-muted">
+          Your role and institution came from your invitation and cannot be changed here.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-300 flex items-center justify-center">
-              <ShieldCheck size={22} />
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Assigned role</p>
-              <p className="text-white font-semibold">{assignedRole ? roleLabels[assignedRole] : "Missing invite data"}</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08 }}
-          className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center justify-center">
-              <Building size={22} />
-            </div>
+      <div className="mt-10 grid gap-4 sm:grid-cols-2">
+        {facts.map(({ icon: Icon, label, value }, index) => (
+          <motion.div
+            key={label}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.08 }}
+            className="panel flex items-center gap-4 rounded-card p-5"
+          >
+            <span className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-primary-soft text-primary-soft-contrast">
+              <Icon size={19} />
+            </span>
             <div className="min-w-0">
-              <p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">Institution</p>
-              <p className="text-white font-semibold truncate">{universityName || (assignedRole === "super_admin" ? "VUI Platform" : "Pending assignment")}</p>
+              <p className="eyebrow">{label}</p>
+              <p className="mt-1 truncate font-medium text-ink">{value}</p>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        ))}
       </div>
 
-      <div className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 p-6 sm:p-8 rounded-[32px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
+      <div className="panel mt-4 rounded-panel p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, y: -10 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 text-sm flex items-center justify-center gap-2 font-medium"
-            >
-              <AlertCircle size={16} />
-              {error}
-            </motion.div>
-          )}
+          <FormError>{error}</FormError>
 
-          <div className="flex flex-col items-center mb-8">
-            <div className="relative group">
-              <div className="w-24 h-24 rounded-full bg-slate-900 border-2 border-slate-700 flex items-center justify-center overflow-hidden transition-all group-hover:border-blue-500">
-                <User size={40} className="text-slate-500 group-hover:text-blue-400 transition-colors" />
-              </div>
-              <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Camera size={24} className="text-white" />
-              </div>
-              <div className="absolute bottom-0 right-0 w-8 h-8 bg-blue-600 rounded-full border-[3px] border-slate-950 flex items-center justify-center shadow-lg">
-                <Upload size={14} className="text-white" />
-              </div>
-            </div>
-            <p className="text-sm font-medium text-slate-400 mt-4">Add an avatar URL now or later in settings.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-300 ml-1" htmlFor="firstName">First Name *</label>
-              <input
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="First name" htmlFor="firstName">
+              <TextInput
                 id="firstName"
-                type="text"
                 name="firstName"
-                defaultValue={initialFirstName || ""}
+                type="text"
                 required
-                className="w-full bg-slate-900/70 border border-slate-700/70 text-slate-100 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block p-3.5 transition-all outline-none"
+                defaultValue={initialFirstName || ""}
                 placeholder="Jane"
               />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-300 ml-1" htmlFor="lastName">Last Name *</label>
-              <input
+            </Field>
+            <Field label="Last name" htmlFor="lastName">
+              <TextInput
                 id="lastName"
-                type="text"
                 name="lastName"
-                defaultValue={initialLastName || ""}
+                type="text"
                 required
-                className="w-full bg-slate-900/70 border border-slate-700/70 text-slate-100 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block p-3.5 transition-all outline-none"
+                defaultValue={initialLastName || ""}
                 placeholder="Doe"
               />
-            </div>
+            </Field>
           </div>
 
-          {email && (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-sm text-slate-300">
-              Invite email: <span className="font-medium text-white">{email}</span>
-            </div>
-          )}
+          {email ? (
+            <p className="rounded-card border border-line bg-canvas-sunken px-4 py-3 text-sm text-ink-muted">
+              Invite email: <span className="font-medium text-ink">{email}</span>
+            </p>
+          ) : null}
 
-          {assignedRole === "student" && (
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-300 ml-1" htmlFor="studentId">Student ID (Optional)</label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <GraduationCap size={18} className="text-slate-500" />
-                </div>
-                <input
-                  id="studentId"
-                  type="text"
-                  name="studentId"
-                  className="w-full bg-slate-900/70 border border-slate-700/70 text-slate-100 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block pl-10 p-3.5 transition-all outline-none"
-                  placeholder="e.g. VUI/2026/0042"
-                />
-              </div>
-            </div>
-          )}
+          {assignedRole === "student" ? (
+            <Field label="Student ID" htmlFor="studentId" hint="Optional — you can add it later.">
+              <TextInput
+                id="studentId"
+                name="studentId"
+                type="text"
+                placeholder="e.g. VUI/2026/0042"
+                icon={<GraduationCap size={17} />}
+              />
+            </Field>
+          ) : null}
 
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-300 ml-1" htmlFor="avatarUrl">Avatar URL (Optional)</label>
-            <input
-              id="avatarUrl"
-              type="url"
-              name="avatarUrl"
-              className="w-full bg-slate-900/70 border border-slate-700/70 text-slate-100 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block p-3.5 transition-all outline-none"
-              placeholder="https://..."
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading || Boolean(inviteError)}
-            className="w-full py-4 px-4 bg-blue-600 hover:bg-blue-500 text-white text-lg font-semibold rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] transition-all active:scale-[0.98] disabled:opacity-60 disabled:active:scale-100 flex items-center justify-center gap-2"
+          <Field
+            label="Avatar URL"
+            htmlFor="avatarUrl"
+            hint="Optional — a link to a photo you already host."
           >
-            {isLoading ? <Loader2 size={24} className="animate-spin" /> : <><CheckCircle2 size={20} /> Complete Setup</>}
-          </button>
+            <TextInput id="avatarUrl" name="avatarUrl" type="url" placeholder="https://..." />
+          </Field>
+
+          <SubmitButton loading={isLoading} disabled={Boolean(inviteError)}>
+            {isLoading ? null : <CheckCircle2 size={17} aria-hidden />}
+            {isLoading ? "Finishing" : "Complete setup"}
+          </SubmitButton>
         </form>
       </div>
     </div>

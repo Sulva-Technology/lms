@@ -2,16 +2,17 @@
 
 import * as React from "react"
 import { motion } from "motion/react"
-import { Eye, EyeOff, Loader2, Lock, CheckCircle2, ArrowLeft } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Eye, EyeOff, Lock } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { resetPasswordAction } from "@/app/actions/auth"
+import { Field, FormError, SubmitButton, TextInput } from "./fields"
 
 export function ResetPasswordForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
   const [showPassword, setShowPassword] = React.useState(false)
-  
+
   const [password, setPassword] = React.useState("")
   const [confirmPassword, setConfirmPassword] = React.useState("")
   const [error, setError] = React.useState("")
@@ -20,7 +21,7 @@ export function ResetPasswordForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError("")
-    
+
     if (!password || !confirmPassword) {
       setError("Please fill in all fields")
       return
@@ -54,7 +55,7 @@ export function ResetPasswordForm() {
         return
       }
     } catch (err) {
-      setError('Could not update password. Please reopen the reset link and try again.')
+      setError("Could not update password. Please reopen the reset link and try again.")
       setIsLoading(false)
       return
     }
@@ -65,96 +66,82 @@ export function ResetPasswordForm() {
 
   if (success) {
     return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center space-y-4"
-      >
-        <div className="flex justify-center mb-4">
-          <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center">
-            <CheckCircle2 size={32} className="text-emerald-400" />
-          </div>
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
+        <span className="grid size-12 place-items-center rounded-card bg-success/10 text-success">
+          <CheckCircle2 size={24} />
+        </span>
+        <div>
+          <h2 className="font-display text-xl font-semibold text-ink">Password updated</h2>
+          <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+            Use your new password the next time you sign in.
+          </p>
         </div>
-        <h3 className="text-xl font-semibold text-white font-outfit">Password Reset Successfully</h3>
-        <p className="text-slate-400 text-sm">
-          Your password has been changed. You can now use your new password to log in.
-        </p>
-        <div className="pt-4">
-          <Link href="/login" className="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] transition-all active:scale-[0.98] inline-flex items-center justify-center gap-2">
-            Continue to Login
-          </Link>
-        </div>
+        <Link
+          href="/login"
+          className="flex w-full items-center justify-center gap-2 rounded-card bg-primary px-4 py-3 text-sm font-semibold text-primary-contrast transition-[background-color,transform] hover:bg-primary-hover active:scale-[0.99]"
+        >
+          Continue to sign in
+        </Link>
       </motion.div>
     )
   }
 
+  const toggle = (
+    <button
+      type="button"
+      onClick={() => setShowPassword((visible) => !visible)}
+      aria-label={showPassword ? "Hide password" : "Show password"}
+      className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-ink-subtle transition-colors hover:text-ink"
+    >
+      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+    </button>
+  )
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {error && (
-        <motion.div 
-          initial={{ opacity: 0, height: 0, y: -10 }}
-          animate={{ opacity: 1, height: "auto", y: 0 }}
-          className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm flex items-center justify-center font-medium"
-        >
-          {error}
-        </motion.div>
-      )}
+      <FormError>{error}</FormError>
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-300 ml-1">New Password</label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock size={18} className="text-slate-500 group-focus-within:text-blue-400 transition-colors" />
-          </div>
-          <input
+      <Field label="New password" htmlFor="password" hint="At least 8 characters.">
+        <div className="relative">
+          <TextInput
+            id="password"
             name="password"
             type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-slate-900/50 border border-slate-800 text-slate-200 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block pl-10 pr-10 p-3.5 transition-all outline-none"
-            placeholder="••••••••"
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="New password"
+            icon={<Lock size={17} />}
+            className="pr-11"
           />
-          <button
-            type="button"
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 transition-colors focus:outline-none"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
+          {toggle}
         </div>
-      </div>
+      </Field>
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-300 ml-1">Confirm New Password</label>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Lock size={18} className="text-slate-500 group-focus-within:text-blue-400 transition-colors" />
-          </div>
-          <input
-            name="confirmPassword"
-            type={showPassword ? "text" : "password"}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full bg-slate-900/50 border border-slate-800 text-slate-200 text-sm rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 block pl-10 pr-10 p-3.5 transition-all outline-none"
-            placeholder="••••••••"
-          />
-        </div>
-      </div>
+      <Field label="Confirm new password" htmlFor="confirmPassword">
+        <TextInput
+          id="confirmPassword"
+          name="confirmPassword"
+          type={showPassword ? "text" : "password"}
+          autoComplete="new-password"
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          placeholder="Repeat the new password"
+          icon={<Lock size={17} />}
+        />
+      </Field>
 
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] transition-all active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100 flex items-center justify-center gap-2 mt-4"
+      <SubmitButton loading={isLoading}>
+        {isLoading ? "Saving" : "Set new password"}
+      </SubmitButton>
+
+      <Link
+        href="/login"
+        className="flex items-center justify-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink"
       >
-        {isLoading ? <Loader2 size={18} className="animate-spin" /> : "Set new password"}
-      </button>
-      
-       <div className="pt-2 text-center">
-        <Link href="/login" className="text-slate-400 hover:text-slate-300 text-sm font-medium transition-colors flex items-center justify-center gap-2">
-          <ArrowLeft size={16} />
-          Back to login
-        </Link>
-      </div>
+        <ArrowLeft size={15} aria-hidden />
+        Back to sign in
+      </Link>
     </form>
   )
 }
