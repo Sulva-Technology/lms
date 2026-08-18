@@ -45,7 +45,7 @@ BEGIN
     AND rel.relname = 'attendance_records'
     AND con.contype = 'u'
     AND (
-      SELECT array_agg(att.attname ORDER BY att.attname)
+      SELECT array_agg(att.attname::text ORDER BY att.attname::text)
       FROM unnest(con.conkey) AS k(attnum)
       JOIN pg_attribute att ON att.attrelid = con.conrelid AND att.attnum = k.attnum
     ) = ARRAY['course_section_id', 'record_date', 'student_id'];

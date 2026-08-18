@@ -1,5 +1,7 @@
 export function resolveAppUrl(publicAppUrl?: string, vercelUrl?: string) {
-  if (publicAppUrl) return publicAppUrl;
-  if (vercelUrl) return `https://${vercelUrl}`;
+  const explicit = publicAppUrl?.trim();
+  if (explicit) return explicit;
+  const inferred = vercelUrl?.trim();
+  if (inferred) return `https://${inferred}`;
   return undefined;
 }
