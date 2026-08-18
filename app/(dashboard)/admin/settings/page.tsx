@@ -14,6 +14,7 @@ export default async function AdminSettingsPage() {
   async function save(formData: FormData) {
     "use server";
     await updateUniversitySettingsAction({
+      vocabulary: String(formData.get("vocabulary") || "academic"),
       timezone: String(formData.get("timezone") || ""),
       gradingScale: String(formData.get("gradingScale") || ""),
       registrationPolicy: String(formData.get("registrationPolicy") || ""),
@@ -24,6 +25,21 @@ export default async function AdminSettingsPage() {
   return (
     <GenericList title="Settings" description="Academic defaults and university operational settings." icon={SettingsIcon}>
       <form action={save} className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-6 grid gap-5 max-w-3xl">
+        <label className="grid gap-2 text-sm text-slate-300">
+          Vocabulary
+          <select
+            name="vocabulary"
+            defaultValue={values.vocabulary || "academic"}
+            className="rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-white outline-none focus:border-blue-400"
+          >
+            <option value="academic">Academic — university, lecturer, student, semester</option>
+            <option value="organization">Organization — trainer, trainee, programme, cohort</option>
+          </select>
+          <span className="text-xs text-slate-500">
+            Changes what people read across the app. Nothing about your data or links changes.
+          </span>
+        </label>
+
         {[
           ["timezone", "Timezone", values.timezone || "Africa/Lagos"],
           ["gradingScale", "Grading scale", values.gradingScale || "A-F"],

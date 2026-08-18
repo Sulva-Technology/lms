@@ -19,7 +19,7 @@ interface MobileNavProps {
 
 export function MobileNav({ user, isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname()
-  const navItems = getNavigationForRole(user.role)
+  const navItems = getNavigationForRole(user.role, user.vocabulary)
   
   // We take the first 4 items for the bottom tab bar (mobile)
   const tabItems = navItems.slice(0, 4)

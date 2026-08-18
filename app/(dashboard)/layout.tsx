@@ -2,6 +2,7 @@ import { AppShell, AppShellUser } from '@/components/layout/AppShell';
 import { requireUser } from '@/lib/auth/guards';
 import { toDisplayName } from '@/lib/auth/roles';
 import { createClient } from '@/lib/supabase/server';
+import { getTenantVocabulary } from '@/lib/ui/tenant-vocabulary';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await requireUser();
@@ -24,6 +25,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
     }
   }
 
+  const vocabulary = await getTenantVocabulary(supabase as any, session.profile.university_id);
+
   const { count: unreadNotifications } = await supabase
     .from('notifications')
     .select('id', { count: 'exact', head: true })
@@ -37,6 +40,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     role: session.profile.role,
     avatarUrl: session.profile.avatar_url,
     unreadNotifications: unreadNotifications ?? 0,
+    vocabulary,
     university,
   };
 

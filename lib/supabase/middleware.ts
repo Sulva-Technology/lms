@@ -18,6 +18,7 @@ const PUBLIC_PREFIXES = [
   '/docs',
   '/unauthorized',
   '/api/',
+  '/certificates',
   '/school-not-found',
   '/school-unavailable',
 ]

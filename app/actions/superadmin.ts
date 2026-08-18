@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth/guards';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendUserInvite } from '@/lib/auth/invites';
+import { bootstrapAcademicStructure } from '@/lib/services/tenant-bootstrap';
 import { isValidSubdomain, slugifySubdomain } from '@/lib/tenant/host';
 import { tenantOrigin } from '@/lib/tenant/url';
 import { env } from '@/lib/env';
@@ -133,8 +134,21 @@ export async function createUniversityAction(payload: any) {
     return { error: `School was not created: ${message}` };
   }
 
+  // A tenant with no faculty, department, session or term cannot publish a
+  // single course, and an organisation that does not think in those terms
+  // should not have to assemble them by hand. Failure here is not fatal: the
+  // school and its administrator exist, and the structure can be created from
+  // the admin dashboard.
+  let structureWarning: string | undefined;
+  try {
+    await bootstrapAcademicStructure(createAdminClient() as any, created.id);
+  } catch (bootstrapError) {
+    structureWarning =
+      bootstrapError instanceof Error ? bootstrapError.message : 'Could not create the default structure.';
+  }
+
   revalidatePath('/superadmin/universities');
-  return { success: true, url };
+  return { success: true, url, structureWarning };
 }
 
 export async function updateUniversitySubscriptionAction(payload: any) {

@@ -24,6 +24,8 @@ const lecturerSettingsSchema = z.object({
 });
 
 const universitySettingsSchema = z.object({
+  // Chooses the wording the whole app reads in for this tenant.
+  vocabulary: z.enum(["academic", "organization"]).default("academic"),
   timezone: z.string().optional(),
   gradingScale: z.string().optional(),
   registrationPolicy: z.string().optional(),
@@ -98,7 +100,7 @@ export async function updateUniversitySettingsAction(payload: unknown) {
     updated_at: new Date().toISOString(),
   }, { onConflict: "university_id" });
   if (error) return { error: error.message };
-  revalidatePath("/admin/settings");
+  revalidatePath("/admin/settings", "layout");
   return { success: true };
 }
 

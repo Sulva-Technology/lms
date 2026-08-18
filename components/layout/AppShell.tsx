@@ -4,6 +4,7 @@ import * as React from "react"
 import { Sidebar } from "./Sidebar"
 import { Topbar } from "./Topbar"
 import { MobileNav } from "./MobileNav"
+import type { Vocabulary } from "@/lib/ui/labels"
 import { AuthRole } from "@/types/auth"
 
 export interface AppShellUser {
@@ -13,6 +14,7 @@ export interface AppShellUser {
   role: AuthRole
   avatarUrl?: string | null
   unreadNotifications?: number
+  vocabulary?: Vocabulary
   university?: {
     id: string
     name: string

@@ -13,7 +13,7 @@ import { Avatar } from "@/components/ui/avatar"
 
 export function Sidebar({ user }: { user: AppShellUser }) {
   const pathname = usePathname()
-  const navItems = getNavigationForRole(user.role)
+  const navItems = getNavigationForRole(user.role, user.vocabulary)
   const [collapsed, setCollapsed] = React.useState(false)
 
   const BrandIcon = user.role === "super_admin" ? LayoutTemplate : 

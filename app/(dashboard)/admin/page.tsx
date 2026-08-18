@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/guards";
 import { readOr } from "@/lib/safe-read";
 import { createClient } from "@/lib/supabase/server";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { StructureBootstrapCard } from "@/components/admin/StructureBootstrapCard";
 
 function formatTime(value: string) {
   const date = new Date(value);
@@ -27,12 +28,13 @@ export default async function AdminDashboardPage() {
   const supabase = await createClient();
   const universityId = session.profile.university_id!;
 
-  const [studentCount, lecturerCount, facultyCount, departmentCount, courseCount, recentEvents] = await Promise.all([
+  const [studentCount, lecturerCount, facultyCount, departmentCount, courseCount, semesterCount, recentEvents] = await Promise.all([
     readOr(Promise.resolve(supabase.from("profiles").select("id", { count: "exact", head: true }).eq("university_id", universityId).eq("role", "student").then((result) => result.count || 0)), 0),
     readOr(Promise.resolve(supabase.from("profiles").select("id", { count: "exact", head: true }).eq("university_id", universityId).eq("role", "lecturer").then((result) => result.count || 0)), 0),
     readOr(Promise.resolve(supabase.from("faculties").select("id", { count: "exact", head: true }).eq("university_id", universityId).is("deleted_at", null).then((result) => result.count || 0)), 0),
     readOr(Promise.resolve(supabase.from("departments").select("id", { count: "exact", head: true }).eq("university_id", universityId).is("deleted_at", null).then((result) => result.count || 0)), 0),
     readOr(Promise.resolve(supabase.from("courses").select("id", { count: "exact", head: true }).eq("university_id", universityId).is("deleted_at", null).then((result) => result.count || 0)), 0),
+    readOr(Promise.resolve(supabase.from("semesters").select("id", { count: "exact", head: true }).eq("university_id", universityId).then((result) => result.count || 0)), 0),
     readOr(
       Promise.resolve(supabase
         .from("audit_logs")
@@ -69,6 +71,8 @@ export default async function AdminDashboardPage() {
           <span className="font-medium text-sm">Open Reports</span>
         </Link>
       </div>
+
+      {departmentCount === 0 || semesterCount === 0 ? <StructureBootstrapCard /> : null}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-5">
         {stats.map((stat) => (
