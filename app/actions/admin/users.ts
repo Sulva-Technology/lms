@@ -9,6 +9,7 @@ import { actionError, actionSuccess } from '@/lib/api/response';
 import { revalidatePath } from 'next/cache';
 import { sendUserInvite } from '@/lib/auth/invites';
 import { AuthRole } from '@/types/auth';
+import { getEmailLinkOrigin } from '@/lib/tenant/origin';
 
 const universityAdminInvitableRoles: AuthRole[] = ['student', 'lecturer', 'department_admin', 'admin'];
 
@@ -81,6 +82,9 @@ export async function inviteUserAction(payload: unknown) {
       universityId: targetUniversityId,
       firstName: parsed.firstName || undefined,
       lastName: parsed.lastName || undefined,
+      // Without this the invitation lands on the platform root, where the
+      // person it was sent to has no account and no school.
+      baseUrl: await getEmailLinkOrigin(),
     });
 
     revalidatePath('/admin/users');

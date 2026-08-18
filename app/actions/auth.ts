@@ -9,6 +9,7 @@ import { getTenantContext } from '@/lib/tenant/context';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getAuthErrorMessage } from '@/utils/auth-errors';
+import { getEmailLinkOrigin } from '@/lib/tenant/origin';
 
 export async function loginAction(formData: FormData) {
   try {
@@ -101,10 +102,11 @@ export async function forgotPasswordAction(formData: FormData) {
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
   const supabase = await createClient();
-  
-  // Use origin from request or fallback to env var
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  
+
+  // The reset link has to come back to the school the person is signing in to,
+  // not to the platform's own front door.
+  const appUrl = await getEmailLinkOrigin();
+
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
     redirectTo: `${appUrl}/auth/callback?next=/reset-password`,
   });
