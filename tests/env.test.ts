@@ -30,6 +30,15 @@ describe('root domain', () => {
     expect(env.NEXT_PUBLIC_ROOT_DOMAIN).toBe('localhost:3000');
   });
 
+  it('falls back to the deployment host when only the app URL is set', async () => {
+    stubRequired();
+    vi.stubEnv('NEXT_PUBLIC_ROOT_DOMAIN', '');
+    vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://lms.example.com');
+    vi.resetModules();
+    const { env } = await import('@/lib/env');
+    expect(env.NEXT_PUBLIC_ROOT_DOMAIN).toBe('lms.example.com');
+  });
+
   it('uses the configured root domain without a protocol', async () => {
     stubRequired();
     vi.stubEnv('NEXT_PUBLIC_ROOT_DOMAIN', 'sulva.com');

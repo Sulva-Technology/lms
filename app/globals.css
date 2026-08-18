@@ -89,6 +89,11 @@
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
   }
 
+  /* Film-grain texture. Inline SVG so it needs no network request. */
+  .noise-overlay {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
   /* Custom Scrollbar for sleek interfaces */
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
@@ -138,4 +143,17 @@ body::-webkit-scrollbar-thumb {
 }
 body::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* Motion/react animations are handled by MotionConfig reducedMotion="user".
+   This covers the CSS-driven ones. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

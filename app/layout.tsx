@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import { Inter, Outfit } from 'next/font/google';
+import { MotionProvider } from '@/components/layout/MotionProvider';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -14,7 +15,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} dark`}>
       <body className="font-sans antialiased text-slate-50 selection:bg-blue-500/30" suppressHydrationWarning>
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

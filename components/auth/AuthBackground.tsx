@@ -34,7 +34,7 @@ export function AuthBackground() {
         className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-600/20 blur-[120px]"
       />
       
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay"></div>
+      <div className="absolute inset-0 noise-overlay opacity-[0.03] mix-blend-overlay"></div>
     </div>
   )
 }

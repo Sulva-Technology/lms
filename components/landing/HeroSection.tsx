@@ -6,6 +6,13 @@ import Link from "next/link"
 import { ArrowRight, Play, Sparkles } from "lucide-react"
 
 export function HeroSection() {
+  const scrollToSolutions = React.useCallback(() => {
+    const target = document.getElementById("solutions")
+    if (!target) return
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" })
+  }, [])
+
   return (
     <section className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center text-center">
       <motion.div
@@ -28,10 +35,15 @@ export function HeroSection() {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/onboarding" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-full px-8 py-4 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] active:scale-[0.98] transition-all text-lg flex items-center justify-center gap-2 border border-blue-400/20">
+          <Link href="/onboarding" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-full px-8 py-4 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 text-lg flex items-center justify-center gap-2 border border-blue-400/20">
             Get Started Free <ArrowRight size={20} />
           </Link>
-          <button className="w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-full px-8 py-4 transition-all focus:ring-2 focus:ring-white/20 active:scale-[0.98] text-lg flex items-center justify-center gap-2 backdrop-blur-sm">
+          <button
+            type="button"
+            onClick={scrollToSolutions}
+            aria-label="See how it works"
+            className="w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-full px-8 py-4 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-[0.98] text-lg flex items-center justify-center gap-2 backdrop-blur-sm"
+          >
             <Play size={20} /> See how it works
           </button>
         </div>

@@ -21,7 +21,7 @@ export function LandingBackground() {
         transition={{ duration: 18, repeat: Infinity, ease: 'linear', delay: 5 }}
         className="absolute top-[20%] right-[20%] w-[30%] h-[30%] bg-emerald-600/10 blur-[150px] rounded-full mix-blend-screen" 
       />
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay"></div>
+      <div className="absolute inset-0 noise-overlay opacity-[0.03] mix-blend-overlay"></div>
     </div>
   )
 }

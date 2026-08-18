@@ -24,13 +24,27 @@ function optional(value: string | undefined): string | undefined {
   return trimmed ? trimmed : undefined
 }
 
+// Schools hang off the same host the app is served from, so a deployment that
+// never set a root domain still serves its own landing page instead of treating
+// every request as an unknown school.
+function hostOf(url: string | undefined): string | undefined {
+  if (!url) return undefined
+  try {
+    return new URL(url).host
+  } catch {
+    return undefined
+  }
+}
+
+const appUrl = resolveAppUrl(process.env.NEXT_PUBLIC_APP_URL, process.env.VERCEL_URL)
+
 // Validation will throw if required env vars are missing
 export const env = envSchema.parse({
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   SUPABASE_SERVICE_ROLE_KEY: optional(process.env.SUPABASE_SERVICE_ROLE_KEY),
-  NEXT_PUBLIC_APP_URL: resolveAppUrl(process.env.NEXT_PUBLIC_APP_URL, process.env.VERCEL_URL),
-  NEXT_PUBLIC_ROOT_DOMAIN: optional(process.env.NEXT_PUBLIC_ROOT_DOMAIN),
+  NEXT_PUBLIC_APP_URL: appUrl,
+  NEXT_PUBLIC_ROOT_DOMAIN: optional(process.env.NEXT_PUBLIC_ROOT_DOMAIN) ?? hostOf(appUrl),
   LIVE_CLASS_PROVIDER_WEBHOOK_SECRET: optional(process.env.LIVE_CLASS_PROVIDER_WEBHOOK_SECRET),
   DAILY_API_KEY: optional(process.env.DAILY_API_KEY),
   DAILY_API_URL: optional(process.env.DAILY_API_URL),
