@@ -1,8 +1,8 @@
 -- Seed data for VUI LMS
 
 -- 1. Create a dummy University
-INSERT INTO universities (id, name, domain, logo_url)
-VALUES ('00000000-0000-0000-0000-000000000001', 'VUI Demo University', 'vui.edu', NULL)
+INSERT INTO universities (id, name, subdomain, domain, logo_url)
+VALUES ('00000000-0000-0000-0000-000000000001', 'VUI Demo University', 'vui', 'vui.edu', NULL)
 ON CONFLICT DO NOTHING;
 
 -- 2. Create Users (We'll use auth.users later if needed, but profiles are here)
