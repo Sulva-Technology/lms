@@ -51,7 +51,7 @@ const integrationEnvVars: Array<{ name: string; feature: string; degradation: st
   },
 ];
 
-const optionalEnvVars = ['NEXT_PUBLIC_APP_URL', 'DAILY_API_URL'];
+const optionalEnvVars = ['NEXT_PUBLIC_APP_URL', 'DAILY_API_URL', 'NEXT_PUBLIC_ROOT_DOMAIN'];
 
 const checkEnv = (): void => {
   const missingRequired = requiredEnvVars.filter((name) => !process.env[name]);
