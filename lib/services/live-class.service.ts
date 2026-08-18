@@ -38,6 +38,7 @@ export class LiveClassService {
       is_waiting_room_enabled: payload.isWaitingRoomEnabled,
       join_before_host: payload.joinBeforeHost,
       tracking_rule: payload.trackingRule,
+      attendance_threshold_percent: payload.attendanceThresholdPercent ?? 75,
       provider_session_id: session.sessionId,
       provider_room_name: session.sessionId,
       provider_room_url: session.joinUrl,
@@ -127,5 +128,63 @@ export class LiveClassService {
      }, { onConflict: 'live_class_id,user_id' });
      
      return token;
+  }
+
+  /**
+   * Applies a provider participant event to the participant row.
+   *
+   * Daily identifies the participant by the `user_id` we set when minting the
+   * meeting token, and the room by `room_name`. Only those two fields are relied
+   * on; when the event carries no usable duration the elapsed time since the
+   * recorded join is used instead, so a missing field costs accuracy rather
+   * than the whole record.
+   */
+  async recordParticipantPresence(params: {
+    roomName: string;
+    participantId: string;
+    event: 'joined' | 'left';
+    occurredAt?: string;
+    durationSeconds?: number;
+  }) {
+    const { data: liveClass } = await this.supabase
+      .from('live_classes')
+      .select('id')
+      .or(`provider_session_id.eq.${params.roomName},meeting_id.eq.${params.roomName}`)
+      .maybeSingle();
+
+    if (!liveClass) throw new Error('No live class matches this room');
+
+    const { data: participant } = await this.supabase
+      .from('live_class_participants')
+      .select('id, joined_at, provider_joined_at, total_seconds')
+      .eq('live_class_id', liveClass.id)
+      .eq('user_id', params.participantId)
+      .maybeSingle();
+
+    if (!participant) throw new Error('No participant row matches this event');
+
+    const occurredAt = params.occurredAt ? new Date(params.occurredAt) : new Date();
+
+    if (params.event === 'joined') {
+      await this.supabase
+        .from('live_class_participants')
+        .update({ provider_joined_at: occurredAt.toISOString(), left_at: null })
+        .eq('id', participant.id);
+      return { liveClassId: liveClass.id, totalSeconds: participant.total_seconds ?? 0 };
+    }
+
+    const reference = participant.provider_joined_at || participant.joined_at;
+    const elapsed = reference
+      ? Math.max(0, Math.round((occurredAt.getTime() - new Date(reference).getTime()) / 1000))
+      : 0;
+    const attended = params.durationSeconds !== undefined ? Math.max(0, Math.round(params.durationSeconds)) : elapsed;
+    const totalSeconds = (participant.total_seconds ?? 0) + attended;
+
+    await this.supabase
+      .from('live_class_participants')
+      .update({ left_at: occurredAt.toISOString(), total_seconds: totalSeconds })
+      .eq('id', participant.id);
+
+    return { liveClassId: liveClass.id, totalSeconds };
   }
 }

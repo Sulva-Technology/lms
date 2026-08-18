@@ -4,6 +4,8 @@ export interface SupabaseStub {
   client: any;
   tables: Record<string, Row[]>;
   inserted: Record<string, Row[]>;
+  /** Conflict target passed to upsert(), keyed by table. */
+  upsertConflicts: Record<string, string[]>;
   updated: Record<string, Row[]>;
   deleted: Record<string, Row[]>;
 }
@@ -32,6 +34,7 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
   }
 
   const inserted: Record<string, Row[]> = {};
+  const upsertConflicts: Record<string, string[]> = {};
   const updated: Record<string, Row[]> = {};
   const deleted: Record<string, Row[]> = {};
 
@@ -46,16 +49,29 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
     const equals: Array<[string, any]> = [];
     const memberships: Array<[string, Set<any>]> = [];
     const notNulls: string[] = [];
+    const disjunctions: Array<Array<[string, string]>> = [];
     let sort: { column: string; ascending: boolean } | null = null;
     let take: number | null = null;
     let mode: 'select' | 'insert' | 'update' | 'delete' = 'select';
     let payload: Row | Row[] | null = null;
     let settled: Row[] | null = null;
 
+    // PostgREST filters an embedded resource with a dotted path, e.g.
+    // .eq('attendance_sessions.course_section_id', id). Resolve those against
+    // the nested fixture object rather than a literal key.
+    const value = (row: Row, column: string): any =>
+      column.split('.').reduce<any>((current, segment) => {
+        if (current === null || current === undefined) return undefined;
+        return Array.isArray(current) ? current[0]?.[segment] : current[segment];
+      }, row);
+
     const matches = (row: Row) =>
-      equals.every(([column, value]) => row[column] === value) &&
-      memberships.every(([column, values]) => values.has(row[column])) &&
-      notNulls.every((column) => row[column] !== null && row[column] !== undefined);
+      equals.every(([column, expected]) => value(row, column) === expected) &&
+      memberships.every(([column, values]) => values.has(value(row, column))) &&
+      notNulls.every((column) => value(row, column) !== null && value(row, column) !== undefined) &&
+      disjunctions.every((alternatives) =>
+        alternatives.some(([column, expected]) => String(value(row, column)) === expected),
+      );
 
     const run = (): Row[] => {
       if (settled) return settled;
@@ -113,9 +129,12 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
         payload = value;
         return chain;
       },
-      upsert: (value: Row | Row[]) => {
+      upsert: (value: Row | Row[], options?: { onConflict?: string }) => {
         mode = 'insert';
         payload = value;
+        if (options?.onConflict) {
+          upsertConflicts[table] = options.onConflict.split(',').map((column) => column.trim());
+        }
         return chain;
       },
       update: (value: Row) => {
@@ -133,6 +152,16 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
       },
       in: (column: string, values: any[]) => {
         memberships.push([column, new Set(values)]);
+        return chain;
+      },
+      // PostgREST or() takes a comma separated filter list; only the eq form is
+      // modelled, which is what the application uses.
+      or: (expression: string) => {
+        const alternatives = expression.split(',').map((clause) => {
+          const [column, operator, expected] = clause.split('.');
+          return operator === 'eq' ? ([column, expected] as [string, string]) : null;
+        });
+        disjunctions.push(alternatives.filter(Boolean) as Array<[string, string]>);
         return chain;
       },
       not: (column: string, operator: string) => {
@@ -167,6 +196,7 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
     client: { from: (table: string) => builder(table) },
     tables,
     inserted,
+    upsertConflicts,
     updated,
     deleted,
   };

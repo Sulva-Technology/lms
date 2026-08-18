@@ -47,6 +47,8 @@ export interface LiveClassPayload {
   isWaitingRoomEnabled?: boolean;
   joinBeforeHost?: boolean;
   trackingRule?: 'duration' | 'join';
+  /** Share of the scheduled duration required for "present" under the duration rule. */
+  attendanceThresholdPercent?: number;
 }
 
 export interface LiveClassResponse {

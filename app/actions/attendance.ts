@@ -37,3 +37,15 @@ export async function calculateLiveClassAttendanceAction(liveClassId: string) {
   }
 }
 
+export async function getAttendanceHistoryAction(sessionId: string) {
+  const supabase = await createClient();
+  const session = await requireRole('lecturer');
+
+  const service = new AttendanceService(supabase as any);
+  try {
+      const changes = await service.getSessionHistory(sessionId, session.user!.id);
+      return { success: true, changes };
+  } catch (err: any) {
+      return { error: err.message };
+  }
+}

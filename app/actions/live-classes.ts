@@ -87,6 +87,7 @@ export async function updateLiveClassAction(payload: any) {
             is_waiting_room_enabled: parsed.data.isWaitingRoomEnabled,
             join_before_host: parsed.data.joinBeforeHost,
             tracking_rule: parsed.data.trackingRule,
+            attendance_threshold_percent: parsed.data.attendanceThresholdPercent,
         })
         .eq('id', parsed.data.id)
         .select()

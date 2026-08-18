@@ -31,6 +31,7 @@ export function LiveClassManager({ courses, sessions }: { courses: Course[]; ses
       isWaitingRoomEnabled: formData.get("isWaitingRoomEnabled") === "on",
       joinBeforeHost: formData.get("joinBeforeHost") === "on",
       trackingRule: String(formData.get("trackingRule") || "duration"),
+      attendanceThresholdPercent: Number(formData.get("attendanceThresholdPercent") || 75),
     };
 
     setError("");
@@ -129,7 +130,8 @@ export function LiveClassManager({ courses, sessions }: { courses: Course[]; ses
             <label className="grid gap-2 text-sm font-medium text-slate-300">Start time<input name="startTime" type="datetime-local" required className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /></label>
             <label className="grid gap-2 text-sm font-medium text-slate-300">Duration<input name="durationMinutes" type="number" min={15} max={300} defaultValue={60} required className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /></label>
           </div>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Attendance tracking<select name="trackingRule" className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400"><option value="duration">Duration based</option><option value="join">Join based</option></select></label>
+          <label className="grid gap-2 text-sm font-medium text-slate-300">Attendance tracking<select name="trackingRule" className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400"><option value="duration">Duration based</option><option value="join">Join based</option></select><span className="text-xs font-normal text-slate-500">Duration based marks a student present only once they have attended enough of the class.</span></label>
+          <label className="grid gap-2 text-sm font-medium text-slate-300">Present at (% of class)<input name="attendanceThresholdPercent" type="number" min={1} max={100} defaultValue={75} className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /><span className="text-xs font-normal text-slate-500">Below half of this a student is marked absent, in between they are late.</span></label>
           <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="isRecordingEnabled" type="checkbox" className="h-4 w-4 accent-blue-500" /> Enable recording</label>
           <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="isWaitingRoomEnabled" type="checkbox" className="h-4 w-4 accent-blue-500" /> Enable waiting room</label>
           <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="joinBeforeHost" type="checkbox" className="h-4 w-4 accent-blue-500" /> Allow students to join before host</label>

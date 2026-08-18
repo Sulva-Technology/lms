@@ -11,6 +11,7 @@ export const createLiveClassSchema = z.object({
   isWaitingRoomEnabled: z.boolean().default(false),
   joinBeforeHost: z.boolean().default(false),
   trackingRule: z.enum(['duration', 'join']).default('duration'),
+  attendanceThresholdPercent: z.number().int().min(1).max(100).default(75),
 });
 
 export const updateLiveClassSchema = createLiveClassSchema.partial();

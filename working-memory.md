@@ -15,6 +15,21 @@
 - Integrations: Daily (live classes), Resend (email), Upstash Redis (rate limiting), Supabase Realtime (notifications).
 - Deployment assumptions: Vercel-compatible standalone output.
 
+## Live Classes and Attendance (2026-08-14, verified statically only)
+- `tracking_rule` is now real. `calculateFromLiveClass` reads it: the `join` rule keeps the old behaviour, the `duration` rule grades on time actually attended against `live_classes.attendance_threshold_percent` (default 75) — present at or above the threshold, late at or above half of it, absent below.
+- Presence comes from Daily's `participant.joined` / `participant.left` webhooks, handled in `app/api/webhooks/live-class-provider/route.ts` behind the same signature check as recordings. `LiveClassService.recordParticipantPresence` writes `provider_joined_at`, `left_at` and an accumulated `total_seconds` (migration `033_live_attendance_presence.sql`), so a student who drops and rejoins keeps one row and their time adds up. Events for unknown participants are acknowledged and dropped rather than retried.
+- The webhook only relies on Daily's `room_name` and the `user_id` we set when minting the token; when an event carries no `duration` the elapsed time since the recorded join is used instead.
+- `AttendanceService.getAttendanceRates` computes per-student attendance rate per section, counting `present` and `late` as attended, sorted lowest first. The lecturer attendance page shows a "Below 75% attendance" panel for the selected section.
+- `live_classes` had RLS enabled in `005` and only ever received the catch-all tenant SELECT plus an admin `FOR ALL`. Lecturers could never insert, so `createLiveClassAction` created the Daily room and then failed the database write, orphaning the room. Migration `031_live_class_write_policies.sql` adds lecturer INSERT/UPDATE/DELETE keyed on `is_course_lecturer(course_section_id)`.
+- Daily rooms are created `privacy: "private"`, which Daily only admits with a meeting token. Both room pages embedded the bare `join_url` / `host_url`, and the only token minter (`recordParticipantJoin`) had no caller, so nobody could enter a room and no `live_class_participants` row was ever written. `components/live/LiveClassRoom.tsx` now mints a token through `POST /api/live-classes/[sessionId]/join` and embeds `roomUrl?t=<token>`. Live-class attendance depends entirely on this.
+- Attendance was capped at one register per section per calendar day by `attendance_sessions_section_date_key` plus the `001` constraint `UNIQUE(course_section_id, student_id, record_date)`. Migration `032_attendance_school_register.sql` adds `period`, re-keys sessions on `(course_section_id, date, period)`, and drops the `001` constraint by discovering its generated name.
+- `attendance_records.notes` existed since `001` and was never written. It is now captured per student in the roll call UI.
+- `attendance_record_changes` plus a `SECURITY DEFINER` trigger on `attendance_records` records every status or note change with who made it. It has a SELECT policy only, so the log cannot be rewritten through PostgREST by the people it audits.
+- `markAttendance` now upserts the session on `(course_section_id, date, period)` instead of select-then-insert, which used to race two staff marking the same register into a duplicate key error.
+- Both CSV exports joined rows with `'\n'`, a literal backslash-n, so every export was a single line. Fixed, plus CSV formula-injection guarding, and `generateStudentAttendanceCSV` finally has a caller: `GET /api/exports/attendance/[courseSectionId]`, linked from the attendance page.
+- `npm run verify` passes: 102 tests across 19 files, 102 routes, 50 tables, clean build.
+- **Migrations `031`, `032` and `033` have not been executed against any database.** Docker was not running and the hosted project DNS no longer resolves, so unlike the `001`-`030` set these two were never replayed. Run `npx supabase db reset` before trusting them.
+
 ## Confirmed Facts (2026-08-14 local end-to-end verification)
 - The whole migration set `001`–`030` plus `supabase/seed.sql` was replayed from scratch against a local Supabase stack in Docker (`npx supabase db reset`) and applies cleanly.
 - Migration `020` originally failed on every database: Supabase Storage installs a `storage.protect_delete()` trigger that rejects direct `DELETE` on `storage.objects`. The migration no longer deletes the legacy `vui_*` rows; it drops their policies instead, which closes the leak without a destructive step. The earlier "back up storage before applying 020" warning no longer applies.
@@ -50,6 +65,9 @@
 - Removed the unused `@google/genai` and `firebase-tools` dependencies, which carried 6 of the 10 production audit advisories (hono, fast-uri, ip-address, body-parser). Neither was imported anywhere.
 
 ## Unknowns / Needs Confirmation
+- Whether migrations `031`, `032` and `033` apply cleanly; all three are unexecuted.
+- The exact field names Daily sends on participant events. The handler relies on `room_name` and `user_id` only, and degrades to elapsed time when `duration` is absent, but this has never been exercised against a real webhook delivery.
+- `calculateFromLiveClass` derives the register date from `start_time` in UTC, which lands on the wrong day for classes just after midnight in UTC+1.
 - Whether the deployed Supabase project has migrations `015`–`025` applied. All are written; none were applied by this pass.
 - Whether the leaked Supabase service-role key has been rotated.
 - Whether payment-provider automation is planned beyond platform subscription records (explicitly out of scope on 2026-08-13).

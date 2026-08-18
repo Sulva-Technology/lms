@@ -1,5 +1,6 @@
 import { GenericList } from "@/components/academic/GenericList";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LiveClassRoom } from "@/components/live/LiveClassRoom";
 import { requireRole } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { Video } from "lucide-react";
@@ -21,9 +22,12 @@ export default async function LecturerLiveClassRoomPage({ params }: { params: Pr
         <EmptyState title="Live class unavailable" description="Only the assigned lecturer can host this session." />
       ) : (
         <div className="grid gap-6">
-          <div className="aspect-video rounded-[32px] border border-white/10 bg-slate-950/80 p-6 shadow-2xl">
-            <iframe src={liveClass.host_url || undefined} title={liveClass.topic || "Live class"} className="h-full w-full rounded-[24px] border-0 bg-slate-900" allow="camera; microphone; fullscreen; display-capture" />
-          </div>
+          <LiveClassRoom
+            sessionId={liveClass.id}
+            roomUrl={liveClass.host_url}
+            role="host"
+            topic={liveClass.topic || liveClass.title}
+          />
           <div className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5">
             <h2 className="font-outfit text-lg font-semibold text-white">Participants</h2>
             <p className="mt-2 text-sm text-slate-400">{(liveClass.live_class_participants || []).length} participant records captured for this session.</p>

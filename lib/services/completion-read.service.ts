@@ -44,7 +44,7 @@ export class StudentReadService {
     if (sectionIds.length === 0) return { summary: [], records: [] };
     const { data, error } = await this.supabase
       .from("attendance_records")
-      .select("id,status,record_date,created_at,attendance_sessions(title,date,course_sections(courses(code,title)))")
+      .select("id,status,notes,record_date,created_at,attendance_sessions(title,date,period,course_sections(courses(code,title)))")
       .eq("student_id", studentId)
       .in("course_section_id", sectionIds)
       .order("created_at", { ascending: false });
@@ -57,6 +57,8 @@ export class StudentReadService {
         title: session?.title || "Attendance",
         course: course?.code || course?.title || "Course",
         date: session?.date || record.record_date || record.created_at,
+        period: session?.period ?? 1,
+        notes: record.notes || "",
         status: record.status,
       };
     });
@@ -201,7 +203,7 @@ export class LecturerReadService {
     if (sectionIds.length === 0) return [];
     const { data, error } = await this.supabase
       .from("attendance_sessions")
-      .select("id,title,date,course_sections(courses(code,title)),attendance_records(id,status,student_id)")
+      .select("id,title,date,period,course_sections(courses(code,title)),attendance_records(id,status,notes,student_id)")
       .in("course_section_id", sectionIds)
       .order("date", { ascending: false });
     if (error) throw error;

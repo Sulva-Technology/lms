@@ -3,6 +3,7 @@ import { GenericList } from "@/components/academic/GenericList";
 import { EmptyState } from "@/components/ui/empty-state";
 import { requireRole } from "@/lib/auth/guards";
 import { readOr } from "@/lib/safe-read";
+import { AttendanceService } from "@/lib/services/attendance.service";
 import { LecturerReadService } from "@/lib/services/completion-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { UserCheck } from "lucide-react";
@@ -48,6 +49,11 @@ export default async function LecturerAttendancePage() {
     roster[enrollment.course_section_id].push({ id: enrollment.student_id, name });
   }
 
+  const attendanceRates = await readOr(
+    new AttendanceService(supabase as any).getAttendanceRates(sectionIds),
+    [] as any[],
+  );
+
   const liveClasses = await readOr(
     supabase
       .from("live_classes")
@@ -75,6 +81,7 @@ export default async function LecturerAttendancePage() {
           sections={sections}
           sessions={sessions}
           roster={roster}
+          rates={attendanceRates}
           liveClasses={liveClasses.map((liveClass: any) => ({
             id: liveClass.id,
             topic: liveClass.topic || liveClass.title || "Live class",

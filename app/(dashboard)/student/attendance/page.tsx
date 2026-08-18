@@ -34,7 +34,9 @@ export default async function StudentAttendancePage() {
             { key: "course", header: "Course", cell: (item: any) => item.course },
             { key: "title", header: "Session", cell: (item: any) => <span className="font-medium text-white">{item.title}</span> },
             { key: "date", header: "Date", cell: (item: any) => new Date(item.date).toLocaleDateString() },
+            { key: "period", header: "Period", cell: (item: any) => item.period ?? 1 },
             { key: "status", header: "Status", cell: (item: any) => <span className="capitalize">{item.status}</span> },
+            { key: "notes", header: "Note", cell: (item: any) => item.notes || "—" },
           ]}
         />
       )}
