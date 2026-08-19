@@ -20,7 +20,8 @@
     "db:seed:auth": "tsx scripts/seed-demo-users.ts",
     "db:seed:demo": "tsx scripts/comprehensive-seed.ts",
     "check:writes": "tsx scripts/check-write-paths.ts",
-    "db:seed:superadmin": "tsx scripts/seed-super-admin.ts"
+    "db:seed:superadmin": "tsx scripts/seed-super-admin.ts",
+    "check:drift": "tsx scripts/check-drift.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

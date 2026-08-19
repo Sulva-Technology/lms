@@ -228,3 +228,37 @@ compliance stops chasing someone who has already finished.
 
 Nothing renews automatically. Expiring certificates surface in the compliance
 view and a person assigns the training again.
+
+## Schema drift audit
+
+The migrations describe what the database should contain. Nothing stopped
+someone adding to it directly, and twice that happened on `profiles` — once
+with a policy that read `profiles` from inside a policy on `profiles`, which
+took down every page that lists people with `42P17`.
+
+```bash
+npm run check:drift
+```
+
+Needs `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, and migration
+`042` applied. It reads schema metadata only — names and definitions of
+policies, indexes and constraints, never a row of application data — through a
+function whose EXECUTE is granted to the service role alone.
+
+It reports three things and exits non-zero on any of them:
+
+- **Policies that read the table they guard.** The `42P17` shape, caught
+  wherever it appears rather than only where a migration introduced it.
+- **In the database, declared by no migration.** Something was added by hand.
+  Either write the migration that declares it, or drop it.
+- **Declared by a migration, missing from the database.** Usually a migration
+  that has not been applied. Worth checking against
+  `supabase_migrations.schema_migrations`, since `supabase db push` skips
+  versions already recorded there even when the objects are absent.
+
+Constraints Postgres names itself from inline `CREATE TABLE` clauses are
+ignored, since no migration ever names them. Anything named deliberately is
+compared.
+
+This is not part of `npm run verify`, which must run without a database.
+
