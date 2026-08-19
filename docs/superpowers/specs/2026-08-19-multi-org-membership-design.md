@@ -46,12 +46,21 @@ CREATE TABLE memberships (
     university_id UUID NOT NULL REFERENCES universities(id) ON DELETE CASCADE,
     role          user_role NOT NULL,
     student_id    TEXT,
+    department_id UUID REFERENCES departments(id) ON DELETE SET NULL,
     created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     deleted_at    TIMESTAMPTZ,
     PRIMARY KEY (user_id, university_id),
     UNIQUE (university_id, student_id),
     CHECK (role <> 'super_admin')
+);
+
+CREATE TABLE membership_claims (
+    user_id       UUID NOT NULL,
+    university_id UUID NOT NULL,
+    role          user_role NOT NULL,
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (user_id, university_id)
 );
 
 CREATE TABLE platform_admins (
@@ -67,6 +76,14 @@ CREATE TABLE platform_admins (
   student_id)` with it. A matric number is issued by one school and means
   nothing at another. NULLs stay distinct under Postgres, so members without
   one are unaffected — same semantics as the constraint on `profiles` today.
+- `department_id` is new. `TrainingAssignmentService.assignTeam()` already
+  filters `profiles` by a `department_id` column that has never existed, so
+  "assign this training to a department" fails with `42703` every time it is
+  called. A person's department is a fact about their place in one
+  organisation, so `memberships` is where it belongs, and adding it makes an
+  existing feature work rather than adding a new one. Backfills as NULL —
+  there is no source for it — so `assignTeam` returns an empty list until
+  departments are assigned, instead of erroring.
 - `role <> 'super_admin'` keeps the platform role out of the tenant table, so
   there is one representation of platform administration rather than two.
 
@@ -82,24 +99,47 @@ INSERT INTO platform_admins (user_id)
 SELECT id FROM profiles WHERE role = 'super_admin';
 ```
 
+### Why there is a claims mirror
+
+`membership_claims` holds the `(user_id, university_id, role)` of every *active*
+membership, kept in step by trigger. It exists for one reason: the helper
+functions must read a table whose policy names `auth.uid()` and nothing else.
+
+The alternative fails concretely. `CoreReadService.getAdminUsers()` runs under
+RLS — its callers pass `createClient()`, not the admin client — and backs
+`/admin/users`, `/admin/students` and `/admin/lecturers`. So `profiles` must
+keep a policy that lets one member see another, which in turn requires reading
+the *target's* memberships, which requires `memberships` to carry a policy
+beyond "your own rows". The moment `memberships` has a policy calling
+`is_university_admin()` or `is_member_of()`, and those helpers read
+`memberships`, the policy re-enters itself: `42P17`, the same failure migration
+041 removed.
+
+Pointing the helpers at the mirror breaks the cycle. Reads chain
+`profiles → memberships → membership_claims`, three distinct relations, and the
+chain terminates because nothing reads `membership_claims` except helpers, and
+its policy touches no other table.
+
+This supersedes `profile_claims` entirely, which migration 045 drops.
+
 ### Policies
 
-Each table gets exactly one policy, and it names `auth.uid()` and nothing else:
-
 ```sql
-CREATE POLICY "Users read own memberships" ON memberships
+-- The mirror and the platform table: caller's own rows, nothing else.
+CREATE POLICY "Users read own membership claims" ON membership_claims
 FOR SELECT USING (user_id = auth.uid());
 
 CREATE POLICY "Users read own platform admin row" ON platform_admins
 FOR SELECT USING (user_id = auth.uid());
+
+-- memberships may use the helpers, because they read the mirror.
+CREATE POLICY "Members read organisation memberships" ON memberships
+FOR SELECT USING (is_member_of(university_id));
 ```
 
-No INSERT, UPDATE or DELETE policy exists. The service role is the only writer,
-which is how the application already manages `profiles`. This is the same shape
-as `profile_claims`, for the same reason: a policy on either table that called
-`in_same_tenant()` or `is_university_admin()` would re-enter itself, because
-those helpers read these tables. Administrators list their organisation's
-members through the admin client in a server action, as they do today.
+No INSERT, UPDATE or DELETE policy exists on any of the three. The service role
+is the only writer, which is how the application already manages `profiles`.
+`membership_claims` is written only by the trigger on `memberships`.
 
 ## 2. RLS helpers — same migration
 
@@ -108,15 +148,18 @@ touched**:
 
 ```sql
 is_super_admin()          -- EXISTS (SELECT 1 FROM platform_admins WHERE user_id = auth.uid())
-is_member_of(uni)         -- NEW: EXISTS in memberships, deleted_at IS NULL
-role_in(uni)              -- NEW: memberships.role for (auth.uid(), uni)
+is_member_of(uni)         -- NEW: EXISTS in membership_claims for (auth.uid(), uni)
+role_in(uni)              -- NEW: membership_claims.role for (auth.uid(), uni)
 in_same_tenant(uni)       -- is_super_admin() OR is_member_of(uni)
 is_university_admin(uni)  -- role_in(uni) = 'admin'
 is_staff_in(uni)          -- NEW: role_in(uni) IN (lecturer, department_admin, admin) OR is_super_admin()
 ```
 
-All are `STABLE SECURITY DEFINER SET search_path = public`. None reads
-`profiles`, so none can recurse through a `profiles` policy.
+All are `STABLE SECURITY DEFINER SET search_path = public`, and every one reads
+only `membership_claims` or `platform_admins` — never `profiles`, never
+`memberships`. Each therefore touches only rows the caller can already see
+under those tables' own policies, so none depends on `SECURITY DEFINER`
+actually bypassing RLS, and none can recurse.
 
 Removed once nothing calls them: `current_university_id()`,
 `current_user_role()`, `current_user_is_staff()`, `current_profile_id()`. The
@@ -163,8 +206,12 @@ unchanged, so no object needs moving.
   manage members by joining `memberships` to `profiles`, scoped to the host
   tenant. Removing a person sets `memberships.deleted_at`; it never touches the
   profile, which may belong to other organisations.
-- **`lib/services/*`** — six services read `profiles.university_id`; they take
-  the tenant from the request context instead.
+- **`lib/services/*`** — six services read `profiles.university_id`. Each moves
+  to `memberships`, keeping its current client: `CoreReadService.getAdminUsers`
+  and `ReportService.getUniversityOverview` run under RLS, which the new
+  `memberships` and `profiles` policies support without a service-role
+  escalation. `DiscussionService.replyToDiscussion` reads a role for one user
+  and now needs the tenant it is already passed.
 
 ## 5. Testing
 
@@ -189,9 +236,34 @@ verify` on every change.
    the old helper definitions are replaced in place, so both the old and new
    application code read correct answers.
 2. Deploy the application changes.
-3. Apply `045_drop_profile_tenant_columns.sql`: drop `profiles.university_id`,
-   `profiles.role`, `profiles.student_id` and its unique constraint, then
-   `profile_claims`, its trigger and `sync_profile_claim()`.
+3. Apply `045_drop_profile_tenant_columns.sql`. Two policies on `profiles`
+   name the columns being dropped and must be replaced first
+   (`005_rls_policies.sql:45,47`):
+
+   ```sql
+   DROP POLICY IF EXISTS "Users view profiles in same university" ON profiles;
+   CREATE POLICY "Users view profiles sharing an organisation" ON profiles
+   FOR SELECT USING (
+     EXISTS (SELECT 1 FROM memberships m
+             WHERE m.user_id = profiles.id AND m.deleted_at IS NULL
+               AND is_member_of(m.university_id))
+   );
+
+   DROP POLICY IF EXISTS "Admins manage university profiles" ON profiles;
+   CREATE POLICY "Admins manage organisation profiles" ON profiles
+   FOR ALL USING (
+     is_super_admin() OR EXISTS (
+       SELECT 1 FROM memberships m
+       WHERE m.user_id = profiles.id AND m.deleted_at IS NULL
+         AND is_university_admin(m.university_id))
+   );
+   ```
+
+   Both preserve today's semantics exactly: a member sees everyone in an
+   organisation they belong to, an admin manages everyone in theirs. Then drop
+   `profiles.university_id`, `profiles.role`, `profiles.student_id` and its
+   unique constraint, followed by `profile_claims`, its trigger and
+   `sync_profile_claim()`.
 
 Step 3 is a separate deploy on purpose. Between steps 1 and 2 the database
 answers both models; only after every instance runs the new code is it safe to
