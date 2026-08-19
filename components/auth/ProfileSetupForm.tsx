@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { motion } from "motion/react"
-import { Building, CheckCircle2, GraduationCap, ShieldCheck } from "lucide-react"
+import { Building, CheckCircle2, Eye, EyeOff, GraduationCap, Lock, ShieldCheck } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { completeOnboardingAction } from "@/app/actions/onboarding"
 import { AuthRole } from "@/types/auth"
@@ -29,6 +29,9 @@ export function ProfileSetupForm({
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState(inviteError || "")
+  const [showPassword, setShowPassword] = React.useState(false)
+  const [password, setPassword] = React.useState("")
+  const [confirmPassword, setConfirmPassword] = React.useState("")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -36,6 +39,16 @@ export function ProfileSetupForm({
 
     if (!assignedRole) {
       setError("This invite is missing secure role metadata. Ask an administrator to resend it.")
+      return
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long")
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match")
       return
     }
 
@@ -161,6 +174,49 @@ export function ProfileSetupForm({
             hint="Optional — a link to a photo you already host."
           >
             <TextInput id="avatarUrl" name="avatarUrl" type="url" placeholder="https://..." />
+          </Field>
+
+          <Field
+            label="Create a password"
+            htmlFor="password"
+            hint="At least 8 characters, with an uppercase letter, a lowercase letter and a number."
+          >
+            <div className="relative">
+              <TextInput
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Your new password"
+                icon={<Lock size={17} />}
+                className="pr-11"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-ink-subtle transition-colors hover:text-ink"
+              >
+                {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+              </button>
+            </div>
+          </Field>
+
+          <Field label="Confirm password" htmlFor="confirmPassword">
+            <TextInput
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
+              required
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              placeholder="Repeat the password"
+              icon={<Lock size={17} />}
+            />
           </Field>
 
           <SubmitButton loading={isLoading} disabled={Boolean(inviteError)}>

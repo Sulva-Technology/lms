@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Outfit } from 'next/font/google';
+import { AuthHashBridge } from '@/components/auth/AuthHashBridge';
 import { MotionProvider } from '@/components/layout/MotionProvider';
 import { buildBrandStyle } from '@/lib/branding';
 import { getTenantContext } from '@/lib/tenant/context';
@@ -27,6 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <style id="school-brand" dangerouslySetInnerHTML={{ __html: brandStyle }} />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
+        <AuthHashBridge />
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

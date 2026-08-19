@@ -34,6 +34,16 @@ export async function completeOnboardingAction(formData: FormData) {
     return { error: 'This account is missing university assignment metadata. Ask an administrator to resend the invite.' };
   }
 
+  // An invited account has no password until now, so set it before the profile
+  // exists — otherwise onboarding finishes and the person cannot sign back in.
+  const { error: passwordError } = await supabase.auth.updateUser({
+    password: parsed.data.password,
+  });
+
+  if (passwordError) {
+    return { error: passwordError.message };
+  }
+
   const adminClient = createAdminClient();
 
   const redirectTo = getRoleRedirectPath(finalRole);
