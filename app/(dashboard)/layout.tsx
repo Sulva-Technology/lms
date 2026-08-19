@@ -1,8 +1,13 @@
+import type { Metadata } from 'next';
 import { AppShell, AppShellUser } from '@/components/layout/AppShell';
 import { requireUser } from '@/lib/auth/guards';
 import { toDisplayName } from '@/lib/auth/roles';
 import { createClient } from '@/lib/supabase/server';
 import { getTenantVocabulary } from '@/lib/ui/tenant-vocabulary';
+
+// Everything under the shell is signed-in, school-private data. Nothing here
+// should ever reach a search index, whatever a stray public link says.
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await requireUser();
