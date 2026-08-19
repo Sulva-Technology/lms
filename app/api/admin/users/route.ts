@@ -25,7 +25,7 @@ export async function GET(req: Request) {
     if (query) {
       q = q.or(
         `first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`,
-        { foreignTable: 'profiles' },
+        { referencedTable: 'profiles' },
       );
     }
 
