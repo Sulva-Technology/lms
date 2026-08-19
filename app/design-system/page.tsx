@@ -7,13 +7,13 @@ import Link from 'next/link';
 
 const designSystemUser: AppShellUser = {
   id: 'design-system-preview',
-  name: 'VUI Designer',
-  email: 'design@vui.edu',
+  name: 'Sulva Designer',
+  email: 'design@sulva.edu',
   role: 'admin',
   avatarUrl: null,
   university: {
     id: 'vui-preview',
-    name: 'VUI University',
+    name: 'Sulva University',
     logoUrl: null,
   },
 };
@@ -24,7 +24,7 @@ export default function DesignSystemPage() {
       <div className="max-w-4xl mx-auto space-y-16 pb-20">
         
         <div>
-          <h1 className="font-outfit text-4xl font-semibold mb-4 text-ink">VUI LMS Design System</h1>
+          <h1 className="font-outfit text-4xl font-semibold mb-4 text-ink">Sulva LMS Design System</h1>
           <p className="text-ink-muted text-lg">A premium, glassmorphism-inspired component library and design language for modern learning management systems.</p>
           <div className="flex flex-wrap gap-4 mt-6">
             <Link href="/docs/design-system" className="border border-line bg-surface px-4 py-2 rounded-full text-sm font-medium text-ink hover:text-ink flex items-center gap-2 border border-line"><Sparkles size={16} className="text-primary" /> DESIGN_SYSTEM.md</Link>
@@ -43,7 +43,7 @@ export default function DesignSystemPage() {
             <Link href="/docs/framer-motion-guide" className="border border-line bg-surface px-4 py-2 rounded-full text-sm font-medium text-ink hover:text-ink flex items-center gap-2 border border-line"><Sparkles size={16} className="text-primary" /> FRAMER_MOTION_GUIDE.md</Link>
             <Link href="/docs/tailwind-design-tokens" className="border border-line bg-surface px-4 py-2 rounded-full text-sm font-medium text-ink hover:text-ink flex items-center gap-2 border border-line"><Sparkles size={16} className="text-cyan-200" /> TAILWIND_DESIGN_TOKENS.md</Link>
             <Link href="/docs/app-shell-design" className="border border-line bg-surface px-4 py-2 rounded-full text-sm font-medium text-ink hover:text-ink flex items-center gap-2 border border-line"><Sparkles size={16} className="text-purple-300" /> APP_SHELL_DESIGN.md</Link>
-            <Link href="/docs/vui-lms-master-design-system" className="border border-line bg-surface px-4 py-2 rounded-full text-sm font-medium text-ink hover:text-ink flex items-center gap-2 border border-line"><Sparkles size={16} className="text-yellow-200" /> VUI_LMS_MASTER_DESIGN_SYSTEM.md</Link>
+            <Link href="/docs/sulva-lms-master-design-system" className="border border-line bg-surface px-4 py-2 rounded-full text-sm font-medium text-ink hover:text-ink flex items-center gap-2 border border-line"><Sparkles size={16} className="text-yellow-200" /> SULVA_LMS_MASTER_DESIGN_SYSTEM.md</Link>
           </div>
         </div>
 

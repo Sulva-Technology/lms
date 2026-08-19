@@ -1,11 +1,11 @@
-# VUI LMS: Marketing Landing Page Design Specification
+# Sulva LMS: Marketing Landing Page Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Premium B2B SaaS, Google-inspired Glassmorphism, Academic Trust
 **Target Audience:** University Administrators, Department Heads, Private Institutes
 
-This document outlines the design strategy for the VUI LMS marketing landing page. It is engineered to evoke enterprise-readiness while showcasing a highly modern, consumer-grade user experience (a rarity in the EdTech space).
+This document outlines the design strategy for the Sulva LMS marketing landing page. It is engineered to evoke enterprise-readiness while showcasing a highly modern, consumer-grade user experience (a rarity in the EdTech space).
 
 ---
 
@@ -26,7 +26,7 @@ This document outlines the design strategy for the VUI LMS marketing landing pag
 
 ### 2.1 Navigation Bar (Sticky Top)
 *   **Aesthetic:** `sticky top-0 z-50 bg-slate-950/60 backdrop-blur-xl border-b border-white/5`.
-*   **Left:** VUI Logo (Clean, sleek typography or simple geometric mark).
+*   **Left:** Sulva Logo (Clean, sleek typography or simple geometric mark).
 *   **Center Links:** Platform, Solutions, Resources, Pricing.
 *   **Right:** "Sign In" (Ghost), "Request Demo" (Primary glowing button).
 
@@ -36,7 +36,7 @@ This document outlines the design strategy for the VUI LMS marketing landing pag
     *   *Option 1:* "The Operating System for the Modern University."
     *   *Option 2:* "Finally. A Learning Platform Built for This Decade."
     *   *Option 3:* "Enterprise Power. Consumer Delight."
-*   **Subheadline:** "VUI LMS combines seamless course registration, immersive live classes, and powerful academic administration into one stunning, unified platform."
+*   **Subheadline:** "Sulva LMS combines seamless course registration, immersive live classes, and powerful academic administration into one stunning, unified platform."
 *   **CTAs:** 
     *   Primary: "Book a Guided Demo" (`bg-white text-black hover:bg-slate-200 transition-colors`).
     *   Secondary: "Explore the Platform" (Glass button with `Play` icon).
@@ -68,10 +68,10 @@ These sections alternate Left/Right alignment.
 
 ### 2.6 Enterprise Trust (Security & Integrations)
 *   **Security:** Icons for SSO, Data Encryption, GDPR compliance. Structured as a clean 3-column row.
-*   **Integrations:** Floating glass icons representing generic connections (Google Workspace, Turnitin, Stripe, etc.) orbiting a central VUI logo.
+*   **Integrations:** Floating glass icons representing generic connections (Google Workspace, Turnitin, Stripe, etc.) orbiting a central Sulva logo.
 
 ### 2.7 Testimonials / Case Studies
-*   **Aesthetic:** Large typography, high-contrast quotes. Avatar of a Dean or Provost. "VUI eliminated 90% of our enrollment day IT tickets."
+*   **Aesthetic:** Large typography, high-contrast quotes. Avatar of a Dean or Provost. "Sulva eliminated 90% of our enrollment day IT tickets."
 
 ### 2.8 FAQs & Pricing Placeholder
 *   **FAQs:** Simple, elegant accordions. `bg-transparent border-b border-white/10`.
@@ -118,4 +118,4 @@ app/
      │   └─ MarketingFooter.tsx
 ```
 
-This dynamic layout acts as a premium digital brochure, communicating immediately that VUI LMS is not a legacy clunky portal, but a piece of high-end software worthy of forward-thinking institutions.
+This dynamic layout acts as a premium digital brochure, communicating immediately that Sulva LMS is not a legacy clunky portal, but a piece of high-end software worthy of forward-thinking institutions.

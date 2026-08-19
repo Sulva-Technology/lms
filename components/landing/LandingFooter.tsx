@@ -21,7 +21,7 @@ const COLUMNS = [
     heading: "Resources",
     links: [
       { href: "/design-system", label: "Design system" },
-      { href: "/docs/vui-lms-master-design-system", label: "Documentation" },
+      { href: "/docs/sulva-lms-master-design-system", label: "Documentation" },
       { href: "/docs/component-library", label: "Component library" },
       { href: "/docs/live-class-design", label: "Live class guide" },
     ],
@@ -47,9 +47,9 @@ export function LandingFooter({ brand }: LandingFooterProps) {
       <div className="mx-auto grid max-w-6xl gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <Link href="/" className="inline-flex items-center gap-3">
-            <SchoolBrandMark name={brand?.name ?? "VUI LMS"} logoUrl={brand?.logoUrl} size={32} />
+            <SchoolBrandMark name={brand?.name ?? "Sulva LMS"} logoUrl={brand?.logoUrl} size={32} />
             <span className="font-display text-lg font-semibold tracking-tight text-ink">
-              {brand?.name ?? "VUI LMS"}
+              {brand?.name ?? "Sulva LMS"}
             </span>
           </Link>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-ink-muted">{tagline}</p>
@@ -74,9 +74,9 @@ export function LandingFooter({ brand }: LandingFooterProps) {
 
       <div className="mx-auto mt-16 flex max-w-6xl flex-col items-center justify-between gap-4 border-t border-line pt-8 text-sm text-ink-subtle md:flex-row">
         <p>
-          © {new Date().getFullYear()} {brand ? `${brand.name}.` : "VUI Software Inc."} All rights
+          © {new Date().getFullYear()} {brand ? `${brand.name}.` : "Sulva Software Inc."} All rights
           reserved.
-          {brand ? <span> Powered by VUI LMS.</span> : null}
+          {brand ? <span> Powered by Sulva LMS.</span> : null}
         </p>
         <div className="flex items-center gap-6">
           <Link href="/docs/security-section" className="transition-colors hover:text-ink">

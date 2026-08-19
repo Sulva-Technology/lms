@@ -1,10 +1,10 @@
-# VUI LMS: Course Registration Design Specification
+# Sulva LMS: Course Registration Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Clean Academic Workflow, Google-inspired Clarity, Glassmorphism Stepper
 
-This document details the course registration experience. Historically, university portals make this process confusing and anxiety-inducing. VUI LMS transforms it into a guided, consumer-grade checkout experience: intuitive, visually reassuring, and structurally robust.
+This document details the course registration experience. Historically, university portals make this process confusing and anxiety-inducing. Sulva LMS transforms it into a guided, consumer-grade checkout experience: intuitive, visually reassuring, and structurally robust.
 
 ---
 

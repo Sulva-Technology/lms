@@ -1,10 +1,10 @@
-# VUI LMS: Student Dashboard Design Specification
+# Sulva LMS: Student Dashboard Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Premium Glassmorphism, Material You Softness, Udemy-grade UX.
 
-This document serves as the master blueprint for the VUI LMS Student Dashboard. It provides comprehensive layout structures, component details, interaction guidelines, and Tailwind CSS implementation notes necessary for immediate frontend development.
+This document serves as the master blueprint for the Sulva LMS Student Dashboard. It provides comprehensive layout structures, component details, interaction guidelines, and Tailwind CSS implementation notes necessary for immediate frontend development.
 
 ---
 

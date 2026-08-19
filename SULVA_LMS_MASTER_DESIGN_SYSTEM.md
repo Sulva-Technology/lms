@@ -1,4 +1,4 @@
-# VUI LMS: Master UI/UX Design System & Frontend Architecture
+# Sulva LMS: Master UI/UX Design System & Frontend Architecture
 
 **Version:** 1.0.0
 **Role:** Lead Product Designer & Frontend Architect
@@ -8,7 +8,7 @@
 
 ## 1. Product Design Vision & Principles
 
-**Vision:** To transform the traditionally clunky, anxiety-inducing university portal experience into a premium, consumer-grade software environment. VUI LMS must feel as frictionless as Netflix, as polished as Stripe, and as immersive as a modern video game, while retaining absolute academic rigor and trust.
+**Vision:** To transform the traditionally clunky, anxiety-inducing university portal experience into a premium, consumer-grade software environment. Sulva LMS must feel as frictionless as Netflix, as polished as Stripe, and as immersive as a modern video game, while retaining absolute academic rigor and trust.
 
 **Design Principles:**
 1. **Focus Over Feature Bloat:** Use glassmorphism and depth to hide secondary actions until needed.

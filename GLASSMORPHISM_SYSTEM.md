@@ -1,10 +1,10 @@
-# VUI LMS Glassmorphism Visual Language
+# Sulva LMS Glassmorphism Visual Language
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director
 **Aesthetic:** Modern, Google-inspired, Frosted Glass, Academic Premium
 
-This document defines the exact glassmorphism parameters for VUI LMS. Glassmorphism is used here as a structural tool to communicate elevation, focus, and hierarchy—not merely as decoration. 
+This document defines the exact glassmorphism parameters for Sulva LMS. Glassmorphism is used here as a structural tool to communicate elevation, focus, and hierarchy—not merely as decoration. 
 
 ---
 

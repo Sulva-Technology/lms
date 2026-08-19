@@ -45,7 +45,7 @@ export function Sidebar({ user }: { user: AppShellUser }) {
     window.dispatchEvent(new Event(COLLAPSE_EVENT))
   }
 
-  const brandName = user.university?.name ?? "VUI LMS"
+  const brandName = user.university?.name ?? "Sulva LMS"
 
   return (
     <motion.aside

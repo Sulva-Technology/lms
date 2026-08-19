@@ -22,7 +22,7 @@ export default function OnboardingLayout({ children }: { children: React.ReactNo
     <div className="surface-wash flex min-h-screen flex-col px-5 py-6 sm:px-8 sm:py-8">
       <header className="mx-auto flex w-full max-w-4xl items-center justify-between">
         <Link href="/" className="font-display text-lg font-semibold tracking-tight text-ink">
-          VUI LMS
+          Sulva LMS
         </Link>
 
         {step > 0 ? (

@@ -1,11 +1,11 @@
-# VUI LMS: Course Learning Page Design Specification
+# Sulva LMS: Course Learning Page Design Specification
 
 **Version:** 1.0.0
 **Target Course:** CSC 301 - Software Engineering
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Premium Udemy UX + University Rigor + Glassmorphism
 
-This document specifies the layout, components, and animations for the main course learning page within VUI LMS. It is designed to be immersive, focusing heavily on reducing friction for the student while providing comprehensive tools for the university environment.
+This document specifies the layout, components, and animations for the main course learning page within Sulva LMS. It is designed to be immersive, focusing heavily on reducing friction for the student while providing comprehensive tools for the university environment.
 
 ---
 

@@ -21,8 +21,8 @@ const docs: Record<string, string> = {
   "student-dashboard-design": "STUDENT_DASHBOARD_DESIGN.md",
   "tailwind-design-tokens": "TAILWIND_DESIGN_TOKENS.md",
   "video-player-design": "VIDEO_PLAYER_DESIGN.md",
-  "vui-lms-master-design-system": "VUI_LMS_MASTER_DESIGN_SYSTEM.md",
-  "security-section": "VUI_LMS_MASTER_DESIGN_SYSTEM.md",
+  "sulva-lms-master-design-system": "SULVA_LMS_MASTER_DESIGN_SYSTEM.md",
+  "security-section": "SULVA_LMS_MASTER_DESIGN_SYSTEM.md",
 };
 
 export function generateStaticParams() {
@@ -53,7 +53,7 @@ export default async function DocsPage({ params }: { params: Promise<{ slug: str
                 <FileText size={22} />
               </span>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink-subtle">VUI LMS Documentation</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink-subtle">Sulva LMS Documentation</p>
                 <h1 className="font-outfit text-2xl font-semibold text-ink">{title}</h1>
               </div>
             </div>

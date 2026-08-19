@@ -1,6 +1,6 @@
-# VUI LMS System Instructions & Design Rules
+# Sulva LMS System Instructions & Design Rules
 
-Whenever you are tasked to create, update, or suggest a page, layout, or component for VUI LMS, you MUST adhere strictly to the following aesthetic rules and anti-patterns. 
+Whenever you are tasked to create, update, or suggest a page, layout, or component for Sulva LMS, you MUST adhere strictly to the following aesthetic rules and anti-patterns. 
 
 ## 🚫 STRICTLY AVOID
 - **Legacy/Generic UI:** Old-school university portal UIs, flat boring admin dashboards, generic LMS designs, designs that look like Moodle, or government portals. Do not use generic Bootstrap-style templates.

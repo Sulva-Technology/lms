@@ -1,11 +1,11 @@
-# VUI LMS: Framer Motion Implementation Guide
+# Sulva LMS: Framer Motion Implementation Guide
 
 **Version:** 1.0.0
 **Role:** Senior React Frontend Engineer & Motion Designer
 **Target Framework:** React + `motion/react`
 **Design Philosophy:** Premium, subtle, and fluid motion inspired by Material You and modern SaaS.
 
-This guide provides reusable Framer Motion variants and complete implementation examples for VUI LMS. All animations include reduced-motion fallbacks for accessibility.
+This guide provides reusable Framer Motion variants and complete implementation examples for Sulva LMS. All animations include reduced-motion fallbacks for accessibility.
 
 ---
 
@@ -255,4 +255,4 @@ export function AccessibleCard({ children }) {
 }
 ```
 
-By adhering strictly to these timings and physics profiles, the VUI LMS maintains a unified, ultra-premium feel without distracting from the academic content.
+By adhering strictly to these timings and physics profiles, the Sulva LMS maintains a unified, ultra-premium feel without distracting from the academic content.

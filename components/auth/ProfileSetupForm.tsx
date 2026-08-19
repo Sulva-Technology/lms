@@ -92,7 +92,7 @@ export function ProfileSetupForm({
       label: "Institution",
       value:
         universityName ||
-        (assignedRole === "super_admin" ? "VUI Platform" : "Pending assignment"),
+        (assignedRole === "super_admin" ? "Sulva Platform" : "Pending assignment"),
     },
   ]
 
@@ -167,7 +167,7 @@ export function ProfileSetupForm({
                 id="studentId"
                 name="studentId"
                 type="text"
-                placeholder="e.g. VUI/2026/0042"
+                placeholder="e.g. SULVA/2026/0042"
                 icon={<GraduationCap size={17} />}
               />
             </Field>

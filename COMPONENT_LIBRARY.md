@@ -1,9 +1,9 @@
-# VUI LMS: Reusable Component Library Specification
+# Sulva LMS: Reusable Component Library Specification
 
 **Version:** 1.0.0
 **Aesthetic:** Premium Glassmorphism, Material You Softness, Udemy-quality Learning
 
-This document defines the comprehensive reusable component library for VUI LMS. It serves as the single source of truth for frontend implementation, ensuring consistency across all roles (Student, Lecturer, Admin) and interfaces.
+This document defines the comprehensive reusable component library for Sulva LMS. It serves as the single source of truth for frontend implementation, ensuring consistency across all roles (Student, Lecturer, Admin) and interfaces.
 
 ---
 

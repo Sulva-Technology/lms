@@ -1,11 +1,11 @@
-# VUI LMS: Full App Shell Design Specification
+# Sulva LMS: Full App Shell Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Premium Glassmorphism, Material You, Modern SaaS
 **Scope:** Global layout wrapping all authenticated LMS experiences
 
-This document defines the ubiquitous Application Shell for VUI LMS. It is responsible for routing, global state interactions (search, notifications), role-based access control rendering, and housing the ambient background that gives the platform its signature look.
+This document defines the ubiquitous Application Shell for Sulva LMS. It is responsible for routing, global state interactions (search, notifications), role-based access control rendering, and housing the ambient background that gives the platform its signature look.
 
 ---
 
@@ -30,7 +30,7 @@ This document defines the ubiquitous Application Shell for VUI LMS. It is respon
 
 ### 2.1 The Sidebar (Desktop)
 *   **Aesthetic:** `w-64 bg-slate-900/50 backdrop-blur-3xl border-r border-white/5 flex flex-col transition-all duration-300`.
-*   **Header:** VUI Logo + Context (Current University).
+*   **Header:** Sulva Logo + Context (Current University).
 *   **Nav Items:** Dense, highly readable list. Active items have a `bg-white/10` background and a colored left border corresponding to the user's role.
 *   **Collapse State:** Reduces to `w-20`. Icons only. Tooltips appear on hover.
 

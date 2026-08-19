@@ -1,4 +1,4 @@
-# VUI LMS: Admin Dashboard Design Specification
+# Sulva LMS: Admin Dashboard Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect

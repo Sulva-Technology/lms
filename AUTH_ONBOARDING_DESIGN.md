@@ -1,4 +1,4 @@
-# VUI LMS: Authentication & Onboarding Design Specification
+# Sulva LMS: Authentication & Onboarding Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
@@ -30,7 +30,7 @@ This document outlines the authentication and onboarding experience. As the firs
 ## 2. Authentication Pages
 
 ### 2.1 Login Page
-*   **Header:** VUI Logo + "Welcome Back." Subtext: "Sign in to your university portal."
+*   **Header:** Sulva Logo + "Welcome Back." Subtext: "Sign in to your university portal."
 *   **University Switcher:** A prominent dropdown at the top of the card. e.g., "Currently signing in to: Stanford University". Opens a glass dropdown to switch tenants.
 *   **Fields:** Email/Student ID, Password.
 *   **Inputs:** `bg-slate-900/50 border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 text-white rounded-xl`. Focus states must have a soft outer glow.
@@ -48,7 +48,7 @@ This document outlines the authentication and onboarding experience. As the firs
 
 ### 2.4 Invite Acceptance Flow
 *   **Trigger:** User clicks a magic link in their email.
-*   **Experience:** They skip standard login. The card opens to a "Welcome to VUI LMS, [Name]" screen with a "Set up your account" CTA spanning directly into onboarding.
+*   **Experience:** They skip standard login. The card opens to a "Welcome to Sulva LMS, [Name]" screen with a "Set up your account" CTA spanning directly into onboarding.
 
 ---
 

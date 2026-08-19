@@ -1,10 +1,10 @@
-# VUI LMS: Video Lesson Player Design Specification
+# Sulva LMS: Video Lesson Player Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Dark Immersive, Premium Udemy UX, Glassmorphism Overlays
 
-This document specifies the highly focused, immersive video learning interface for VUI LMS. The goal is a distraction-free environment that retains all necessary academic tools (transcripts, notes, curriculum) accessible via fluid, animated glass panels.
+This document specifies the highly focused, immersive video learning interface for Sulva LMS. The goal is a distraction-free environment that retains all necessary academic tools (transcripts, notes, curriculum) accessible via fluid, animated glass panels.
 
 ---
 

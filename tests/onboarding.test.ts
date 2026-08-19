@@ -8,7 +8,7 @@ describe('onboarding validation', () => {
     const parsed = onboardingSchema.parse({
       firstName: 'Ada',
       lastName: 'Lovelace',
-      studentId: 'VUI/2026/0001',
+      studentId: 'SULVA/2026/0001',
       password: validPassword,
       confirmPassword: validPassword,
       role: 'super_admin',
@@ -18,7 +18,7 @@ describe('onboarding validation', () => {
     expect(parsed).toEqual({
       firstName: 'Ada',
       lastName: 'Lovelace',
-      studentId: 'VUI/2026/0001',
+      studentId: 'SULVA/2026/0001',
       password: validPassword,
       confirmPassword: validPassword,
     });

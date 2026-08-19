@@ -48,9 +48,9 @@ export function LandingNavbar({
     >
       <nav className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <Link href="/" className="flex min-w-0 items-center gap-3">
-          <SchoolBrandMark name={brand?.name ?? "VUI LMS"} logoUrl={brand?.logoUrl} size={36} />
+          <SchoolBrandMark name={brand?.name ?? "Sulva LMS"} logoUrl={brand?.logoUrl} size={36} />
           <span className="truncate font-display text-lg font-semibold tracking-tight text-ink">
-            {brand?.name ?? "VUI LMS"}
+            {brand?.name ?? "Sulva LMS"}
           </span>
         </Link>
 

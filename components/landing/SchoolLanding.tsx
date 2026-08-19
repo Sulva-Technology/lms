@@ -14,7 +14,7 @@ import { SecuritySection } from "./SecuritySection"
 
 /**
  * The front page of a school host. Same shell as the platform page, but every
- * word, mark and colour belongs to the school rather than to VUI LMS.
+ * word, mark and colour belongs to the school rather than to Sulva LMS.
  */
 export function SchoolLanding({ profile, host }: { profile: TenantProfile; host: string }) {
   const labels = labelsFor(profile.vocabulary)

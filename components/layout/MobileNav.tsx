@@ -24,7 +24,7 @@ export function MobileNav({ user, isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname()
   const navItems = getNavigationForRole(user.role, user.vocabulary)
   const tabItems = navItems.slice(0, 4)
-  const brandName = user.university?.name ?? "VUI LMS"
+  const brandName = user.university?.name ?? "Sulva LMS"
 
   // A drawer that leaves the page scrolling behind it feels broken on a phone.
   React.useEffect(() => {

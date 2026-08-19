@@ -1,10 +1,10 @@
 # Working Memory
 
 ## Problem Summary
-- Take the VUI LMS from a read-mostly shell to a fully working multi-tenant platform: students submit work, lecturers grade it, files and video actually move, and infrastructure (rate limiting, email, realtime) is real rather than simulated.
+- Take the Sulva LMS from a read-mostly shell to a fully working multi-tenant platform: students submit work, lecturers grade it, files and video actually move, and infrastructure (rate limiting, email, realtime) is real rather than simulated.
 
 ## Product Goal
-- Users land on production-backed LMS pages with clear actions, useful empty/error states, responsive premium VUI styling, and validated role-scoped mutations instead of placeholder or mock-only screens.
+- Users land on production-backed LMS pages with clear actions, useful empty/error states, responsive premium Sulva styling, and validated role-scoped mutations instead of placeholder or mock-only screens.
 
 ## Stack and Runtime
 - Framework: Next.js App Router 15.5.

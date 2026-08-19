@@ -16,7 +16,7 @@ export interface AuthLayoutProps {
 }
 
 export function AuthLayout({ children, title, subtitle, brand, aside }: AuthLayoutProps) {
-  const name = brand?.name ?? "VUI LMS"
+  const name = brand?.name ?? "Sulva LMS"
 
   return (
     <div className="grid min-h-screen lg:grid-cols-[1.05fr_1fr]">

@@ -1,9 +1,9 @@
-# VUI LMS Design System
+# Sulva LMS Design System
 
 **Version:** 1.0.0
 **Target Stack:** Next.js, React, TypeScript, Tailwind CSS, Framer Motion, Lucide React
 
-VUI LMS is a premium university-focused learning management system. This document outlines the comprehensive design system, combining Udemy-level course learning UX, Google Material You-inspired softness, deep glassmorphism aesthetics, and smooth Framer Motion-style animations.
+Sulva LMS is a premium university-focused learning management system. This document outlines the comprehensive design system, combining Udemy-level course learning UX, Google Material You-inspired softness, deep glassmorphism aesthetics, and smooth Framer Motion-style animations.
 
 ---
 

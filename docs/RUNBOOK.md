@@ -1,4 +1,4 @@
-# VUI LMS Runbook
+# Sulva LMS Runbook
 
 Operational reference for running, deploying, and debugging this application.
 

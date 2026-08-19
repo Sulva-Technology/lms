@@ -174,7 +174,7 @@ export class CoreReadService {
 
       return {
         id: session.id,
-        courseCode: course?.code || 'VUI',
+        courseCode: course?.code || 'SULVA',
         courseTitle: course?.title || 'Live Class',
         topic: session.topic || session.title,
         lecturerName,

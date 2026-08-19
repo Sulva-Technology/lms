@@ -1,10 +1,10 @@
-# VUI LMS Motion Design System
+# Sulva LMS Motion Design System
 
 **Version:** 1.0.0
 **Target Framework:** React + Framer Motion
 **Design Philosophy:** Fluid, Intentional, Premium, and Unobtrusive.
 
-This document outlines the animation standards for VUI LMS. Our motion language combines the physical, tactile feel of Material You with the sleek, high-end polish of modern glassmorphism. Animations must feel natural, guiding the user's eye without ever blocking their workflow.
+This document outlines the animation standards for Sulva LMS. Our motion language combines the physical, tactile feel of Material You with the sleek, high-end polish of modern glassmorphism. Animations must feel natural, guiding the user's eye without ever blocking their workflow.
 
 ---
 

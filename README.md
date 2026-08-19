@@ -1,6 +1,6 @@
-# VUI LMS
+# Sulva LMS
 
-VUI LMS is a production-oriented Next.js App Router learning management system backed by Supabase. It includes role-scoped student, lecturer, admin, and super-admin workflows, server-side validation, Supabase RLS migrations, and a premium glassmorphism UI system.
+Sulva LMS is a production-oriented Next.js App Router learning management system backed by Supabase. It includes role-scoped student, lecturer, admin, and super-admin workflows, server-side validation, Supabase RLS migrations, and a premium glassmorphism UI system.
 
 ## Stack
 

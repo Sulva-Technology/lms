@@ -1,11 +1,11 @@
-# VUI LMS: Lecturer Dashboard Design Specification
+# Sulva LMS: Lecturer Dashboard Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Premium Glassmorphism, Material You Softness, Modern SaaS
 **Accent Colors:** Violet (`violet-500`) / Indigo (`indigo-500`)
 
-This document serves as the master blueprint for the VUI LMS Lecturer Dashboard. It focuses on empowering educators with clear workflows for managing courses, live sessions, assignments, and analytics, reducing administrative friction through intelligent, glassmorphism-inspired UI.
+This document serves as the master blueprint for the Sulva LMS Lecturer Dashboard. It focuses on empowering educators with clear workflows for managing courses, live sessions, assignments, and analytics, reducing administrative friction through intelligent, glassmorphism-inspired UI.
 
 ---
 

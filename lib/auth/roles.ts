@@ -54,7 +54,7 @@ export function normalizeRoleParam(value: unknown): AuthRole | null {
   return null;
 }
 
-export function toDisplayName(firstName?: string | null, lastName?: string | null, fallback = 'VUI User') {
+export function toDisplayName(firstName?: string | null, lastName?: string | null, fallback = 'Sulva User') {
   const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
   return fullName || fallback;
 }

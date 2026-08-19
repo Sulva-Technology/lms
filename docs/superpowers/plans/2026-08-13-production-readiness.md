@@ -1,8 +1,8 @@
-# VUI LMS Production Readiness Implementation Plan
+# Sulva LMS Production Readiness Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Turn the VUI LMS from a read-mostly shell into a fully working multi-tenant learning platform where students actually submit work, lecturers actually grade it, video actually uploads and plays, and files actually move — with real infrastructure behind rate limiting, email, and realtime.
+**Goal:** Turn the Sulva LMS from a read-mostly shell into a fully working multi-tenant learning platform where students actually submit work, lecturers actually grade it, video actually uploads and plays, and files actually move — with real infrastructure behind rate limiting, email, and realtime.
 
 **Architecture:** Next.js 15 App Router. Reads happen in Server Components through `lib/services/*.service.ts` classes. Writes happen through Server Actions in `app/actions/*.ts`, which validate with Zod, authorize with `requireRole`/`requireUser` from `lib/auth/guards.ts`, delegate to a service, and return `{ success, ... }` or `{ error }`. Client interactivity lives in `"use client"` manager components that call those actions inside `useTransition`. Files upload browser-direct to Supabase Storage via short-lived signed upload URLs minted server-side; lesson video bypasses Supabase entirely and goes to Mux via direct upload, with playback through signed Mux playback tokens.
 
@@ -130,7 +130,7 @@ rm -f fix.js fix2.js fix3.js fix4.js gen.js gen_dynamic.js
 
 ```bash
 git add -A
-git commit -m "chore: baseline commit of VUI LMS application"
+git commit -m "chore: baseline commit of Sulva LMS application"
 ```
 
 - [ ] **Step 5: Verify**
@@ -936,7 +936,7 @@ Apply the same pattern at the end of `sendToCourseStudents`, using `students.map
 ```dotenv
 # Transactional email (required in production)
 RESEND_API_KEY=re_your_api_key
-EMAIL_FROM="VUI LMS <no-reply@your-domain.edu>"
+EMAIL_FROM="Sulva LMS <no-reply@your-domain.edu>"
 ```
 
 - [ ] **Step 10: Verify nothing regressed**
@@ -976,7 +976,7 @@ DAILY_API_KEY=<from Daily dashboard → Developers → API keys>
 UPSTASH_REDIS_REST_URL=<from Upstash console → REST API>
 UPSTASH_REDIS_REST_TOKEN=<from Upstash console → REST API>
 RESEND_API_KEY=<from Resend dashboard → API Keys>
-EMAIL_FROM="VUI LMS <no-reply@your-domain.edu>"
+EMAIL_FROM="Sulva LMS <no-reply@your-domain.edu>"
 ```
 
 `LIVE_CLASS_PROVIDER_WEBHOOK_SECRET` already has a value; confirm it is the base64 HMAC secret Daily shows when you register the webhook, not a placeholder.

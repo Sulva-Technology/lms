@@ -1,12 +1,12 @@
-# VUI LMS: Tailwind CSS Design Tokens & Utility Patterns
+# Sulva LMS: Tailwind CSS Design Tokens & Utility Patterns
 
 **Version:** 1.0.0
 **Role:** Senior Frontend UI Engineer
 **Aesthetic:** Google Material You, Premium Glassmorphism, SaaS Learning
 
-This document provides the raw Tailwind CSS utility patterns and custom design tokens for VUI LMS. It acts as the styling dictionary for all components. 
+This document provides the raw Tailwind CSS utility patterns and custom design tokens for Sulva LMS. It acts as the styling dictionary for all components. 
 
-*Note: As VUI LMS uses a dark-first, highly immersive aesthetic, "Dark Mode" is the default structural paradigm, augmented by brilliant lighting and glass effects.*
+*Note: As Sulva LMS uses a dark-first, highly immersive aesthetic, "Dark Mode" is the default structural paradigm, augmented by brilliant lighting and glass effects.*
 
 ---
 

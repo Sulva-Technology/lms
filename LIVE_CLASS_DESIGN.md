@@ -1,10 +1,10 @@
-# VUI LMS: Live Online Class Room Design Specification
+# Sulva LMS: Live Online Class Room Design Specification
 
 **Version:** 1.0.0
 **Role:** Premium UI Art Director & Frontend Architect
 **Aesthetic:** Dark Immersive, Google Meet Clarity, Premium Glassmorphism Overlays
 
-This document specifies the integrated live class environment for VUI LMS. It is a highly focused, distraction-free environment that uses structural glassmorphism to present controls only when necessary, maintaining focus on the educational content.
+This document specifies the integrated live class environment for Sulva LMS. It is a highly focused, distraction-free environment that uses structural glassmorphism to present controls only when necessary, maintaining focus on the educational content.
 
 ---
 
