@@ -14,24 +14,35 @@ import { AppShellUser } from "./AppShell"
 import { LogoutButton } from "./LogoutButton"
 
 const COLLAPSE_KEY = "vui-sidebar-collapsed"
+const COLLAPSE_EVENT = "vui-sidebar-collapse"
+
+// localStorage is an external store, so it is subscribed to rather than copied
+// into state by an effect. The server snapshot is the expanded width, so the
+// server and the first client paint still agree before the stored value applies.
+const subscribeCollapsed = (onChange: () => void) => {
+  window.addEventListener("storage", onChange)
+  window.addEventListener(COLLAPSE_EVENT, onChange)
+  return () => {
+    window.removeEventListener("storage", onChange)
+    window.removeEventListener(COLLAPSE_EVENT, onChange)
+  }
+}
+
+const getCollapsedSnapshot = () => window.localStorage.getItem(COLLAPSE_KEY) === "1"
+const getCollapsedServerSnapshot = () => false
 
 export function Sidebar({ user }: { user: AppShellUser }) {
   const pathname = usePathname()
   const navItems = getNavigationForRole(user.role, user.vocabulary)
-  const [collapsed, setCollapsed] = React.useState(false)
-
-  // Restored after mount rather than rendered from storage, so the server and
-  // the first client paint agree on the width.
-  React.useEffect(() => {
-    setCollapsed(window.localStorage.getItem(COLLAPSE_KEY) === "1")
-  }, [])
+  const collapsed = React.useSyncExternalStore(
+    subscribeCollapsed,
+    getCollapsedSnapshot,
+    getCollapsedServerSnapshot,
+  )
 
   const toggle = () => {
-    setCollapsed((current) => {
-      const next = !current
-      window.localStorage.setItem(COLLAPSE_KEY, next ? "1" : "0")
-      return next
-    })
+    window.localStorage.setItem(COLLAPSE_KEY, collapsed ? "0" : "1")
+    window.dispatchEvent(new Event(COLLAPSE_EVENT))
   }
 
   const brandName = user.university?.name ?? "VUI LMS"
