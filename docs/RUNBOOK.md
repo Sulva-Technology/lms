@@ -161,7 +161,7 @@ the rest of the request.
 1. In Vercel → Project → Domains, add both the apex domain and `*.<root domain>`.
 2. At the DNS provider, add the records Vercel shows: an A/ALIAS record for the
    apex and a `CNAME *` record pointing at `cname.vercel-dns.com`.
-3. Set `NEXT_PUBLIC_ROOT_DOMAIN` (for example `sulva.com`) in Vercel for all
+3. Set `NEXT_PUBLIC_ROOT_DOMAIN` (this deployment uses `lms.sulvatech.com`) in Vercel for all
    environments. Vercel issues the wildcard TLS certificate automatically.
 4. In Supabase → Authentication → URL Configuration, add `https://*.<root domain>/**`
    to the redirect allow list. Invite and password-reset links land on the school's
@@ -181,3 +181,50 @@ its subdomain offline within the 60-second tenant cache TTL.
 Reserved subdomains that can never be assigned: `www, app, api, admin, superadmin,
 mail, smtp, ftp, static, assets, cdn, docs, blog, status, support, dashboard, login,
 auth, dev, staging, test, demo, vercel`.
+
+## Training tenants
+
+A tenant is created as either a school or an organisation running internal
+training. `universities.mode` records which, and it defaults to `academic`, so
+every tenant that existed before this option behaves exactly as it did.
+
+The difference is structural, not cosmetic. `courses.department_id` and
+`course_sections.semester_id` are nullable, so a training tenant owns courses
+directly and schedules cohorts by their own `starts_on` / `ends_on` dates. No
+faculty, department, academic session or term is created for one — earlier
+builds fabricated all four and renamed them in the UI, which made every report
+read as though a law firm had a Faculty of Training.
+
+A section must still be schedulable: it carries either a semester or a start
+date. Both modes are held to that by a CHECK constraint, and the same rule is
+mirrored in `courseSectionSchema` so a mistake is refused with a sentence
+rather than a constraint violation.
+
+Wording follows the mode unless someone overrides it in Admin → Settings. A
+training tenant reads trainer, trainee, programme and cohort; a school reads
+lecturer, student, course and semester. Only navigation and role badges follow
+the vocabulary today — individual page headings still read academically.
+
+### Running required training
+
+1. Create the course, then a cohort with its start date.
+2. Assign it at **Admin → Compliance**, to one person or to a whole team.
+   Assigning also enrols them, so the training opens as soon as they sign in.
+   Leaving the deadline empty is allowed; that training never counts as overdue.
+3. Learners see their deadlines at **My Training**, and are notified when
+   something is assigned.
+4. Set `courses.valid_for_months` for anything that must be repeated. A
+   certificate issued against it expires that many months later, and the
+   verification page reads *expired* rather than *valid*.
+5. **Admin → Compliance** shows the compliance rate, who is overdue, what falls
+   due within a fortnight, and which certificates lapse within thirty days.
+   Renewing is assigning the training again.
+
+Withdrawing an assignment leaves the row in place and stops it counting against
+anyone; there is no way to delete one, the same rule certificates follow.
+
+Issuing a certificate closes any open assignment for that learner and cohort, so
+compliance stops chasing someone who has already finished.
+
+Nothing renews automatically. Expiring certificates surface in the compliance
+view and a person assigns the training again.

@@ -4,6 +4,7 @@ import path from 'node:path';
 import { createSupabaseStub } from './helpers/supabase-stub';
 import { getTenantMode, isTrainingTenant } from '@/lib/tenant/mode';
 import { courseSectionSchema as sectionSchema } from '@/lib/validation/admin';
+import { getTenantVocabulary } from '@/lib/ui/tenant-vocabulary';
 
 describe('getTenantMode', () => {
   it('reads the mode a tenant declared', async () => {
@@ -82,5 +83,34 @@ describe('cohort sections', () => {
     if (!parsed.success) {
       expect(parsed.error.issues[0].message).toBe('The cohort cannot end before it starts.');
     }
+  });
+});
+
+describe('vocabulary follows mode', () => {
+  it('defaults a training tenant to organisation wording', async () => {
+    const { client } = createSupabaseStub({
+      universities: [{ id: 'uni1', mode: 'training' }],
+      university_settings: [],
+    });
+
+    expect(await getTenantVocabulary(client, 'uni1')).toBe('organization');
+  });
+
+  it('leaves a school reading academically', async () => {
+    const { client } = createSupabaseStub({
+      universities: [{ id: 'uni1', mode: 'academic' }],
+      university_settings: [],
+    });
+
+    expect(await getTenantVocabulary(client, 'uni1')).toBe('academic');
+  });
+
+  it('lets an explicit setting override the mode default', async () => {
+    const { client } = createSupabaseStub({
+      universities: [{ id: 'uni1', mode: 'training' }],
+      university_settings: [{ university_id: 'uni1', settings: { vocabulary: 'academic' } }],
+    });
+
+    expect(await getTenantVocabulary(client, 'uni1')).toBe('academic');
   });
 });
