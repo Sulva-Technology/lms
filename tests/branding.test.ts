@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   buildBrandStyle,
   buildPalette,
+  buildRamp,
+  hexToOklch as toOklch,
+  RAMP_SHADES,
   CANVAS,
   contrastRatio,
   DEFAULT_PRIMARY,
@@ -101,6 +104,44 @@ describe('derived palette', () => {
   });
 });
 
+describe('legacy ramp', () => {
+  it('produces every shade as a valid colour', () => {
+    for (const mode of MODES) {
+      for (const hex of SAMPLES) {
+        const ramp = buildRamp(hex, mode);
+        for (const shade of RAMP_SHADES) {
+          expect(ramp[shade]).toMatch(/^#[0-9a-f]{6}$/);
+        }
+      }
+    }
+  });
+
+  it('gets darker as the shade number rises', () => {
+    for (const mode of MODES) {
+      const ramp = buildRamp('#690dab', mode);
+      const lightness = RAMP_SHADES.map((shade) => toOklch(ramp[shade]).l);
+      for (let i = 1; i < lightness.length; i += 1) {
+        expect(lightness[i]).toBeLessThan(lightness[i - 1]);
+      }
+    }
+  });
+
+  it('carries the brand hue through the whole scale', () => {
+    const source = toOklch('#0b6b4f');
+    const ramp = buildRamp('#0b6b4f', 'dark');
+    // The palest and darkest shades hold little chroma, so hue is only
+    // meaningful — and only checked — through the usable middle of the scale.
+    for (const shade of [300, 400, 500, 600, 700] as const) {
+      const delta = Math.abs(((toOklch(ramp[shade]).h - source.h + 540) % 360) - 180);
+      expect(delta).toBeLessThan(4);
+    }
+  });
+
+  it('falls back to the platform brand when a school has picked nothing', () => {
+    expect(buildRamp(null, 'dark')).toEqual(buildRamp('#690dab', 'dark'));
+  });
+});
+
 describe('brand stylesheet', () => {
   it('defines both modes and emits only colour declarations', () => {
     const css = buildBrandStyle('#690dab', '#0b6b4f');
@@ -108,6 +149,8 @@ describe('brand stylesheet', () => {
     expect(css).toContain('[data-theme="dark"]{');
     expect(css).toContain('--brand-primary:');
     expect(css).toContain('--brand-secondary-soft-contrast:');
+    expect(css).toContain('--brand-ramp-500:');
+    expect(css).toContain('--brand-ramp-950:');
     // Nothing but hex values reaches the inline <style>, so a stored value can
     // never close the tag or smuggle a declaration.
     expect(css).not.toMatch(/[<>;]\s*[a-z-]+\s*:\s*(?!#)/i);

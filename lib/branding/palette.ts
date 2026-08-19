@@ -131,3 +131,49 @@ export function buildPalette(
     secondary: accent(secondary, mode),
   };
 }
+
+/**
+ * A full 50..950 ramp derived from one brand colour.
+ *
+ * This exists for the screens still written against Tailwind's literal `blue-*`
+ * scale. Those utilities compile to `var(--color-blue-N)`, so redefining the
+ * ramp inside the legacy shell rebrands several hundred call sites without
+ * touching them — and each one retires naturally when its screen is rebuilt on
+ * the semantic tokens.
+ */
+export const RAMP_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+
+export type RampShade = (typeof RAMP_SHADES)[number];
+
+// Lightness per shade, and how much of the brand's chroma each one keeps. The
+// ends of a ramp are washed out or nearly black, so holding full chroma there
+// produces colours that read as a different hue.
+const RAMP_STEPS: Record<RampShade, { l: number; c: number }> = {
+  50: { l: 0.971, c: 0.14 },
+  100: { l: 0.943, c: 0.24 },
+  200: { l: 0.885, c: 0.44 },
+  300: { l: 0.808, c: 0.64 },
+  400: { l: 0.723, c: 0.85 },
+  500: { l: 0.645, c: 1 },
+  600: { l: 0.565, c: 1 },
+  700: { l: 0.487, c: 0.94 },
+  800: { l: 0.409, c: 0.84 },
+  900: { l: 0.337, c: 0.7 },
+  950: { l: 0.241, c: 0.55 },
+};
+
+export type BrandRamp = Record<RampShade, string>;
+
+export function buildRamp(hex: string | null | undefined, mode: ThemeMode): BrandRamp {
+  const source = normalizeHex(hex || '') || DEFAULT_PRIMARY;
+  // Start from the fitted accent so the ramp sits around a colour that is
+  // already legible in this mode rather than around the raw input.
+  const anchor = hexToOklch(accent(source, mode).base);
+
+  const ramp = {} as BrandRamp;
+  for (const shade of RAMP_SHADES) {
+    const step = RAMP_STEPS[shade];
+    ramp[shade] = oklchToHex({ l: step.l, c: anchor.c * step.c, h: anchor.h });
+  }
+  return ramp;
+}

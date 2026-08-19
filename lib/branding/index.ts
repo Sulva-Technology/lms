@@ -1,6 +1,10 @@
 export { buildBrandStyle } from './css';
 export {
   buildPalette,
+  buildRamp,
+  RAMP_SHADES,
+  type BrandRamp,
+  type RampShade,
   contrastForeground,
   CANVAS,
   DEFAULT_PRIMARY,
