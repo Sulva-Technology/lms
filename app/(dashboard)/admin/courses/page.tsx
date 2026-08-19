@@ -7,6 +7,7 @@ import { readOr } from "@/lib/safe-read";
 import { CoreReadService } from "@/lib/services/core-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { BookMarked } from "lucide-react";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function CoursesPage() {
   const session = await requireRole("department_admin");
@@ -21,7 +22,7 @@ export default async function CoursesPage() {
   try {
     data = await service.getAcademicList(session.profile.university_id!, "courses", true);
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load courses.";
+    errorMessage = describeDataError(error, "Could not load courses.");
   }
 
   if (errorMessage) return <ErrorState message={errorMessage} />;

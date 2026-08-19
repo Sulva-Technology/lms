@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { describeDataError } from "@/lib/errors/data-error";
 
 const quizPayloadSchema = z.object({
   quizId: z.string().uuid().optional(),
@@ -98,7 +99,7 @@ export async function upsertQuizAction(payload: unknown) {
     revalidatePath("/lecturer/quizzes");
     return { success: true, quizId: result.data.id };
   } catch (error) {
-    return { error: error instanceof Error ? error.message : "Could not save quiz." };
+    return { error: describeDataError(error, "Could not save quiz.") };
   }
 }
 
@@ -139,7 +140,7 @@ export async function upsertQuizQuestionAction(payload: unknown) {
     revalidatePath("/lecturer/quizzes");
     return { success: true, questionId };
   } catch (error) {
-    return { error: error instanceof Error ? error.message : "Could not save question." };
+    return { error: describeDataError(error, "Could not save question.") };
   }
 }
 
@@ -164,7 +165,7 @@ export async function deleteQuizQuestionAction(payload: unknown) {
     revalidatePath("/lecturer/quizzes");
     return { success: true };
   } catch (error) {
-    return { error: error instanceof Error ? error.message : "Could not delete question." };
+    return { error: describeDataError(error, "Could not delete question.") };
   }
 }
 
@@ -189,7 +190,7 @@ export async function publishQuizAction(payload: unknown) {
     revalidatePath("/student/quizzes");
     return { success: true };
   } catch (error) {
-    return { error: error instanceof Error ? error.message : "Could not update publish status." };
+    return { error: describeDataError(error, "Could not update publish status.") };
   }
 }
 

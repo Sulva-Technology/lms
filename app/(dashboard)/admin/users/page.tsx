@@ -7,6 +7,7 @@ import { requireRole } from "@/lib/auth/guards";
 import { CoreReadService } from "@/lib/services/core-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { Users } from "lucide-react";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function AdminUsersPage() {
   const session = await requireRole("department_admin");
@@ -17,7 +18,7 @@ export default async function AdminUsersPage() {
   try {
     users = await service.getAdminUsers(session.profile.university_id!);
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load users.";
+    errorMessage = describeDataError(error, "Could not load users.");
   }
 
   if (errorMessage) return <ErrorState message={errorMessage} />;

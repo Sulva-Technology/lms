@@ -3,6 +3,7 @@ import { ErrorState } from "@/components/ui/error-state";
 import { requireRole } from "@/lib/auth/guards";
 import { CoreReadService } from "@/lib/services/core-read.service";
 import { createClient } from "@/lib/supabase/server";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function RegistrationPage() {
   const session = await requireRole("student");
@@ -13,7 +14,7 @@ export default async function RegistrationPage() {
   try {
     data = await service.getStudentRegistration(session.user.id, session.profile.university_id!);
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load registration.";
+    errorMessage = describeDataError(error, "Could not load registration.");
   }
 
   if (errorMessage || !data) return <ErrorState message={errorMessage || "Could not load registration."} />;

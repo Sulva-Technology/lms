@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/guards";
 import { QuizManagementService } from "@/lib/services/quiz-management.service";
 import { createClient } from "@/lib/supabase/server";
 import { Target } from "lucide-react";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function LecturerQuizzesPage() {
   const session = await requireRole("lecturer");
@@ -14,7 +15,7 @@ export default async function LecturerQuizzesPage() {
   try {
     data = await service.getLecturerQuizzes(session.user.id);
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load quiz studio.";
+    errorMessage = describeDataError(error, "Could not load quiz studio.");
   }
 
   if (errorMessage || !data) return <ErrorState message={errorMessage || "Could not load quiz studio."} />;

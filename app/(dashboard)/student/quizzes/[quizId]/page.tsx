@@ -6,6 +6,7 @@ import { QuizManagementService } from "@/lib/services/quiz-management.service";
 import { createClient } from "@/lib/supabase/server";
 import { ArrowLeft, Target } from "lucide-react";
 import Link from "next/link";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function QuizAttemptPage({ params }: { params: Promise<{ quizId: string }> }) {
   const { quizId } = await params;
@@ -17,7 +18,7 @@ export default async function QuizAttemptPage({ params }: { params: Promise<{ qu
   try {
     quiz = await service.getStudentQuiz(quizId, session.user.id);
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load quiz.";
+    errorMessage = describeDataError(error, "Could not load quiz.");
   }
 
   if (errorMessage || !quiz) return <ErrorState message={errorMessage || "Could not load quiz."} />;

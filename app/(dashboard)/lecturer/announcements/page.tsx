@@ -6,6 +6,7 @@ import { readOr } from "@/lib/safe-read";
 import { CoreReadService } from "@/lib/services/core-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { Bell } from "lucide-react";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function LecturerAnnouncementsPage() {
   const session = await requireRole("lecturer");
@@ -25,7 +26,7 @@ export default async function LecturerAnnouncementsPage() {
     if (result.error) throw result.error;
     data = result.data || [];
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load announcements.";
+    errorMessage = describeDataError(error, "Could not load announcements.");
   }
 
   if (errorMessage) return <ErrorState message={errorMessage} />;

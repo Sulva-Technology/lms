@@ -5,6 +5,7 @@ import { requireRole } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { CoreReadService } from "@/lib/services/core-read.service";
 import { BookOpen } from "lucide-react";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function StudentCoursesPage() {
   const session = await requireRole("student");
@@ -15,7 +16,7 @@ export default async function StudentCoursesPage() {
   try {
     courses = await service.getStudentCourses(session.user.id);
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load courses.";
+    errorMessage = describeDataError(error, "Could not load courses.");
   }
 
   if (errorMessage) return <ErrorState message={errorMessage} />;

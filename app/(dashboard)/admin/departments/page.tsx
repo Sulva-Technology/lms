@@ -5,6 +5,7 @@ import { requireRole } from "@/lib/auth/guards";
 import { CoreReadService } from "@/lib/services/core-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { Library } from "lucide-react";
+import { describeDataError } from "@/lib/errors/data-error";
 
 export default async function DepartmentsPage() {
   const session = await requireRole("department_admin");
@@ -17,7 +18,7 @@ export default async function DepartmentsPage() {
     data = await service.getAcademicList(session.profile.university_id!, "departments", true);
     faculties = await service.getAcademicList(session.profile.university_id!, "faculties");
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : "Could not load departments.";
+    errorMessage = describeDataError(error, "Could not load departments.");
   }
 
   if (errorMessage) return <ErrorState message={errorMessage} />;
