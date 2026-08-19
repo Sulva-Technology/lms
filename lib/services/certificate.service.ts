@@ -1,6 +1,8 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { randomUUID } from 'node:crypto';
 
+export type CertificateStatus = 'valid' | 'expired' | 'revoked';
+
 export type Eligibility = {
   studentId: string;
   studentName: string;
@@ -47,7 +49,7 @@ export class CertificateService {
   async evaluate(courseSectionId: string): Promise<Eligibility[]> {
     const { data: section, error: sectionError } = await this.supabase
       .from('course_sections')
-      .select('id, course_id, courses(id, title, code, pass_mark)')
+      .select('id, course_id, courses(id, title, code, pass_mark, valid_for_months)')
       .eq('id', courseSectionId)
       .single();
     if (sectionError) throw sectionError;
@@ -132,6 +134,8 @@ export class CertificateService {
     courseSectionId: string;
     studentId: string;
     issuedBy: string;
+    /** Injectable clock so expiry is testable. */
+    now?: Date;
   }) {
     await this.requireCourseStaff(params.courseSectionId, params.issuedBy);
 
@@ -144,12 +148,31 @@ export class CertificateService {
 
     const { data: section, error: sectionError } = await this.supabase
       .from('course_sections')
-      .select('id, name, course_id, courses(title, code)')
+      .select('id, name, course_id, courses(title, code, valid_for_months)')
       .eq('id', params.courseSectionId)
       .single();
     if (sectionError) throw sectionError;
 
     const course: any = Array.isArray(section.courses) ? section.courses[0] : section.courses;
+
+    // A course with a validity period issues certificates that lapse. Month
+    // arithmetic goes through Date.UTC so the anniversary lands on the same
+    // calendar day rather than drifting by the length of the months crossed.
+    const validForMonths: number | null = course?.valid_for_months ?? null;
+    const issuedAt = params.now ?? new Date();
+    const expiresAt = validForMonths
+      ? new Date(
+          Date.UTC(
+            issuedAt.getUTCFullYear(),
+            issuedAt.getUTCMonth() + validForMonths,
+            issuedAt.getUTCDate(),
+            issuedAt.getUTCHours(),
+            issuedAt.getUTCMinutes(),
+            issuedAt.getUTCSeconds(),
+            issuedAt.getUTCMilliseconds(),
+          ),
+        ).toISOString()
+      : null;
 
     const { data: organisation } = await this.supabase
       .from('universities')
@@ -169,6 +192,7 @@ export class CertificateService {
         lessons_completed: eligibility.lessonsCompleted,
         lessons_total: eligibility.lessonsTotal,
         final_score: eligibility.finalScore,
+        expires_at: expiresAt,
         snapshot: {
           studentName: eligibility.studentName,
           courseTitle: course?.title || 'Course',
@@ -183,6 +207,20 @@ export class CertificateService {
     if (error) {
       if (error.code === '23505') throw new Error('This learner already holds a certificate for this section');
       throw error;
+    }
+
+    // The certificate is the proof the assignment was asking for, so close it.
+    // An assignment left open is a reporting wrinkle; a lost certificate is not,
+    // which is why this never throws.
+    try {
+      await this.supabase
+        .from('training_assignments')
+        .update({ completed_at: new Date().toISOString() })
+        .eq('course_section_id', params.courseSectionId)
+        .eq('student_id', params.studentId)
+        .is('completed_at', null);
+    } catch {
+      // Deliberately ignored.
     }
 
     return data;
@@ -212,18 +250,27 @@ export class CertificateService {
    * verification page passes a service-role client, because the person checking
    * a certificate is a stranger with no account.
    */
-  async verify(serial: string) {
+  async verify(serial: string, now: Date = new Date()) {
     const { data } = await this.supabase
       .from('certificates')
-      .select('serial, issued_at, revoked_at, revoked_reason, lessons_completed, lessons_total, final_score, snapshot')
+      .select('serial, issued_at, expires_at, revoked_at, revoked_reason, lessons_completed, lessons_total, final_score, snapshot')
       .eq('serial', serial.trim().toUpperCase())
       .maybeSingle();
 
-    if (!data) return { found: false as const };
+    if (!data) return { found: false as const, status: 'missing' as const };
+
+    // Revocation outranks expiry: a certificate withdrawn for cause should not
+    // read as though it merely lapsed.
+    const status: CertificateStatus = data.revoked_at
+      ? 'revoked'
+      : data.expires_at && new Date(data.expires_at).getTime() <= now.getTime()
+        ? 'expired'
+        : 'valid';
 
     return {
       found: true as const,
-      valid: !data.revoked_at,
+      status,
+      valid: status === 'valid',
       certificate: data,
     };
   }

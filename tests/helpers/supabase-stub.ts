@@ -50,6 +50,7 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
     const equals: Array<[string, any]> = [];
     const memberships: Array<[string, Set<any>]> = [];
     const notNulls: string[] = [];
+    const nulls: string[] = [];
     const disjunctions: Array<Array<[string, string]>> = [];
     let sort: { column: string; ascending: boolean } | null = null;
     let take: number | null = null;
@@ -72,6 +73,7 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
       equals.every(([column, expected]) => value(row, column) === expected) &&
       memberships.every(([column, values]) => values.has(value(row, column))) &&
       notNulls.every((column) => value(row, column) !== null && value(row, column) !== undefined) &&
+      nulls.every((column) => value(row, column) === null || value(row, column) === undefined) &&
       disjunctions.every((alternatives) =>
         alternatives.some(([column, expected]) => String(value(row, column)) === expected),
       );
@@ -169,6 +171,11 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
           return operator === 'eq' ? ([column, expected] as [string, string]) : null;
         });
         disjunctions.push(alternatives.filter(Boolean) as Array<[string, string]>);
+        return chain;
+      },
+      // PostgREST .is() only ever tests null in this codebase.
+      is: (column: string, value: null) => {
+        if (value === null) nulls.push(column);
         return chain;
       },
       not: (column: string, operator: string) => {

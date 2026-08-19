@@ -25,20 +25,27 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
     );
   }
 
-  const { certificate, valid } = result;
+  const { certificate, status } = result;
   const snapshot = (certificate.snapshot || {}) as Record<string, string>;
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 print:py-0">
       <div
         className={`rounded-[32px] border p-10 text-center print:border-slate-300 ${
-          valid ? "border-emerald-500/30 bg-emerald-500/[0.04]" : "border-red-500/30 bg-red-500/[0.04]"
+          status === 'valid'
+            ? 'border-emerald-500/30 bg-emerald-500/[0.04]'
+            : status === 'expired'
+              ? 'border-amber-500/30 bg-amber-500/[0.04]'
+              : 'border-red-500/30 bg-red-500/[0.04]'
         }`}
       >
-        {valid ? (
+        {status === 'valid' ? (
           <BadgeCheck className="mx-auto h-14 w-14 text-emerald-400" aria-hidden />
         ) : (
-          <ShieldAlert className="mx-auto h-14 w-14 text-red-400" aria-hidden />
+          <ShieldAlert
+            className={`mx-auto h-14 w-14 ${status === 'expired' ? 'text-amber-400' : 'text-red-400'}`}
+            aria-hidden
+          />
         )}
 
         <p className="mt-6 text-xs uppercase tracking-[0.3em] text-ink-muted">
@@ -73,8 +80,12 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
           </div>
         </dl>
 
-        {valid ? (
+        {status === 'valid' ? (
           <p className="mt-8 text-sm font-medium text-emerald-300">This certificate is valid.</p>
+        ) : status === 'expired' ? (
+          <p className="mt-8 text-sm font-medium text-amber-300">
+            This certificate expired on {new Date(certificate.expires_at!).toLocaleDateString()} and needs renewing.
+          </p>
         ) : (
           <p className="mt-8 text-sm font-medium text-red-300">
             This certificate was revoked
