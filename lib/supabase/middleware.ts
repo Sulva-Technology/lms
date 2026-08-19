@@ -1,7 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { AuthRole } from '@/types/auth'
 import { canAccessRolePath, getRequiredRoleForPath, getRoleRedirectPath } from '@/lib/auth/roles'
+import { resolveAccess } from '@/lib/auth/membership-access'
+import type { SupabaseLike } from '@/lib/auth/membership'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { parseTenantHost } from '@/lib/tenant/host'
 import { resolveTenant } from '@/lib/tenant/resolve'
@@ -138,31 +139,20 @@ export const updateSession = async (request: NextRequest) => {
     }
 
     const adminClient = createAdminClient()
-    const { data: profile, error: profileError } = await adminClient
-      .from('profiles')
-      .select('role, university_id')
-      .eq('id', user.id)
-      .maybeSingle()
-
-    if (profileError) {
-      console.error('Middleware profile fetch error:', profileError)
-    }
+    const access = await resolveAccess(adminClient as unknown as SupabaseLike, user.id, tenantId)
 
     // Authenticated invited users without a profile must finish onboarding.
-    if (!profile && !pathname.startsWith('/onboarding') && !pathname.startsWith('/reset-password')) {
+    if (!access.hasProfile && !pathname.startsWith('/onboarding') && !pathname.startsWith('/reset-password')) {
       const url = request.nextUrl.clone()
       url.pathname = '/onboarding/profile'
       url.search = ''
       return NextResponse.redirect(url)
     }
 
-    // A session from another school must not be usable on this school's host.
-    if (
-      profile &&
-      tenantId &&
-      profile.role !== 'super_admin' &&
-      profile.university_id !== tenantId
-    ) {
+    // An account with no standing at this school must not be usable on its
+    // host. Cookies carry no Domain attribute, so signing out here never
+    // touches the person's session at another school.
+    if (access.hasProfile && tenantId && !access.role) {
       await supabase.auth.signOut()
       const url = request.nextUrl.clone()
       url.pathname = '/login'
@@ -171,17 +161,17 @@ export const updateSession = async (request: NextRequest) => {
     }
 
     // Completed users should not re-enter onboarding.
-    if (profile && pathname.startsWith('/onboarding')) {
+    if (access.hasProfile && pathname.startsWith('/onboarding')) {
       const url = request.nextUrl.clone()
-      url.pathname = getRoleRedirectPath(profile.role as AuthRole)
+      url.pathname = getRoleRedirectPath(access.role)
       url.search = ''
       return NextResponse.redirect(url)
     }
 
     const requiredRole = getRequiredRoleForPath(pathname)
-    if (profile && requiredRole && !canAccessRolePath(profile.role as AuthRole, requiredRole)) {
+    if (access.role && requiredRole && !canAccessRolePath(access.role, requiredRole)) {
       const url = request.nextUrl.clone()
-      url.pathname = getRoleRedirectPath(profile.role as AuthRole)
+      url.pathname = getRoleRedirectPath(access.role)
       url.search = ''
       return NextResponse.redirect(url)
     }
