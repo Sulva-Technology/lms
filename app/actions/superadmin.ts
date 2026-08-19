@@ -25,6 +25,10 @@ const platformPlanSchema = z.object({
 const universityStatusSchema = z.object({
   universityId: z.string().uuid(),
   status: z.enum(['active', 'trialing', 'suspended', 'archived']),
+  // What kind of tenant this is. Platform-level by design: migration 034 locked
+  // writes on universities to super admins, and a school admin deciding it is
+  // now a training organisation would reshape its own tenant.
+  mode: z.enum(['academic', 'training']).optional(),
 });
 
 const universitySchema = z.object({
@@ -84,7 +88,13 @@ export async function updateUniversityStatusAction(payload: any) {
   await requireRole('super_admin');
   const parsed = universityStatusSchema.safeParse(payload);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
-  const { error } = await supabase.from('universities').update({ status: parsed.data.status }).eq('id', parsed.data.universityId);
+  const { error } = await supabase
+    .from('universities')
+    .update({
+      status: parsed.data.status,
+      ...(parsed.data.mode ? { mode: parsed.data.mode } : {}),
+    })
+    .eq('id', parsed.data.universityId);
   if (error) return { error: error.message };
   revalidatePath('/superadmin/universities');
   return { success: true };

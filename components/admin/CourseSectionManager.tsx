@@ -23,7 +23,11 @@ function optionById(options: Option[], id: string) {
   return options.find((option) => option.id === id) || null;
 }
 
-export function CourseSectionManager({ courses, semesters, lecturers, sections }: { courses: Option[]; semesters: Option[]; lecturers: Option[]; sections: Row[] }) {
+export function CourseSectionManager({ courses, semesters, lecturers, sections, mode = "academic" }: { courses: Option[]; semesters: Option[]; lecturers: Option[]; sections: Row[]; mode?: "academic" | "training" }) {
+  // A training organisation has no semesters, so a cohort is scheduled by its
+  // own dates. Exactly one of the two reaches the payload, matching the
+  // course_sections_schedulable constraint.
+  const isTraining = mode === "training";
   const [items, setItems] = useState(sections);
   const [drawer, setDrawer] = useState<"section" | "assign" | null>(null);
   const [selected, setSelected] = useState<Row | null>(null);
@@ -34,11 +38,15 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
   function createSection(formData: FormData) {
     const courseId = String(formData.get("courseId") || "");
     const semesterId = String(formData.get("semesterId") || "");
+    const startsOn = String(formData.get("startsOn") || "");
+    const endsOn = String(formData.get("endsOn") || "");
     const payload = {
       courseId,
-      semesterId,
+      semesterId: semesterId || undefined,
       name: String(formData.get("name") || ""),
       capacity: formData.get("capacity") ? Number(formData.get("capacity")) : null,
+      startsOn: startsOn || undefined,
+      endsOn: endsOn || undefined,
     };
     run(async () => upsertCourseSectionAction(payload), (result) => {
       setItems((current) => [{
@@ -160,10 +168,17 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
       <Drawer isOpen={drawer === "section"} onClose={() => setDrawer(null)} title="Add course section" className="max-w-xl">
         <form action={createSection} className="grid gap-4">
           <label className="grid gap-2 text-sm font-medium text-ink-muted">Course<select name="courseId" required className={inputClass}>{courses.map((course) => <option key={course.id} value={course.id}>{course.code} - {course.title}</option>)}</select></label>
-          <label className="grid gap-2 text-sm font-medium text-ink-muted">Semester<select name="semesterId" required className={inputClass}>{semesters.map((semester) => <option key={semester.id} value={semester.id}>{semester.name}</option>)}</select></label>
+          {isTraining ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="grid gap-2 text-sm font-medium text-ink-muted">Starts on<input name="startsOn" type="date" required className={inputClass} /></label>
+              <label className="grid gap-2 text-sm font-medium text-ink-muted">Ends on<input name="endsOn" type="date" className={inputClass} /></label>
+            </div>
+          ) : (
+            <label className="grid gap-2 text-sm font-medium text-ink-muted">Semester<select name="semesterId" required className={inputClass}>{semesters.map((semester) => <option key={semester.id} value={semester.id}>{semester.name}</option>)}</select></label>
+          )}
           <label className="grid gap-2 text-sm font-medium text-ink-muted">Section name<input name="name" required placeholder="Group A / 2026 Cohort" className={inputClass} /></label>
           <label className="grid gap-2 text-sm font-medium text-ink-muted">Capacity<input name="capacity" type="number" min={1} className={inputClass} /></label>
-          <button disabled={pending || courses.length === 0 || semesters.length === 0} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60">
+          <button disabled={pending || courses.length === 0 || (!isTraining && semesters.length === 0)} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60">
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} Save section
           </button>
         </form>

@@ -114,3 +114,42 @@ describe('vocabulary follows mode', () => {
     expect(await getTenantVocabulary(client, 'uni1')).toBe('academic');
   });
 });
+
+describe('activating training mode', () => {
+  const page = fs.readFileSync(
+    path.join(process.cwd(), 'app', '(dashboard)', 'superadmin', 'universities', 'page.tsx'),
+    'utf8',
+  );
+
+  it('lets a platform admin choose the kind of tenant at creation', () => {
+    expect(page).toContain('name="mode"');
+    expect(page).toContain('mode: String(formData.get("mode") || "academic")');
+  });
+
+  it('lets a platform admin change an existing tenant', () => {
+    // Two selects named mode: one on the create form, one per row.
+    expect(page.match(/name="mode"/g)?.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('keeps mode a platform decision rather than a tenant one', () => {
+    // Migration 034 restricts writes on universities to super admins, so a
+    // school admin must not be able to reshape its own tenant.
+    const settings = fs.readFileSync(
+      path.join(process.cwd(), 'app', '(dashboard)', 'admin', 'settings', 'page.tsx'),
+      'utf8',
+    );
+    expect(settings).not.toContain('name="mode"');
+  });
+
+  it('schedules a cohort by dates and a section by term', () => {
+    const manager = fs.readFileSync(
+      path.join(process.cwd(), 'components', 'admin', 'CourseSectionManager.tsx'),
+      'utf8',
+    );
+
+    expect(manager).toContain('const isTraining = mode === "training"');
+    expect(manager).toContain('name="startsOn"');
+    // A training tenant has no semesters, so the guard must not block it.
+    expect(manager).toContain('(!isTraining && semesters.length === 0)');
+  });
+});

@@ -13,6 +13,10 @@ import { redirect } from "next/navigation";
 
 const inputClass = "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary";
 const statusValues = ["active", "trialing", "suspended", "archived"];
+const modeValues = [
+  { value: "academic", label: "School — faculties, semesters, students" },
+  { value: "training", label: "Organisation — teams, cohorts, trainees" },
+];
 
 export default async function SuperadminUniversitiesPage({
   searchParams,
@@ -34,6 +38,7 @@ export default async function SuperadminUniversitiesPage({
       adminEmail: String(formData.get("adminEmail") || ""),
       adminFirstName: String(formData.get("adminFirstName") || ""),
       adminLastName: String(formData.get("adminLastName") || ""),
+      mode: String(formData.get("mode") || "academic"),
     });
     if (result?.error) {
       redirect(`/superadmin/universities?error=${encodeURIComponent(result.error)}`);
@@ -46,6 +51,7 @@ export default async function SuperadminUniversitiesPage({
     await updateUniversityStatusAction({
       universityId: String(formData.get("universityId") || ""),
       status: String(formData.get("status") || "trialing"),
+      mode: String(formData.get("mode") || "academic"),
     });
   }
 
@@ -69,6 +75,9 @@ export default async function SuperadminUniversitiesPage({
         <select name="status" defaultValue="trialing" className={inputClass}>
           {statusValues.map((status) => <option key={status} value={status}>{status}</option>)}
         </select>
+        <select name="mode" defaultValue="academic" className={inputClass}>
+          {modeValues.map((mode) => <option key={mode.value} value={mode.value}>{mode.label}</option>)}
+        </select>
         <p className="self-center text-xs text-ink-muted">
           The school goes live at <span className="text-ink">{`<subdomain>.${rootDomain}`}</span> and the admin receives an invite email.
         </p>
@@ -89,10 +98,13 @@ export default async function SuperadminUniversitiesPage({
             { key: "plan", header: "Plan", cell: (item: any) => item.university_plan_subscriptions?.platform_plans?.name || "Unassigned" },
             { key: "created", header: "Created", cell: (item: any) => new Date(item.created_at).toLocaleDateString() },
             { key: "actions", header: "Update", cell: (item: any) => (
-              <form action={updateStatus} className="flex min-w-[220px] items-center gap-2">
+              <form action={updateStatus} className="flex min-w-[320px] flex-wrap items-center gap-2">
                 <input type="hidden" name="universityId" value={item.id} />
                 <select name="status" defaultValue={item.status} className="rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink outline-none focus:border-primary">
                   {statusValues.map((status) => <option key={status} value={status}>{status}</option>)}
+                </select>
+                <select name="mode" defaultValue={item.mode || "academic"} className="rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink outline-none focus:border-primary">
+                  {modeValues.map((mode) => <option key={mode.value} value={mode.value}>{mode.value}</option>)}
                 </select>
                 <button className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-contrast hover:bg-primary-hover">Save</button>
               </form>

@@ -315,7 +315,7 @@ export class SuperadminService {
   async getUniversities() {
     const { data, error } = await this.supabase
       .from("universities")
-      .select("id,name,subdomain,domain,status,created_at,university_plan_subscriptions(status,platform_plans(name,slug))")
+      .select("id,name,subdomain,domain,status,mode,created_at,university_plan_subscriptions(status,platform_plans(name,slug))")
       .order("created_at", { ascending: false });
     if (error) throw error;
     return data || [];
