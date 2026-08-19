@@ -3,6 +3,9 @@ import { randomUUID } from 'node:crypto';
 
 export type CertificateStatus = 'valid' | 'expired' | 'revoked';
 
+/** What a public lookup can conclude, including that it could not conclude. */
+export type VerificationStatus = CertificateStatus | 'missing' | 'unavailable';
+
 export type Eligibility = {
   studentId: string;
   studentName: string;
@@ -251,11 +254,19 @@ export class CertificateService {
    * a certificate is a stranger with no account.
    */
   async verify(serial: string, now: Date = new Date()) {
-    const { data } = await this.supabase
+    const { data, error } = await this.supabase
       .from('certificates')
       .select('serial, issued_at, expires_at, revoked_at, revoked_reason, lessons_completed, lessons_total, final_score, snapshot')
       .eq('serial', serial.trim().toUpperCase())
       .maybeSingle();
+
+    // A failed lookup is not an unknown serial. Reporting one as the other told
+    // whoever was checking that a real certificate does not exist, and hid a
+    // missing column or a permissions fault behind a polite page.
+    if (error) {
+      console.error('Certificate lookup failed:', error);
+      return { found: false as const, status: 'unavailable' as const, error: error.message };
+    }
 
     if (!data) return { found: false as const, status: 'missing' as const };
 

@@ -13,6 +13,22 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
   const { serial } = await params;
   const result = await new CertificateService(createAdminClient() as any).verify(serial);
 
+  // A lookup that failed is not a certificate that does not exist. Telling a
+  // stranger "no such serial" when the database refused the query is a wrong
+  // answer delivered confidently.
+  if (result.status === "unavailable") {
+    return (
+      <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">
+        <ShieldAlert className="h-12 w-12 text-amber-400" aria-hidden />
+        <h1 className="font-outfit text-2xl font-semibold text-white">This certificate cannot be checked</h1>
+        <p className="text-sm text-slate-400">
+          Something went wrong looking it up, so we cannot say whether it is valid. Try again shortly, and if it
+          keeps happening contact the organisation that issued it.
+        </p>
+      </main>
+    );
+  }
+
   if (!result.found) {
     return (
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">

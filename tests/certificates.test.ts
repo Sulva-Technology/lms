@@ -213,3 +213,46 @@ describe('certificate validity', () => {
     expect(updated.training_assignments?.[0]?.completed_at).toBeTruthy();
   });
 });
+
+describe('certificate verification failures', () => {
+  /** A client whose lookup fails the way a missing column or denied grant does. */
+  const failingClient = (message: string) =>
+    ({
+      from: () => ({
+        select: () => ({
+          eq: () => ({
+            maybeSingle: async () => ({ data: null, error: { message } }),
+          }),
+        }),
+      }),
+    }) as any;
+
+  it('does not report a failed lookup as an unknown serial', async () => {
+    const result = await new CertificateService(failingClient('column "expires_at" does not exist')).verify(
+      'ABCD-EFGH-JKLM',
+    );
+
+    // Saying "no such certificate" here tells the person checking that a real
+    // certificate does not exist, which is a wrong answer, not a cautious one.
+    expect(result.status).toBe('unavailable');
+    expect(result.found).toBe(false);
+  });
+
+  it('still reports a genuinely unknown serial as missing', async () => {
+    const { client } = createSupabaseStub({ certificates: [] });
+
+    const result = await new CertificateService(client).verify('ABCD-EFGH-JKLM');
+
+    expect(result.status).toBe('missing');
+  });
+
+  it('tells the public page apart from the two cases', () => {
+    const page = fs.readFileSync(
+      path.join(process.cwd(), 'app', 'certificates', '[serial]', 'page.tsx'),
+      'utf8',
+    );
+
+    expect(page).toContain('cannot be checked');
+    expect(page).toContain('result.status === "unavailable"');
+  });
+});
