@@ -20,13 +20,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const profile = session.profile;
-    if (!profile?.university_id) {
+    if (!session.universityId) {
       return NextResponse.json({ error: 'No university assigned' }, { status: 403 });
     }
 
     const service = new CourseRegistrationService(supabase as any);
-    const result = await service.submitRegistration(session.user.id, profile.university_id, parsed.data.semesterId, parsed.data.courseSectionIds);
+    const result = await service.submitRegistration(session.user.id, session.universityId, parsed.data.semesterId, parsed.data.courseSectionIds);
 
     return NextResponse.json({ data: result }, { status: 200 });
   } catch (error: any) {

@@ -10,13 +10,12 @@ export async function GET(req: Request) {
     
     if (!session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const profile = session.profile;
-    if (!profile?.university_id || profile.role !== 'admin') {
+    if (!session.universityId || session.role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden. Admin access required.' }, { status: 403 });
     }
 
     const service = new ReportService(supabase as any);
-    const result = await service.getUniversityOverview(profile.university_id);
+    const result = await service.getUniversityOverview(session.universityId);
 
     return NextResponse.json({ data: result }, { status: 200 });
   } catch (error: any) {

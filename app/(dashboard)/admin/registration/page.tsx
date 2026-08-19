@@ -24,7 +24,7 @@ export default async function AdminRegistrationPage() {
   }
 
   try {
-    registrations = await service.getAdminRegistrations(session.profile.university_id!);
+    registrations = await service.getAdminRegistrations(session.universityId!);
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load registrations.");
   }

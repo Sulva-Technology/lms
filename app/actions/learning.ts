@@ -15,7 +15,7 @@ export async function updateLessonProgressAction(payload: { lessonId: string, is
     
     const service = new LearningService(supabase as any);
     try {
-        await service.saveProgress(session.profile!.university_id!, session.user!.id, parsed.data.lessonId, parsed.data.isCompleted);
+        await service.saveProgress(session.universityId!, session.user!.id, parsed.data.lessonId, parsed.data.isCompleted);
         revalidatePath(`/courses`);
         return { success: true };
     } catch (err: any) {
@@ -31,7 +31,7 @@ export async function upsertModuleAction(payload: unknown) {
 
     try {
         const service = new LearningService(supabase as any);
-        const result = await service.upsertModule(session.profile!.university_id!, session.user.id, parsed.data);
+        const result = await service.upsertModule(session.universityId!, session.user.id, parsed.data);
         revalidatePath('/lecturer/courses');
         return { success: true, data: result };
     } catch (err: any) {
@@ -58,7 +58,7 @@ export async function upsertLessonAction(payload: unknown) {
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
     try {
-        const result = await new LearningService(supabase as any).upsertLesson(session.profile!.university_id!, session.user.id, parsed.data);
+        const result = await new LearningService(supabase as any).upsertLesson(session.universityId!, session.user.id, parsed.data);
         revalidatePath('/lecturer/courses');
         return { success: true, data: result };
     } catch (err: any) {
@@ -85,7 +85,7 @@ export async function attachLessonMaterialAction(payload: unknown) {
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
     try {
-        const result = await new LearningService(supabase as any).upsertLessonMaterial(session.profile!.university_id!, session.user.id, parsed.data);
+        const result = await new LearningService(supabase as any).upsertLessonMaterial(session.universityId!, session.user.id, parsed.data);
         revalidatePath('/lecturer/courses');
         return { success: true, data: result };
     } catch (err: any) {
@@ -114,7 +114,7 @@ export async function saveStudentNoteAction(payload: any) {
 
     try {
         await supabase.from('student_notes').insert({
-            university_id: session.profile!.university_id!,
+            university_id: session.universityId!,
             student_id: session.user!.id,
             lesson_id: parsed.data.lessonId,
             content: parsed.data.content,

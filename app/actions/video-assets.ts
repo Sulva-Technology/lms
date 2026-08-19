@@ -19,7 +19,7 @@ export async function attachLessonVideoAction(payload: any) {
     const parsed = attachLessonVideoSchema.safeParse(payload);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    const universityId = session.profile.university_id;
+    const universityId = session.universityId;
     if (!universityId) return { error: 'Your profile is not attached to a university.' };
 
     try {

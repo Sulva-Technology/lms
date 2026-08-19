@@ -110,7 +110,7 @@ export async function updateUniversitySettingsAction(payload: unknown) {
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
   const { error } = await supabase.from("university_settings").upsert({
-    university_id: session.profile.university_id,
+    university_id: session.universityId,
     settings: parsed.data,
     updated_at: new Date().toISOString(),
   }, { onConflict: "university_id" });
@@ -132,7 +132,7 @@ export async function updateSchoolBrandingAction(payload: unknown) {
   const parsed = schoolBrandingSchema.safeParse(payload);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-  const universityId = session.profile.university_id;
+  const universityId = session.universityId;
   if (!universityId) return { error: "Your account is not attached to an institution." };
 
   const adminClient = createAdminClient();

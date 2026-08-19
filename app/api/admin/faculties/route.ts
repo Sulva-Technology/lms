@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
     const { data, error } = await supabase.from('faculties')
       .select('*')
-      .eq('university_id', session.profile.university_id!)
+      .eq('university_id', session.universityId!)
       .order('name', { ascending: true })
       .range(offset, offset + limit - 1);
 

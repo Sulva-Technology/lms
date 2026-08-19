@@ -10,7 +10,7 @@ import { ShieldCheck } from "lucide-react";
 export default async function AdminCompliancePage() {
   const session = await requireRole("department_admin");
   const supabase = await createClient();
-  const universityId = session.profile.university_id!;
+  const universityId = session.universityId!;
 
   const overview = await readOr(new ComplianceService(supabase as any).getOverview(universityId), {
     totals: { active: 0, overdue: 0, dueSoon: 0, completed: 0, expiring: 0, compliantPercent: null },

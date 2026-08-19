@@ -80,7 +80,7 @@ export async function upsertQuizAction(payload: unknown) {
     await assertLecturerOwnsSection(supabase, session.user.id, parsed.data.courseSectionId);
 
     const row = {
-      university_id: session.profile.university_id,
+      university_id: session.universityId,
       course_section_id: parsed.data.courseSectionId,
       title: parsed.data.title,
       description: parsed.data.description || null,
@@ -112,7 +112,7 @@ export async function upsertQuizQuestionAction(payload: unknown) {
   try {
     const quiz = await assertLecturerOwnsQuiz(supabase, session.user.id, parsed.data.quizId);
     const questionRow = {
-      university_id: session.profile.university_id,
+      university_id: session.universityId,
       quiz_id: parsed.data.quizId,
       question_text: parsed.data.questionText,
       question_type: parsed.data.questionType,
@@ -129,7 +129,7 @@ export async function upsertQuizQuestionAction(payload: unknown) {
 
     await supabase.from("quiz_options").delete().eq("question_id", questionId);
     const { error: optionsError } = await supabase.from("quiz_options").insert(parsed.data.options.map((option) => ({
-      university_id: session.profile.university_id,
+      university_id: session.universityId,
       question_id: questionId,
       option_text: option.optionText,
       is_correct: option.isCorrect,

@@ -17,10 +17,10 @@ export async function createProgramAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const data = programMutationSchema.parse(payload);
-    const result = await new ProgramService(supabase as any).createProgram(session.profile!.university_id!, data);
+    const result = await new ProgramService(supabase as any).createProgram(session.universityId!, data);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_PROGRAM_CREATED',
       entityType: 'programs',
@@ -39,10 +39,10 @@ export async function updateProgramAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const data = programMutationSchema.required({ id: true }).parse(payload);
-    const result = await new ProgramService(supabase as any).updateProgram(session.profile!.university_id!, data.id, data);
+    const result = await new ProgramService(supabase as any).updateProgram(session.universityId!, data.id, data);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_PROGRAM_UPDATED',
       entityType: 'programs',
@@ -61,10 +61,10 @@ export async function archiveProgramAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = programIdSchema.parse(payload);
-    const result = await new ProgramService(supabase as any).archiveProgram(session.profile!.university_id!, id);
+    const result = await new ProgramService(supabase as any).archiveProgram(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_PROGRAM_ARCHIVED',
       entityType: 'programs',
@@ -83,10 +83,10 @@ export async function restoreProgramAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = programIdSchema.parse(payload);
-    const result = await new ProgramService(supabase as any).restoreProgram(session.profile!.university_id!, id);
+    const result = await new ProgramService(supabase as any).restoreProgram(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_PROGRAM_UPDATED',
       entityType: 'programs',

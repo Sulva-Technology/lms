@@ -23,7 +23,7 @@ export async function createGradeItemAction(payload: any) {
   
   const service = new GradebookService(supabase as any);
   try {
-      const result = await service.createGradeItem(session.profile!.university_id!, session.user!.id, parsed.data as any);
+      const result = await service.createGradeItem(session.universityId!, session.user!.id, parsed.data as any);
       revalidatePath(`/courses/sections/${parsed.data.courseSectionId}/gradebook`);
       return { success: true, gradeItem: result };
   } catch (err: any) {
@@ -40,7 +40,7 @@ export async function gradeSubmissionAction(payload: any) {
   const service = new GradeService(supabase as any);
   try {
     const result = await service.gradeSubmission(
-      session.profile.university_id!,
+      session.universityId!,
       session.user.id,
       parsed.data.submissionId,
       parsed.data.score,

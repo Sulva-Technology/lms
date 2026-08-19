@@ -22,10 +22,10 @@ export async function createCourseAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const data = courseMutationSchema.parse(payload);
-    const result = await new CourseService(supabase as any).createCourse(session.profile!.university_id!, data);
+    const result = await new CourseService(supabase as any).createCourse(session.universityId!, data);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_COURSE_CREATED',
       entityType: 'courses',
@@ -44,10 +44,10 @@ export async function updateCourseAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const data = courseMutationSchema.required({ id: true }).parse(payload);
-    const result = await new CourseService(supabase as any).updateCourse(session.profile!.university_id!, data.id, data);
+    const result = await new CourseService(supabase as any).updateCourse(session.universityId!, data.id, data);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_COURSE_UPDATED',
       entityType: 'courses',
@@ -66,10 +66,10 @@ export async function archiveCourseAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = courseIdSchema.parse(payload);
-    const result = await new CourseService(supabase as any).archiveCourse(session.profile!.university_id!, id);
+    const result = await new CourseService(supabase as any).archiveCourse(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_COURSE_ARCHIVED',
       entityType: 'courses',
@@ -88,10 +88,10 @@ export async function restoreCourseAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = courseIdSchema.parse(payload);
-    const result = await new CourseService(supabase as any).restoreCourse(session.profile!.university_id!, id);
+    const result = await new CourseService(supabase as any).restoreCourse(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_COURSE_UPDATED',
       entityType: 'courses',
@@ -112,7 +112,7 @@ export async function upsertCourseSectionAction(payload: unknown) {
     const session = await requireRole('department_admin');
     const data = sectionSchema.parse(payload);
     const row = {
-      university_id: session.profile!.university_id!,
+      university_id: session.universityId!,
       course_id: data.courseId,
       semester_id: data.semesterId ?? null,
       name: data.name,
@@ -123,13 +123,13 @@ export async function upsertCourseSectionAction(payload: unknown) {
     };
 
     const query = data.id
-      ? supabase.from('course_sections').update(row).eq('id', data.id).eq('university_id', session.profile!.university_id!)
+      ? supabase.from('course_sections').update(row).eq('id', data.id).eq('university_id', session.universityId!)
       : supabase.from('course_sections').insert(row);
     const { data: result, error } = await query.select().single();
     if (error) throw error;
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: data.id ? 'ADMIN_COURSE_UPDATED' : 'ADMIN_COURSE_CREATED',
       entityType: 'course_sections',
@@ -152,7 +152,7 @@ export async function archiveCourseSectionAction(payload: unknown) {
       .from('course_sections')
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', id)
-      .eq('university_id', session.profile!.university_id!)
+      .eq('university_id', session.universityId!)
       .select()
       .single();
     if (error) throw error;
@@ -172,7 +172,7 @@ export async function assignLecturerToSectionAction(payload: unknown) {
     const { data: result, error } = await supabase
       .from('course_lecturers')
       .upsert({
-        university_id: session.profile!.university_id!,
+        university_id: session.universityId!,
         course_section_id: data.courseSectionId,
         lecturer_id: data.lecturerId,
         is_primary: data.isPrimary,

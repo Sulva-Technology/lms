@@ -11,14 +11,13 @@ export async function GET(req: Request, { params }: { params: Promise<{ courseId
     
     if (!session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const profile = session.profile;
     
     const service = new GradebookService(supabase as any);
     
-    if (profile?.role === 'student') {
+    if (session.role === 'student') {
         const result = await service.getStudentGradeSummary(session.user.id, courseId);
         return NextResponse.json({ data: result }, { status: 200 });
-    } else if (profile?.role === 'lecturer' || profile?.role === 'admin') {
+    } else if (session.role === 'lecturer' || session.role === 'admin') {
         const result = await service.getCourseGrades(courseId, session.user.id);
         return NextResponse.json({ data: result }, { status: 200 });
     }

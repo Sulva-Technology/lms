@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     const { data, error } = await supabase.from('notifications')
       .select('*')
       .eq('user_id', session.user.id)
-      .eq('university_id', session.profile.university_id!)
+      .eq('university_id', session.universityId!)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 

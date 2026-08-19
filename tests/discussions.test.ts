@@ -7,7 +7,11 @@ function stub(authorRole: string) {
   return createSupabaseStub({
     discussions: [{ id: 'd1', university_id: 'uni1', course_section_id: 'sec1', is_answered: false }],
     discussion_replies: [],
-    profiles: [{ id: 'author1', role: authorRole }],
+    profiles: [{ id: 'author1' }],
+    // The role that decides endorsement is the one held at this organisation.
+    memberships: [
+      { user_id: 'author1', university_id: 'uni1', role: authorRole, deleted_at: null },
+    ],
   });
 }
 

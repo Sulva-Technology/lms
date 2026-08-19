@@ -18,13 +18,12 @@ export async function POST(req: Request) {
     
     if (!session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const profile = session.profile;
-    if (!profile?.university_id || profile.role !== 'lecturer') {
+    if (!session.universityId || session.role !== 'lecturer') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const service = new AssignmentService(supabase as any);
-    const result = await service.createAssignment(profile.university_id, session.user.id, parsed.data as any);
+    const result = await service.createAssignment(session.universityId, session.user.id, parsed.data as any);
 
     return NextResponse.json({ data: result }, { status: 201 });
   } catch (error: any) {

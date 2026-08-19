@@ -7,6 +7,7 @@ export const EMPTY_SESSION: SessionData = {
   membership: null,
   isPlatformAdmin: false,
   role: null,
+  universityId: null,
 };
 
 /**
@@ -46,5 +47,6 @@ export async function buildSession(
     membership,
     isPlatformAdmin: platformAdmin,
     role: effectiveRole(membership, platformAdmin),
+    universityId: membership?.universityId ?? (platformAdmin ? universityId : null),
   };
 }

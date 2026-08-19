@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   try {
     const supabase = await createClient();
     const session = await requireRole('admin');
-    const { data, error } = await supabase.from('universities').select('*').eq('id', session.profile.university_id!).single();
+    const { data, error } = await supabase.from('universities').select('*').eq('id', session.universityId!).single();
     if (error) throw error;
     return apiResponse(data);
   } catch (error) {

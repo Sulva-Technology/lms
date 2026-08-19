@@ -16,7 +16,7 @@ export default async function StudentsPage() {
   let errorMessage: string | null = null;
 
   try {
-    students = await service.getAdminUsers(session.profile.university_id!, "student");
+    students = await service.getAdminUsers(session.universityId!, "student");
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load students.");
   }
@@ -25,7 +25,7 @@ export default async function StudentsPage() {
 
   return (
     <GenericList title="Students" description="Invite and manage student accounts." icon={Users}>
-      <InviteUserForm defaultRole="student" allowedRoles={["student"]} universityId={session.profile.university_id} />
+      <InviteUserForm defaultRole="student" allowedRoles={["student"]} universityId={session.universityId} />
       {students.length === 0 ? (
         <EmptyState title="No students" description="Student accounts appear here after invite acceptance and onboarding." />
       ) : (

@@ -23,7 +23,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ discuss
     
     const service = new DiscussionService(supabase as any);
     const result = await service.replyToDiscussion(
-      session.profile.university_id!,
+      session.universityId!,
       session.user.id,
       discussionId,
       parsed.body,

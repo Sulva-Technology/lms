@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     if (parsed.notificationIds && parsed.notificationIds.length > 0) {
       await Promise.all(parsed.notificationIds.map(id => service.markAsRead(id, session.user.id)));
     } else {
-      await service.markAllAsRead(session.profile.university_id!, session.user.id);
+      await service.markAllAsRead(session.universityId!, session.user.id);
     }
 
     return apiResponse({ success: true });

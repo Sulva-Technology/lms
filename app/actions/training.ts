@@ -50,7 +50,7 @@ export async function assignTrainingAction(payload: unknown) {
   try {
     const supabase = await createClient();
     const session = await requireRole('lecturer');
-    const universityId = session.profile!.university_id!;
+    const universityId = session.universityId!;
 
     const assignment = await new TrainingAssignmentService(supabase as any).assign({
       universityId,
@@ -77,7 +77,7 @@ export async function assignTeamTrainingAction(payload: unknown) {
   try {
     const supabase = await createClient();
     const session = await requireRole('lecturer');
-    const universityId = session.profile!.university_id!;
+    const universityId = session.universityId!;
 
     const assignments = await new TrainingAssignmentService(supabase as any).assignTeam({
       universityId,

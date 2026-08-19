@@ -22,7 +22,7 @@ export async function gradeSubmissionAction(submissionId: string, payload: any) 
 
     try {
         result = await service.gradeSubmission(
-            session.profile.university_id!,
+            session.universityId!,
             session.user.id,
             submissionId,
             parsed.data.score,
@@ -42,7 +42,7 @@ export async function gradeSubmissionAction(submissionId: string, payload: any) 
             const notifications = new NotificationService(createAdminClient() as any);
 
             await notifications.createNotification({
-                universityId: session.profile.university_id!,
+                universityId: session.universityId!,
                 userId: result.student_id,
                 title: 'Your assignment has been graded',
                 message: `You scored ${parsed.data.score} out of ${result.total_points ?? parsed.data.score}.`,

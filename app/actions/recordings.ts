@@ -8,14 +8,14 @@ export async function toggleRecordingPublishAction(recordingId: string, isPublis
     const supabase = await createClient();
     const session = await requireUser();
 
-    if (session.profile?.role !== 'lecturer' && session.profile?.role !== 'admin') {
+    if (session.role !== 'lecturer' && session.role !== 'admin') {
         return { error: 'Unauthorized' };
     }
     
     const service = new RecordingService(supabase as any);
     
     try {
-        await service.togglePublish(session.user!.id, session.profile.university_id!, recordingId, isPublished);
+        await service.togglePublish(session.user!.id, session.universityId!, recordingId, isPublished);
         return { success: true };
     } catch (err: any) {
         return { error: err.message };

@@ -9,7 +9,7 @@ import { HardDrive } from "lucide-react";
 
 export default async function AdminStoragePage() {
   const session = await requireRole("department_admin");
-  const files = await readOr(new AdminReadService((await createClient()) as any).getStorage(session.profile.university_id!), []);
+  const files = await readOr(new AdminReadService((await createClient()) as any).getStorage(session.universityId!), []);
 
   return (
     <GenericList title="Storage" description="University files and storage usage." icon={HardDrive}>

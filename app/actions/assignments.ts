@@ -22,7 +22,7 @@ export async function createAssignmentAction(payload: any) {
     
     const service = new AssignmentService(supabase as any);
     try {
-        const result = await service.createAssignment(session.profile!.university_id!, session.user!.id, parsed.data as any);
+        const result = await service.createAssignment(session.universityId!, session.user!.id, parsed.data as any);
         revalidatePath(`/courses/${parsed.data.courseSectionId}`);
         return { success: true, assignment: result };
     } catch (err: any) {
@@ -36,7 +36,7 @@ export async function toggleAssignmentPublishAction(assignmentId: string, isPubl
 
     const service = new AssignmentService(supabase as any);
     try {
-        await service.togglePublish(session.profile!.university_id!, session.user!.id, assignmentId, isPublished);
+        await service.togglePublish(session.universityId!, session.user!.id, assignmentId, isPublished);
         revalidatePath(`/assignments`);
         return { success: true };
     } catch (err: any) {
@@ -53,7 +53,7 @@ export async function updateAssignmentAction(payload: any) {
     const service = new AssignmentService(supabase as any);
     try {
         const { id, ...data } = parsed.data;
-        const result = await service.updateAssignment(session.profile!.university_id!, session.user.id, id, data as any);
+        const result = await service.updateAssignment(session.universityId!, session.user.id, id, data as any);
         revalidatePath('/lecturer/assignments');
         return { success: true, assignment: result };
     } catch (err: any) {
@@ -66,7 +66,7 @@ export async function archiveAssignmentAction(payload: { id: string }) {
     const session = await requireRole('lecturer');
 
     try {
-        const result = await new AssignmentService(supabase as any).archiveAssignment(session.profile!.university_id!, session.user.id, payload.id);
+        const result = await new AssignmentService(supabase as any).archiveAssignment(session.universityId!, session.user.id, payload.id);
         revalidatePath('/lecturer/assignments');
         return { success: true, assignment: result };
     } catch (err: any) {

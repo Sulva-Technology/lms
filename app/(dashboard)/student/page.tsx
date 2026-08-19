@@ -34,9 +34,9 @@ export default async function StudentDashboardPage() {
   const sectionIds = await resolveDashboardValue(service.getStudentSectionIds(session.user.id), [])
   const [courses, assignments, announcements, liveSessions, stats] = await Promise.all([
     resolveDashboardValue(service.getStudentCourses(session.user.id), []),
-    resolveDashboardValue(service.getStudentAssignments(session.profile.university_id!, sectionIds), []),
-    resolveDashboardValue(service.getAnnouncements(session.profile.university_id!, sectionIds), []),
-    resolveDashboardValue(service.getLiveClasses(session.profile.university_id!, sectionIds), []),
+    resolveDashboardValue(service.getStudentAssignments(session.universityId!, sectionIds), []),
+    resolveDashboardValue(service.getAnnouncements(session.universityId!, sectionIds), []),
+    resolveDashboardValue(service.getLiveClasses(session.universityId!, sectionIds), []),
     resolveDashboardValue(service.getStudentStats(session.user.id, sectionIds), defaultStudentStats),
   ])
 

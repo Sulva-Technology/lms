@@ -10,13 +10,13 @@ import { SettingsIcon } from "lucide-react";
 export default async function AdminSettingsPage() {
   const session = await requireRole("department_admin");
   const supabase = await createClient();
-  const settings = await readOr(new AdminReadService(supabase as any).getSettings(session.profile.university_id!), null);
+  const settings = await readOr(new AdminReadService(supabase as any).getSettings(session.universityId!), null);
   const values = settings?.settings || {};
 
   const { data: school } = await supabase
     .from("universities")
     .select("name, primary_color, secondary_color")
-    .eq("id", session.profile.university_id!)
+    .eq("id", session.universityId!)
     .maybeSingle();
 
   async function save(formData: FormData) {

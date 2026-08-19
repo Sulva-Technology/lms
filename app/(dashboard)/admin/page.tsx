@@ -26,7 +26,7 @@ function statusForAction(action: string): "success" | "warning" | "info" | "neut
 export default async function AdminDashboardPage() {
   const session = await requireRole("department_admin");
   const supabase = await createClient();
-  const universityId = session.profile.university_id!;
+  const universityId = session.universityId!;
 
   const [studentCount, lecturerCount, facultyCount, departmentCount, courseCount, semesterCount, recentEvents] = await Promise.all([
     readOr(Promise.resolve(supabase.from("profiles").select("id", { count: "exact", head: true }).eq("university_id", universityId).eq("role", "student").then((result) => result.count || 0)), 0),

@@ -75,12 +75,16 @@ export class NotificationService {
   }
 
   async sendToUniversityUsers(universityId: string, title: string, message: string, type: string, linkUrl?: string) {
-    const { data: users } = await this.supabase.from('profiles').select('id').eq('university_id', universityId);
+    const { data: users } = await this.supabase
+      .from('memberships')
+      .select('user_id')
+      .eq('university_id', universityId)
+      .is('deleted_at', null);
     if (!users || users.length === 0) return;
 
     const payloads = users.map(u => ({
       university_id: universityId,
-      user_id: u.id,
+      user_id: u.user_id,
       title,
       content: message,
       type,

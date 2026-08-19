@@ -10,7 +10,7 @@ export default async function StudentAnnouncementsPage() {
   const session = await requireRole("student");
   const service = new StudentReadService((await createClient()) as any);
   const sectionIds = await readOr(service.getSectionIds(session.user.id), []);
-  const announcements = await readOr(service.getAnnouncements(session.profile.university_id!, sectionIds), []);
+  const announcements = await readOr(service.getAnnouncements(session.universityId!, sectionIds), []);
 
   return (
     <GenericList title="Announcements" description="Official updates from your courses and university." icon={Bell}>

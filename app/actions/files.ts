@@ -23,7 +23,7 @@ export async function createSignedUploadUrlAction(payload: any) {
     const parsed = createSignedUploadSchema.safeParse(payload);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    const universityId = session.profile.university_id;
+    const universityId = session.universityId;
     if (!universityId) return { error: 'Your profile is not attached to a university.' };
 
     // Signed upload URLs are cheap to mint but expensive to abuse: each one is a
@@ -31,7 +31,7 @@ export async function createSignedUploadUrlAction(payload: any) {
     const limit = await rateLimit(`signed-upload:${session.user.id}`, 60, 60_000);
     if (!limit.success) return { error: 'Too many uploads. Wait a moment and try again.' };
 
-    if (!canWriteBucket(session.profile.role, parsed.data.bucket)) {
+    if (!session.role || !canWriteBucket(session.role, parsed.data.bucket)) {
         return { error: 'You do not have permission to upload to this location.' };
     }
 
@@ -60,7 +60,7 @@ export async function createSignedDownloadUrlAction(payload: any) {
     const parsed = requestSignedDownloadSchema.safeParse(payload);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    const universityId = session.profile.university_id;
+    const universityId = session.universityId;
     if (!universityId) return { error: 'Your profile is not attached to a university.' };
 
     const service = new FileService(supabase as any);
@@ -71,7 +71,7 @@ export async function createSignedDownloadUrlAction(payload: any) {
 
         const owner = ownerIdFromPath(parsed.data.path);
         const isOwner = owner === session.user.id;
-        const isStaff = STAFF_ROLES.includes(session.profile.role);
+        const isStaff = session.role !== null && STAFF_ROLES.includes(session.role);
 
         if (parsed.data.bucket === STORAGE_BUCKETS.ASSIGNMENT_SUBMISSIONS && !isOwner && !isStaff) {
             return { error: 'You do not have permission to open this file.' };
@@ -95,7 +95,7 @@ export async function saveFileMetadataAction(payload: any) {
     const parsed = fileMetadataSchema.safeParse(payload);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    const universityId = session.profile.university_id;
+    const universityId = session.universityId;
     if (!universityId) return { error: 'Your profile is not attached to a university.' };
 
     const service = new FileService(supabase as any);

@@ -26,7 +26,7 @@ export async function submitAssignmentAction(assignmentId: string, payload: any)
 
     try {
         submission = await service.submitAssignment(
-            session.profile.university_id!,
+            session.universityId!,
             session.user.id,
             assignmentId,
             parsed.data.content,
@@ -75,7 +75,7 @@ async function notifyLecturers(supabase: any, session: any, assignmentId: string
     const notifications = new NotificationService(createAdminClient() as any);
     for (const lecturer of lecturers) {
         await notifications.createNotification({
-            universityId: session.profile.university_id!,
+            universityId: session.universityId!,
             userId: lecturer.lecturer_id,
             title: 'New submission received',
             message: `${studentName} submitted work for "${assignmentTitle}".`,

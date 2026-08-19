@@ -10,7 +10,7 @@ export async function createLiveClassAction(payload: any) {
     const supabase = await createClient();
     const session = await requireUser();
 
-    if (session.profile?.role !== 'lecturer' && session.profile?.role !== 'admin') {
+    if (session.role !== 'lecturer' && session.role !== 'admin') {
         return { error: 'Unauthorized' };
     }
 
@@ -21,7 +21,7 @@ export async function createLiveClassAction(payload: any) {
     const service = new LiveClassService(supabase as any, provider);
     
     try {
-        const result = await service.createLiveClass(session.profile.university_id!, session.user!.id, parsed.data as any);
+        const result = await service.createLiveClass(session.universityId!, session.user!.id, parsed.data as any);
         return { success: true, liveClass: result };
     } catch (err: any) {
         return { error: err.message };
@@ -36,7 +36,7 @@ export async function cancelLiveClassAction(classId: string) {
     const service = new LiveClassService(supabase as any, provider);
 
     try {
-        await service.cancelLiveClass(session.profile!.university_id!, session.user!.id, classId);
+        await service.cancelLiveClass(session.universityId!, session.user!.id, classId);
         return { success: true };
     } catch (err: any) {
         return { error: err.message };

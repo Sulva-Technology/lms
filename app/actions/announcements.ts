@@ -21,13 +21,13 @@ export async function createAnnouncementAction(payload: unknown) {
     const parsed = createAnnouncementSchema.parse(payload);
     
     // Authorization rule enforce:
-    if (session.profile.role === 'student' && parsed.targetScope === 'university') {
+    if (session.role === 'student' && parsed.targetScope === 'university') {
       throw new Error('Students cannot send university-wide announcements');
     }
     
     const service = new AnnouncementService(supabase as any);
     const result = await service.createAnnouncement({
-      universityId: session.profile.university_id!,
+      universityId: session.universityId!,
       authorId: session.user.id,
       title: parsed.title,
       content: parsed.content,
@@ -38,7 +38,7 @@ export async function createAnnouncementAction(payload: unknown) {
     
     const auditService = new AuditService(supabase as any);
     await auditService.logAction({
-      universityId: session.profile.university_id!,
+      universityId: session.universityId!,
       userId: session.user.id,
       action: 'ANNOUNCEMENT_CREATED',
       entityType: 'announcements',
@@ -59,7 +59,7 @@ export async function updateAnnouncementAction(payload: unknown) {
     const parsed = updateAnnouncementSchema.parse(payload);
     const service = new AnnouncementService(supabase as any);
     const result = await service.updateAnnouncement({
-      universityId: session.profile.university_id!,
+      universityId: session.universityId!,
       authorId: session.user.id,
       announcementId: parsed.id,
       title: parsed.title,
@@ -70,7 +70,7 @@ export async function updateAnnouncementAction(payload: unknown) {
     });
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile.university_id!,
+      universityId: session.universityId!,
       userId: session.user.id,
       action: 'ANNOUNCEMENT_UPDATED',
       entityType: 'announcements',
@@ -89,10 +89,10 @@ export async function archiveAnnouncementAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireUser();
     const { id } = z.object({ id: z.string().uuid() }).parse(payload);
-    const result = await new AnnouncementService(supabase as any).archiveAnnouncement(session.profile.university_id!, session.user.id, id);
+    const result = await new AnnouncementService(supabase as any).archiveAnnouncement(session.universityId!, session.user.id, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile.university_id!,
+      universityId: session.universityId!,
       userId: session.user.id,
       action: 'ANNOUNCEMENT_ARCHIVED',
       entityType: 'announcements',

@@ -93,12 +93,16 @@ export class TrainingAssignmentService {
   }) {
     await this.requireCourseStaff(params.courseSectionId, params.assignedBy);
 
+    // profiles has never had a department_id, so this filter returned 42703 on
+    // every call. A person's department is a fact about their place in one
+    // organisation, so it lives on the membership.
     const { data: members } = await this.supabase
-      .from('profiles')
-      .select('id')
+      .from('memberships')
+      .select('user_id')
       .eq('university_id', params.universityId)
       .eq('department_id', params.departmentId)
-      .eq('role', 'student');
+      .eq('role', 'student')
+      .is('deleted_at', null);
 
     const assigned = [];
     for (const member of members || []) {
@@ -106,7 +110,7 @@ export class TrainingAssignmentService {
         await this.assign({
           universityId: params.universityId,
           courseSectionId: params.courseSectionId,
-          studentId: member.id,
+          studentId: member.user_id,
           dueOn: params.dueOn,
           assignedBy: params.assignedBy,
         }),

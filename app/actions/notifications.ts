@@ -27,7 +27,7 @@ export async function markAllNotificationsAsRead() {
     const session = await requireUser();
     
     const service = new NotificationService(supabase as any);
-    await service.markAllAsRead(session.profile.university_id!, session.user.id);
+    await service.markAllAsRead(session.universityId!, session.user.id);
     
     revalidatePath('/notifications');
     return actionSuccess({ success: true });

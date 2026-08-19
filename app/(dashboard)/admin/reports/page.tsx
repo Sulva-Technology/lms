@@ -8,7 +8,7 @@ import { BarChart } from "lucide-react";
 
 export default async function AdminReportsPage() {
   const session = await requireRole("department_admin");
-  const reports = await readOr(new AdminReadService((await createClient()) as any).getReports(session.profile.university_id!), {
+  const reports = await readOr(new AdminReadService((await createClient()) as any).getReports(session.universityId!), {
     studentCount: 0,
     lecturerCount: 0,
     courseCount: 0,

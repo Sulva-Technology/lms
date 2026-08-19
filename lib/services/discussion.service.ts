@@ -18,8 +18,16 @@ export class DiscussionService {
 
   async replyToDiscussion(universityId: string, authorId: string, discussionId: string, content: string, parentId?: string) {
     // Check if author is lecturer for endorsement
-    const { data: profile } = await this.supabase.from('profiles').select('role').eq('id', authorId).single();
-    const isLecturer = profile?.role === 'lecturer';
+    // Endorsement follows the role held at this organisation, not one held
+    // somewhere else.
+    const { data: membership } = await this.supabase
+      .from('memberships')
+      .select('role')
+      .eq('user_id', authorId)
+      .eq('university_id', universityId)
+      .is('deleted_at', null)
+      .maybeSingle();
+    const isLecturer = membership?.role === 'lecturer';
 
     const { data, error } = await this.supabase.from('discussion_replies').insert({
       university_id: universityId,

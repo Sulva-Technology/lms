@@ -10,9 +10,16 @@ function stub(assignments: any[] = []) {
     course_sections: [{ id: 'sec1', university_id: 'uni1', name: 'January intake' }],
     course_enrollments: [],
     profiles: [
-      { id: 'stu1', university_id: 'uni1', department_id: 'dep1', role: 'student', first_name: 'Ada', last_name: 'Obi' },
-      { id: 'stu2', university_id: 'uni1', department_id: 'dep1', role: 'student', first_name: 'Bola', last_name: 'Eze' },
-      { id: 'lec1', university_id: 'uni1', department_id: 'dep1', role: 'lecturer', first_name: 'Ken', last_name: 'Udo' },
+      { id: 'stu1', first_name: 'Ada', last_name: 'Obi' },
+      { id: 'stu2', first_name: 'Bola', last_name: 'Eze' },
+      { id: 'lec1', first_name: 'Ken', last_name: 'Udo' },
+    ],
+    // Department and role are facts about a person at one organisation, so a
+    // team is drawn from memberships rather than from accounts.
+    memberships: [
+      { user_id: 'stu1', university_id: 'uni1', department_id: 'dep1', role: 'student', deleted_at: null },
+      { user_id: 'stu2', university_id: 'uni1', department_id: 'dep1', role: 'student', deleted_at: null },
+      { user_id: 'lec1', university_id: 'uni1', department_id: 'dep1', role: 'lecturer', deleted_at: null },
     ],
     training_assignments: assignments,
   });

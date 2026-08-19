@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     // A complete implementation would filter by user's faculty/dept as well.
     let q = supabase.from('announcements')
       .select('*, profiles(first_name, last_name, avatar_url)')
-      .eq('university_id', session.profile.university_id!)
+      .eq('university_id', session.universityId!)
       .eq('is_published', true)
       .order('created_at', { ascending: false });
 

@@ -19,14 +19,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ submiss
     
     if (!session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const profile = session.profile;
-    if (!profile?.university_id || profile.role !== 'lecturer') {
+    if (!session.universityId || session.role !== 'lecturer') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const service = new GradeService(supabase as any);
     const result = await service.gradeSubmission(
-      profile.university_id, 
+      session.universityId, 
       session.user.id, 
       submissionId, 
       parsed.data.score, 

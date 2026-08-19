@@ -31,6 +31,12 @@ export interface SessionData {
   isPlatformAdmin: boolean;
   /** The role to authorise this request with; null when there is none here. */
   role: AuthRole | null;
+  /**
+   * The organisation this request is scoped to. The member's own, or for a
+   * platform admin the host they are visiting — they hold no membership, and
+   * scoping their queries to nothing would be wrong.
+   */
+  universityId: string | null;
 }
 
 export interface RoleOption {

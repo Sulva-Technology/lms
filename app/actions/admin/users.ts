@@ -10,6 +10,7 @@ import { revalidatePath } from 'next/cache';
 import { sendUserInvite } from '@/lib/auth/invites';
 import { AuthRole } from '@/types/auth';
 import { getEmailLinkOrigin } from '@/lib/tenant/origin';
+import { getTenantContext } from '@/lib/tenant/context';
 
 const universityAdminInvitableRoles: AuthRole[] = ['student', 'lecturer', 'department_admin', 'admin'];
 
@@ -23,26 +24,33 @@ export async function updateUserRoleAction(userId: string, payload: unknown) {
     
     const parsed = userRoleUpdateSchema.parse(payload);
     
-    const { data: userProfile, error: profileErr } = await adminClient.from('profiles').select('university_id').eq('id', userId).single();
-    if (!userProfile || profileErr) throw new Error('User not found');
-    
-    if (userProfile.university_id !== session.profile.university_id) {
-       throw new Error('Forbidden'); // Trying to modify a user from another university
-    }
-    
-    const { error: updateErr } = await adminClient.from('profiles')
-      .update({ role: parsed.role })
-      .eq('id', userId)
-      .eq('university_id', session.profile.university_id); // double check
-      
+    const universityId = session.universityId;
+    if (!universityId) throw new Error('Forbidden');
+
+    // A role is held at an organisation, so this can only reach the membership
+    // for this one. The person's standing elsewhere is not ours to change.
+    const { data: membership, error: membershipErr } = await adminClient
+      .from('memberships')
+      .select('user_id')
+      .eq('user_id', userId)
+      .eq('university_id', universityId)
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (!membership || membershipErr) throw new Error('User not found');
+
+    const { error: updateErr } = await adminClient.from('memberships')
+      .update({ role: parsed.role, updated_at: new Date().toISOString() })
+      .eq('user_id', userId)
+      .eq('university_id', universityId);
+
     if (updateErr) throw new Error(updateErr.message);
 
     const auditService = new AuditService(supabase as any);
     await auditService.logAction({
-      universityId: session.profile.university_id!,
+      universityId,
       userId: session.user.id,
       action: 'ADMIN_USER_ROLE_CHANGED',
-      entityType: 'profiles',
+      entityType: 'memberships',
       entityId: userId,
       metadata: { new_role: parsed.role }
     });
@@ -59,10 +67,10 @@ export async function inviteUserAction(payload: unknown) {
     const session = await requireRole('department_admin');
     const parsed = inviteUserSchema.parse(payload);
 
-    const currentRole = session.profile.role;
+    const currentRole = session.role;
     const targetUniversityId = currentRole === 'super_admin'
       ? parsed.universityId ?? null
-      : session.profile.university_id;
+      : session.universityId;
 
     if (currentRole !== 'super_admin' && !universityAdminInvitableRoles.includes(parsed.role)) {
       throw new Error('University admins cannot invite users with that role.');
@@ -76,12 +84,17 @@ export async function inviteUserAction(payload: unknown) {
       throw new Error('A university is required for this invite.');
     }
 
-    const user = await sendUserInvite({
+    const tenant = await getTenantContext();
+
+    const invite = await sendUserInvite({
       email: parsed.email,
       role: parsed.role,
       universityId: targetUniversityId,
       firstName: parsed.firstName || undefined,
       lastName: parsed.lastName || undefined,
+      // Named in the email when the address already has an account, so the
+      // person can tell which organisation just added them.
+      organisationName: tenant?.name || 'your new organisation',
       // Without this the invitation lands on the platform root, where the
       // person it was sent to has no account and no school.
       baseUrl: await getEmailLinkOrigin(),
@@ -92,7 +105,7 @@ export async function inviteUserAction(payload: unknown) {
     revalidatePath('/admin/lecturers');
 
     return actionSuccess({
-      id: user?.id ?? null,
+      id: invite.userId,
       email: parsed.email,
       role: parsed.role,
     });

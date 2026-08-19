@@ -39,7 +39,7 @@ export async function issueCertificateAction(payload: unknown) {
     const service = new CertificateService(supabase as any);
 
     const certificate = await service.issue({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       courseSectionId: parsed.data.courseSectionId,
       studentId: parsed.data.studentId,
       issuedBy: session.user!.id,
@@ -49,7 +49,7 @@ export async function issueCertificateAction(payload: unknown) {
     // service role like every other cross-user notification.
     try {
       await new NotificationService(createAdminClient() as any).createNotification({
-        universityId: session.profile!.university_id!,
+        universityId: session.universityId!,
         userId: parsed.data.studentId,
         title: 'Certificate issued',
         message: `Your certificate for ${certificate.snapshot?.courseTitle || 'your course'} is ready.`,

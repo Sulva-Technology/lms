@@ -42,6 +42,7 @@ describe('buildSession', () => {
 
     expect(session.role).toBe('lecturer');
     expect(session.membership?.universityId).toBe(SCHOOL);
+    expect(session.universityId).toBe(SCHOOL);
     expect(session.isPlatformAdmin).toBe(false);
   });
 
@@ -74,6 +75,25 @@ describe('buildSession', () => {
 
     expect(session.role).toBe('super_admin');
     expect(session.isPlatformAdmin).toBe(true);
+    // No membership anywhere, so queries scope to the host being visited.
+    expect(session.universityId).toBeNull();
+  });
+
+  it('scopes a platform admin to the host they are visiting, having no membership', async () => {
+    const stub = createSupabaseStub({
+      profiles: [{ ...profile, id: 'user-root' }],
+      memberships: [],
+      platform_admins: [{ user_id: 'user-root' }],
+    });
+
+    const session = await buildSession(
+      stub.client,
+      { id: 'user-root', email: 'root@sulva.com' },
+      SCHOOL,
+    );
+
+    expect(session.membership).toBeNull();
+    expect(session.universityId).toBe(SCHOOL);
   });
 
   it('returns an empty session when nobody is signed in', async () => {
@@ -87,6 +107,7 @@ describe('buildSession', () => {
       membership: null,
       isPlatformAdmin: false,
       role: null,
+      universityId: null,
     });
   });
 });

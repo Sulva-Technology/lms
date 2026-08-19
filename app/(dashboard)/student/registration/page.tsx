@@ -12,7 +12,7 @@ export default async function RegistrationPage() {
   let errorMessage: string | null = null;
 
   try {
-    data = await service.getStudentRegistration(session.user.id, session.profile.university_id!);
+    data = await service.getStudentRegistration(session.user.id, session.universityId!);
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load registration.");
   }

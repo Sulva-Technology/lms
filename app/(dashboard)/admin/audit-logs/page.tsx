@@ -9,7 +9,7 @@ import { History } from "lucide-react";
 
 export default async function AdminAuditLogsPage() {
   const session = await requireRole("department_admin");
-  const logs = await readOr(new AdminReadService((await createClient()) as any).getAuditLogs(session.profile.university_id!), []);
+  const logs = await readOr(new AdminReadService((await createClient()) as any).getAuditLogs(session.universityId!), []);
 
   return (
     <GenericList title="Audit Logs" description="Security and operational activity for this university." icon={History}>

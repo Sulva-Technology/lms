@@ -17,10 +17,10 @@ export async function createDepartmentAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const data = departmentMutationSchema.parse(payload);
-    const result = await new DepartmentService(supabase as any).createDepartment(session.profile!.university_id!, data);
+    const result = await new DepartmentService(supabase as any).createDepartment(session.universityId!, data);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_DEPARTMENT_CREATED',
       entityType: 'departments',
@@ -39,10 +39,10 @@ export async function updateDepartmentAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const data = departmentMutationSchema.required({ id: true }).parse(payload);
-    const result = await new DepartmentService(supabase as any).updateDepartment(session.profile!.university_id!, data.id, data);
+    const result = await new DepartmentService(supabase as any).updateDepartment(session.universityId!, data.id, data);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_DEPARTMENT_UPDATED',
       entityType: 'departments',
@@ -61,10 +61,10 @@ export async function archiveDepartmentAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = departmentIdSchema.parse(payload);
-    const result = await new DepartmentService(supabase as any).archiveDepartment(session.profile!.university_id!, id);
+    const result = await new DepartmentService(supabase as any).archiveDepartment(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_DEPARTMENT_ARCHIVED',
       entityType: 'departments',
@@ -83,10 +83,10 @@ export async function restoreDepartmentAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = departmentIdSchema.parse(payload);
-    const result = await new DepartmentService(supabase as any).restoreDepartment(session.profile!.university_id!, id);
+    const result = await new DepartmentService(supabase as any).restoreDepartment(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_DEPARTMENT_UPDATED',
       entityType: 'departments',

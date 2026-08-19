@@ -11,13 +11,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ courseId
     
     if (!session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const profile = session.profile;
-    if (!profile?.university_id || (profile.role !== 'lecturer' && profile.role !== 'admin')) {
+    if (!session.universityId || (session.role !== 'lecturer' && session.role !== 'admin')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const service = new ReportService(supabase as any);
-    const result = await service.getCourseProgress(profile.university_id, courseId);
+    const result = await service.getCourseProgress(session.universityId, courseId);
 
     return NextResponse.json({ data: result }, { status: 200 });
   } catch (error: any) {

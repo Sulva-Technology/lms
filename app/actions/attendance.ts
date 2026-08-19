@@ -15,7 +15,7 @@ export async function markAttendanceAction(payload: any) {
   
   const service = new AttendanceService(supabase as any);
   try {
-      const result = await service.markAttendance(session.profile!.university_id!, session.user!.id, parsed.data);
+      const result = await service.markAttendance(session.universityId!, session.user!.id, parsed.data);
       revalidatePath(`/courses/sections/${parsed.data.courseSectionId}`);
       return { success: true, ...result };
   } catch (err: any) {
@@ -29,7 +29,7 @@ export async function calculateLiveClassAttendanceAction(liveClassId: string) {
 
   const service = new AttendanceService(supabase as any);
   try {
-      const result = await service.calculateFromLiveClass(session.profile!.university_id!, session.user!.id, liveClassId);
+      const result = await service.calculateFromLiveClass(session.universityId!, session.user!.id, liveClassId);
       revalidatePath(`/live-classes`);
       return { success: true, ...result };
   } catch (err: any) {

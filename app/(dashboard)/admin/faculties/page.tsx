@@ -14,7 +14,7 @@ export default async function FacultiesPage() {
   let errorMessage: string | null = null;
 
   try {
-    data = await service.getAcademicList(session.profile.university_id!, "faculties", true);
+    data = await service.getAcademicList(session.universityId!, "faculties", true);
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load faculties.");
   }

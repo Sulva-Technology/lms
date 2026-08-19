@@ -20,7 +20,7 @@ export default async function CoursesPage() {
   let errorMessage: string | null = null;
 
   try {
-    data = await service.getAcademicList(session.profile.university_id!, "courses", true);
+    data = await service.getAcademicList(session.universityId!, "courses", true);
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load courses.");
   }
@@ -28,10 +28,10 @@ export default async function CoursesPage() {
   if (errorMessage) return <ErrorState message={errorMessage} />;
 
   [departments, sections, semesters, lecturers] = await Promise.all([
-    readOr(service.getAcademicList(session.profile.university_id!, "departments"), []),
-    readOr(service.getAdminCourseSections(session.profile.university_id!), []),
-    readOr(service.getAdminSemesters(session.profile.university_id!), []),
-    readOr(service.getAdminUsers(session.profile.university_id!, "lecturer"), []),
+    readOr(service.getAcademicList(session.universityId!, "departments"), []),
+    readOr(service.getAdminCourseSections(session.universityId!), []),
+    readOr(service.getAdminSemesters(session.universityId!), []),
+    readOr(service.getAdminUsers(session.universityId!, "lecturer"), []),
   ]);
 
   return (

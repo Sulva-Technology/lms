@@ -32,7 +32,7 @@ export default async function LecturerOverviewPage() {
   const courses = await resolveDashboardValue(service.getLecturerCourses(session.user.id), []);
   const sectionIds = courses.map((course) => course.id);
   const [liveSessions, pendingGrading] = await Promise.all([
-    resolveDashboardValue(service.getLiveClasses(session.profile.university_id!, sectionIds), []),
+    resolveDashboardValue(service.getLiveClasses(session.universityId!, sectionIds), []),
     resolveDashboardValue(service.getPendingGrading(sectionIds), []),
   ]);
   const upcomingClasses = liveSessions

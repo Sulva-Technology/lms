@@ -11,7 +11,7 @@ export async function submitCourseRegistrationAction(formData: object) {
     const supabase = await createClient();
     const session = await requireRole('student');
     const studentId = session.profile!.id;
-    const universityId = session.profile!.university_id;
+    const universityId = session.universityId;
 
     if (!universityId) return { error: 'No university context found.' };
 
@@ -40,11 +40,11 @@ export async function approveRegistrationAction(formData: object) {
     
     try {
         if (parsed.data.status === 'approved') {
-            await service.approveRegistration(session.user!.id, session.profile!.university_id!, parsed.data.registrationId);
+            await service.approveRegistration(session.user!.id, session.universityId!, parsed.data.registrationId);
         } else {
             await adminClient.from('course_registrations').update({ status: parsed.data.status }).eq('id', parsed.data.registrationId);
             await adminClient.from('audit_logs').insert({
-               user_id: session.user!.id, university_id: session.profile!.university_id,
+               user_id: session.user!.id, university_id: session.universityId,
                action: 'REJECT_REGISTRATION', entity_type: 'course_registrations', entity_id: parsed.data.registrationId
             });
         }

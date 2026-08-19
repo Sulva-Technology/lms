@@ -11,7 +11,7 @@ export default async function StudentCalendarPage() {
   const session = await requireRole("student");
   const service = new StudentReadService((await createClient()) as any);
   const sectionIds = await readOr(service.getSectionIds(session.user.id), []);
-  const events = await readOr(service.getCalendar(session.user.id, session.profile.university_id!, sectionIds), []);
+  const events = await readOr(service.getCalendar(session.user.id, session.universityId!, sectionIds), []);
 
   return (
     <GenericList title="Calendar" description="A unified schedule for classes, assessments, and university events." icon={CalendarIcon}>

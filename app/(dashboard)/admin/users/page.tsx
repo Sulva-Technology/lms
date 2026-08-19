@@ -16,7 +16,7 @@ export default async function AdminUsersPage() {
   let errorMessage: string | null = null;
 
   try {
-    users = await service.getAdminUsers(session.profile.university_id!);
+    users = await service.getAdminUsers(session.universityId!);
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load users.");
   }
@@ -25,7 +25,7 @@ export default async function AdminUsersPage() {
 
   return (
     <GenericList title="Users & Invites" description="Invite users and review university accounts." icon={Users}>
-      <InviteUserForm universityId={session.profile.university_id} />
+      <InviteUserForm universityId={session.universityId} />
       {users.length === 0 ? (
         <EmptyState title="No users yet" description="Send the first invite to create accounts for this university." />
       ) : (

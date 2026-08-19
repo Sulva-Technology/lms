@@ -25,7 +25,7 @@ export class ReportService {
   async getUniversityOverview(universityId: string) {
     // Top level counts
     const [{ count: studentCount }, { count: courseCount }, { count: videoCount }] = await Promise.all([
-      this.supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('university_id', universityId).eq('role', 'student'),
+      this.supabase.from('memberships').select('user_id', { count: 'exact', head: true }).eq('university_id', universityId).eq('role', 'student').is('deleted_at', null),
       this.supabase.from('courses').select('id', { count: 'exact', head: true }).eq('university_id', universityId),
       this.supabase.from('video_assets').select('id', { count: 'exact', head: true }).eq('university_id', universityId)
     ]);

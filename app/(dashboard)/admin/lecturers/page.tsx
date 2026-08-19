@@ -16,7 +16,7 @@ export default async function LecturersPage() {
   let errorMessage: string | null = null;
 
   try {
-    lecturers = await service.getAdminUsers(session.profile.university_id!, "lecturer");
+    lecturers = await service.getAdminUsers(session.universityId!, "lecturer");
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load lecturers.");
   }
@@ -25,7 +25,7 @@ export default async function LecturersPage() {
 
   return (
     <GenericList title="Lecturers" description="Invite and manage lecturer accounts." icon={GraduationCap}>
-      <InviteUserForm defaultRole="lecturer" allowedRoles={["lecturer"]} universityId={session.profile.university_id} />
+      <InviteUserForm defaultRole="lecturer" allowedRoles={["lecturer"]} universityId={session.universityId} />
       {lecturers.length === 0 ? (
         <EmptyState title="No lecturers" description="Lecturer accounts appear here after invite acceptance and onboarding." />
       ) : (

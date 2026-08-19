@@ -19,11 +19,11 @@ export async function createFacultyAction(payload: unknown) {
     const data = facultyMutationSchema.parse(payload);
     
     const service = new FacultyService(supabase as any);
-    const result = await service.createFaculty(session.profile!.university_id!, data);
+    const result = await service.createFaculty(session.universityId!, data);
     
     const audit = new AuditService(supabase as any);
     await audit.logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_FACULTY_CREATED',
       entityType: 'faculties',
@@ -44,10 +44,10 @@ export async function updateFacultyAction(payload: unknown) {
     const data = facultyMutationSchema.required({ id: true }).parse(payload);
 
     const service = new FacultyService(supabase as any);
-    const result = await service.updateFaculty(session.profile!.university_id!, data.id, data);
+    const result = await service.updateFaculty(session.universityId!, data.id, data);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_FACULTY_UPDATED',
       entityType: 'faculties',
@@ -66,10 +66,10 @@ export async function archiveFacultyAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = facultyIdSchema.parse(payload);
-    const result = await new FacultyService(supabase as any).archiveFaculty(session.profile!.university_id!, id);
+    const result = await new FacultyService(supabase as any).archiveFaculty(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_FACULTY_ARCHIVED',
       entityType: 'faculties',
@@ -88,10 +88,10 @@ export async function restoreFacultyAction(payload: unknown) {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
     const { id } = facultyIdSchema.parse(payload);
-    const result = await new FacultyService(supabase as any).restoreFaculty(session.profile!.university_id!, id);
+    const result = await new FacultyService(supabase as any).restoreFaculty(session.universityId!, id);
 
     await new AuditService(supabase as any).logAction({
-      universityId: session.profile!.university_id!,
+      universityId: session.universityId!,
       userId: session.user!.id,
       action: 'ADMIN_FACULTY_UPDATED',
       entityType: 'faculties',

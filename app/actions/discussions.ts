@@ -14,7 +14,7 @@ import { z } from 'zod';
  * university_id on every write already scopes.
  */
 async function assertSectionMembership(supabase: any, session: any, courseSectionId: string) {
-  const role = session.profile.role;
+  const role = session.role;
   if (role === 'department_admin' || role === 'admin' || role === 'super_admin') return;
 
   const table = role === 'lecturer' ? 'course_lecturers' : 'course_enrollments';
@@ -48,7 +48,7 @@ export async function createDiscussionAction(payload: unknown) {
 
     const service = new DiscussionService(supabase as any);
     const result = await service.createDiscussion(
-      session.profile.university_id!,
+      session.universityId!,
       session.user.id,
       parsed.courseSectionId,
       parsed.title,
@@ -74,7 +74,7 @@ export async function replyDiscussionAction(payload: unknown) {
 
     const service = new DiscussionService(supabase as any);
     const result = await service.replyToDiscussion(
-      session.profile.university_id!,
+      session.universityId!,
       session.user.id,
       parsed.discussionId,
       parsed.body,
@@ -101,7 +101,7 @@ export async function markDiscussionAnsweredAction(payload: unknown) {
     await assertSectionMembership(supabase, session, courseSectionId);
 
     const service = new DiscussionService(supabase as any);
-    await service.markAsAnswered(session.profile.university_id!, parsed.discussionId, session.user.id);
+    await service.markAsAnswered(session.universityId!, parsed.discussionId, session.user.id);
 
     revalidatePath('/lecturer/questions');
     revalidatePath(`/student/discussions/${parsed.discussionId}`);

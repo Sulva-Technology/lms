@@ -9,7 +9,7 @@ export default async function StudentLiveClassesPage() {
   const session = await requireRole("student");
   const service = new CoreReadService((await createClient()) as any);
   const sectionIds = await readOr(service.getStudentSectionIds(session.user.id), []);
-  const sessions = await readOr(service.getLiveClasses(session.profile.university_id!, sectionIds), []);
+  const sessions = await readOr(service.getLiveClasses(session.universityId!, sectionIds), []);
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">

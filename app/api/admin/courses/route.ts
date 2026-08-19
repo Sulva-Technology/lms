@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
     let q = supabase.from('courses')
       .select('*, departments(id, name)')
-      .eq('university_id', session.profile.university_id!);
+      .eq('university_id', session.universityId!);
 
     if (departmentId) {
       q = q.eq('department_id', departmentId);

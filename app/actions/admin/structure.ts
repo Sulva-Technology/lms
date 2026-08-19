@@ -15,7 +15,7 @@ export async function bootstrapAcademicStructureAction() {
   try {
     const supabase = await createClient();
     const session = await requireRole('department_admin');
-    const universityId = session.profile!.university_id!;
+    const universityId = session.universityId!;
 
     const result = await bootstrapAcademicStructure(supabase as any, universityId);
 

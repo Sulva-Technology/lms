@@ -15,8 +15,8 @@ export default async function ProgramsPage() {
   let errorMessage: string | null = null;
 
   try {
-    data = await service.getAcademicList(session.profile.university_id!, "programs", true);
-    departments = await service.getAcademicList(session.profile.university_id!, "departments");
+    data = await service.getAcademicList(session.universityId!, "programs", true);
+    departments = await service.getAcademicList(session.universityId!, "departments");
   } catch (error) {
     errorMessage = describeDataError(error, "Could not load programs.");
   }

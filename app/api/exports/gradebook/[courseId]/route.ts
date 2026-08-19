@@ -11,8 +11,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ courseId
     
     if (!session.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const profile = session.profile;
-    if (!profile?.university_id || (profile.role !== 'lecturer' && profile.role !== 'admin')) {
+    if (!session.universityId || (session.role !== 'lecturer' && session.role !== 'admin')) {
       return new NextResponse('Forbidden', { status: 403 });
     }
 

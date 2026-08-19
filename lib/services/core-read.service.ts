@@ -360,17 +360,32 @@ export class CoreReadService {
   }
 
   async getAdminUsers(universityId: string, role?: string) {
+    // Members, not accounts: the same person may hold a different role at a
+    // different organisation, and only this one's standing belongs here.
     let query = this.supabase
-      .from('profiles')
-      .select('id, first_name, last_name, email, role, student_id, created_at')
+      .from('memberships')
+      .select('role, student_id, created_at, profiles!inner(id, first_name, last_name, email)')
       .eq('university_id', universityId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (role) query = query.eq('role', role);
 
     const { data, error } = await query;
     if (error) throw error;
-    return data || [];
+
+    return (data || []).map((row: any) => {
+      const profile = one<any>(row.profiles);
+      return {
+        id: profile?.id,
+        first_name: profile?.first_name,
+        last_name: profile?.last_name,
+        email: profile?.email,
+        role: row.role,
+        student_id: row.student_id,
+        created_at: row.created_at,
+      };
+    });
   }
 
   async getAcademicList(universityId: string, table: 'faculties' | 'departments' | 'programs' | 'courses', includeArchived = false) {
