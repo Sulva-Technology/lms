@@ -19,15 +19,15 @@ export interface DataTableProps<T> {
 
 export function DataTable<T>({ data, columns, keyExtractor, className, onRowClick }: DataTableProps<T>) {
   return (
-    <div className={cn("w-full overflow-x-auto glass-panel rounded-2xl", className)}>
+    <div className={cn("w-full overflow-x-auto panel rounded-2xl", className)}>
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="border-b border-white/10 bg-white/[0.02]">
+          <tr className="border-b border-line bg-status-soft">
             {columns.map((col, idx) => (
               <th 
                 key={idx} 
                 className={cn(
-                  "p-4 text-sm font-semibold text-slate-400 whitespace-nowrap",
+                  "p-4 text-sm font-semibold text-ink-muted whitespace-nowrap",
                   col.align === "center" && "text-center",
                   col.align === "right" && "text-right",
                   col.width
@@ -38,10 +38,10 @@ export function DataTable<T>({ data, columns, keyExtractor, className, onRowClic
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+        <tbody className="divide-y divide-line">
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="p-8 text-center text-slate-500 text-sm">
+              <td colSpan={columns.length} className="p-8 text-center text-ink-subtle text-sm">
                 No data available.
               </td>
             </tr>
@@ -55,14 +55,14 @@ export function DataTable<T>({ data, columns, keyExtractor, className, onRowClic
                 {...rowProps}
                 className={cn(
                   "transition-colors",
-                  onRowClick ? "cursor-pointer hover:bg-white/[0.03]" : ""
+                  onRowClick ? "cursor-pointer hover:bg-ink/[0.06]" : ""
                 )}
               >
                 {columns.map((col, idx) => (
                   <td 
                     key={idx} 
                     className={cn(
-                      "p-4 text-sm text-slate-300",
+                      "p-4 text-sm text-ink-muted",
                       col.align === "center" && "text-center",
                       col.align === "right" && "text-right"
                     )}

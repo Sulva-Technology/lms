@@ -46,28 +46,28 @@ export function AnnouncementComposer({ courses = [] }: { courses?: CourseOption[
   };
 
   return (
-    <div className="bg-slate-950/60 backdrop-blur-2xl p-6 rounded-2xl border border-white/10">
-       <h3 className="font-outfit font-semibold text-lg text-white mb-4">Post Announcement</h3>
+    <div className="bg-surface backdrop-blur-2xl p-6 rounded-2xl border border-line">
+       <h3 className="font-outfit font-semibold text-lg text-ink mb-4">Post Announcement</h3>
        <form onSubmit={handleSubmit}>
-          <div className="bg-slate-950/50 rounded-xl border border-white/10 overflow-hidden focus-within:border-blue-500/50 transition-colors mb-3">
+          <div className="bg-surface rounded-xl border border-line overflow-hidden focus-within:border-primary/25 transition-colors mb-3">
              <input
                value={title}
                onChange={e => setTitle(e.target.value)}
                placeholder="Announcement title"
-               className="w-full bg-transparent p-4 text-sm text-white placeholder-slate-500 focus:outline-none border-b border-white/5"
+               className="w-full bg-transparent p-4 text-sm text-ink placeholder-slate-500 focus:outline-none border-b border-line"
              />
              <textarea
                value={content}
                onChange={e => setContent(e.target.value)}
                placeholder="Share an update with your students..."
                rows={4}
-               className="w-full bg-transparent p-4 text-sm text-white placeholder-slate-500 focus:outline-none resize-none"
+               className="w-full bg-transparent p-4 text-sm text-ink placeholder-slate-500 focus:outline-none resize-none"
              />
-             <div className="px-3 py-2 border-t border-white/5 bg-slate-900/50 flex items-center justify-between gap-3">
+             <div className="px-3 py-2 border-t border-line bg-surface flex items-center justify-between gap-3">
                 <select
                   value={targetId}
                   onChange={(e) => setTargetId(e.target.value)}
-                  className="bg-slate-800 text-xs text-slate-300 border border-white/10 rounded-lg p-2 outline-none max-w-[180px]"
+                  className="bg-surface text-xs text-ink-muted border border-line rounded-lg p-2 outline-none max-w-[180px]"
                 >
                   <option value="university">University</option>
                   {courses.map((course) => (
@@ -77,7 +77,7 @@ export function AnnouncementComposer({ courses = [] }: { courses?: CourseOption[
                 <button
                   type="submit"
                   disabled={!title.trim() || !content.trim() || isLoading}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2 bg-primary hover:bg-primary-hover disabled:bg-surface disabled:text-ink-subtle text-ink text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5"
                 >
                    {isLoading ? <Loader2 size={14} className="animate-spin" /> : <><span>Post</span><Send size={14} /></>}
                 </button>

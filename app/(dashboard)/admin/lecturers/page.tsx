@@ -33,7 +33,7 @@ export default async function LecturersPage() {
           data={lecturers}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "name", header: "Name", cell: (item: any) => <span className="font-medium text-white">{[item.first_name, item.last_name].filter(Boolean).join(" ")}</span> },
+            { key: "name", header: "Name", cell: (item: any) => <span className="font-medium text-ink">{[item.first_name, item.last_name].filter(Boolean).join(" ")}</span> },
             { key: "email", header: "Email", cell: (item: any) => item.email || "No email" },
             { key: "created", header: "Created", cell: (item: any) => new Date(item.created_at).toLocaleDateString() },
           ]}

@@ -15,7 +15,7 @@ export default async function SuperadminUsagePage() {
         data={usage}
         keyExtractor={(item: any) => item.id}
         columns={[
-          { key: "name", header: "University", cell: (item: any) => <span className="font-medium text-white">{item.name}</span> },
+          { key: "name", header: "University", cell: (item: any) => <span className="font-medium text-ink">{item.name}</span> },
           { key: "users", header: "Users", cell: (item: any) => (item.profiles || []).length },
           { key: "courses", header: "Courses", cell: (item: any) => (item.courses || []).length },
           { key: "videos", header: "Videos", cell: (item: any) => (item.video_assets || []).length },

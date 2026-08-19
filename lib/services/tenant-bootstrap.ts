@@ -1,4 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import type { TenantMode } from '@/lib/tenant/mode';
 
 export type BootstrapNames = {
   facultyName: string;
@@ -8,12 +9,12 @@ export type BootstrapNames = {
 };
 
 export type BootstrapResult = {
-  /** False when the tenant already had a structure and nothing was written. */
+  /** False when the tenant already had a structure, or needs none at all. */
   created: boolean;
-  facultyId: string;
-  departmentId: string;
-  academicSessionId: string;
-  semesterId: string;
+  facultyId: string | null;
+  departmentId: string | null;
+  academicSessionId: string | null;
+  semesterId: string | null;
 };
 
 const slugCode = (value: string, fallback: string) => {
@@ -42,8 +43,15 @@ export const defaultBootstrapNames = (now = new Date()): BootstrapNames => ({
 export async function bootstrapAcademicStructure(
   client: SupabaseClient<any>,
   universityId: string,
-  options: Partial<BootstrapNames> & { now?: Date } = {},
+  options: Partial<BootstrapNames> & { now?: Date; mode?: TenantMode } = {},
 ): Promise<BootstrapResult> {
+  // A training tenant needs none of this: courses attach straight to the tenant
+  // and cohorts carry their own dates. Creating a "Training" faculty holding a
+  // "General" department was a costume, not a structure.
+  if (options.mode === 'training') {
+    return { created: false, facultyId: null, departmentId: null, academicSessionId: null, semesterId: null };
+  }
+
   const names = { ...defaultBootstrapNames(options.now), ...options };
 
   const { data: existingDepartment } = await client
@@ -141,9 +149,9 @@ export async function bootstrapAcademicStructure(
 
   return {
     created: true,
-    facultyId: facultyId!,
-    departmentId: departmentId!,
-    academicSessionId: academicSessionId!,
-    semesterId: semesterId!,
+    facultyId: facultyId ?? null,
+    departmentId: departmentId ?? null,
+    academicSessionId: academicSessionId ?? null,
+    semesterId: semesterId ?? null,
   };
 }

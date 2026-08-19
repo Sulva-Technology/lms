@@ -32,15 +32,15 @@ export function FilterDropdown({ label = "Filter", options, value, onChange, cla
     <div className={cn("relative", className)} ref={containerRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-xl text-sm font-medium text-slate-200 hover:bg-slate-800 transition-colors"
+        className="flex items-center gap-2 px-4 py-2.5 bg-surface backdrop-blur-sm border border-line rounded-xl text-sm font-medium text-ink hover:bg-surface transition-colors"
       >
-        <Filter size={16} className="text-slate-400" />
+        <Filter size={16} className="text-ink-muted" />
         <span>{label}: {selectedOption?.label || "All"}</span>
-        <ChevronDown size={14} className="text-slate-500 ml-1" />
+        <ChevronDown size={14} className="text-ink-subtle ml-1" />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 w-48 right-0 bg-slate-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50 glass-panel">
+        <div className="absolute top-full mt-2 w-48 right-0 bg-surface border border-line rounded-xl shadow-xl overflow-hidden z-50 panel">
           <div className="p-1">
             {options.map((option) => (
               <button
@@ -52,8 +52,8 @@ export function FilterDropdown({ label = "Filter", options, value, onChange, cla
                 className={cn(
                   "w-full text-left px-3 py-2 text-sm rounded-lg transition-colors",
                   value === option.value 
-                    ? "bg-blue-500/20 text-blue-300" 
-                    : "text-slate-300 hover:bg-white/5"
+                    ? "bg-primary-soft text-primary" 
+                    : "text-ink-muted hover:bg-ink/[0.06]"
                 )}
               >
                 {option.label}

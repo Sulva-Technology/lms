@@ -83,22 +83,22 @@ export function AssignmentSubmissionPanel({
       className="grid gap-6 xl:grid-cols-[1fr_320px]"
     >
       <section className="space-y-6">
-        <div className="rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-300">{assignment.courseCode}</p>
-          <h2 className="mt-2 font-outfit text-2xl font-bold text-white">{assignment.title}</h2>
+        <div className="rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl">
+          <p className="text-xs font-semibold uppercase tracking-wide text-primary">{assignment.courseCode}</p>
+          <h2 className="mt-2 font-outfit text-2xl font-bold text-ink">{assignment.title}</h2>
           {assignment.description && (
-            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-300">{assignment.description}</p>
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-ink-muted">{assignment.description}</p>
           )}
         </div>
 
-        <div className="rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl">
-          <h3 className="font-outfit text-lg font-semibold text-white">Your submission</h3>
+        <div className="rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl">
+          <h3 className="font-outfit text-lg font-semibold text-ink">Your submission</h3>
 
           {locked ? (
             <div className="mt-4 grid gap-4">
-              <p className="text-sm text-slate-400">{lockReason}</p>
+              <p className="text-sm text-ink-muted">{lockReason}</p>
               {current?.content && (
-                <p className="whitespace-pre-wrap rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-slate-200">
+                <p className="whitespace-pre-wrap rounded-xl border border-line bg-status-soft p-4 text-sm text-ink">
                   {current.content}
                 </p>
               )}
@@ -106,18 +106,18 @@ export function AssignmentSubmissionPanel({
             </div>
           ) : (
             <div className="mt-4 grid gap-4">
-              <label className="grid gap-2 text-sm font-medium text-slate-300">
+              <label className="grid gap-2 text-sm font-medium text-ink-muted">
                 Written answer
                 <textarea
                   value={content}
                   onChange={(event) => setContent(event.target.value)}
                   rows={8}
-                  className="rounded-xl border border-white/10 bg-slate-950/70 p-4 text-sm text-white outline-none transition focus:border-blue-400"
+                  className="rounded-xl border border-line bg-surface p-4 text-sm text-ink outline-none transition focus:border-primary"
                   placeholder="Type your answer, or attach files below."
                 />
               </label>
 
-              <div className="grid gap-2 text-sm font-medium text-slate-300">
+              <div className="grid gap-2 text-sm font-medium text-ink-muted">
                 Attachments
                 <FileUploader
                   bucket={STORAGE_BUCKETS.ASSIGNMENT_SUBMISSIONS}
@@ -151,7 +151,7 @@ export function AssignmentSubmissionPanel({
               <button
                 onClick={submit}
                 disabled={pending || (!content.trim() && files.length === 0)}
-                className="inline-flex w-fit items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-glow-blue transition hover:bg-blue-500 disabled:opacity-60"
+                className="inline-flex w-fit items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60"
               >
                 {pending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 {current ? "Resubmit" : "Submit assignment"}
@@ -162,36 +162,36 @@ export function AssignmentSubmissionPanel({
       </section>
 
       <aside className="space-y-4">
-        <div className="rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl">
-          <h3 className="font-outfit text-sm font-semibold uppercase tracking-wide text-slate-400">Status</h3>
+        <div className="rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl">
+          <h3 className="font-outfit text-sm font-semibold uppercase tracking-wide text-ink-muted">Status</h3>
           <div className="mt-4 grid gap-4 text-sm">
-            <div className="flex items-center gap-2 text-slate-200">
+            <div className="flex items-center gap-2 text-ink">
               {isGraded ? (
                 <CheckCircle2 size={16} className="text-emerald-300" />
               ) : current ? (
-                <CheckCircle2 size={16} className="text-blue-300" />
+                <CheckCircle2 size={16} className="text-primary" />
               ) : isPastDue ? (
                 <AlertTriangle size={16} className="text-amber-300" />
               ) : (
-                <Clock size={16} className="text-slate-400" />
+                <Clock size={16} className="text-ink-muted" />
               )}
               {statusLabel}
             </div>
             <div>
-              <p className="text-xs text-slate-500">Due</p>
-              <p className="text-slate-200">{due.toLocaleString()}</p>
+              <p className="text-xs text-ink-subtle">Due</p>
+              <p className="text-ink">{due.toLocaleString()}</p>
             </div>
             <div>
-              <p className="text-xs text-slate-500">Points</p>
-              <p className="text-slate-200">
+              <p className="text-xs text-ink-subtle">Points</p>
+              <p className="text-ink">
                 {current?.score != null
                   ? `${current.score} / ${assignment.totalPoints}`
                   : `${assignment.totalPoints} available`}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-500">Attempts</p>
-              <p className="text-slate-200">
+              <p className="text-xs text-ink-subtle">Attempts</p>
+              <p className="text-ink">
                 {attemptsUsed} of {assignment.maxResubmissions} used
               </p>
             </div>
@@ -200,11 +200,11 @@ export function AssignmentSubmissionPanel({
         </div>
 
         {current?.feedback && (
-          <div className="rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl">
-            <h3 className="font-outfit text-sm font-semibold uppercase tracking-wide text-slate-400">
+          <div className="rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl">
+            <h3 className="font-outfit text-sm font-semibold uppercase tracking-wide text-ink-muted">
               Lecturer feedback
             </h3>
-            <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-200">{current.feedback}</p>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-ink">{current.feedback}</p>
           </div>
         )}
       </aside>

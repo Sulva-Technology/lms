@@ -20,7 +20,9 @@ export const programSchema = z.object({
 });
 
 export const courseSchema = z.object({
-  departmentId: uuidSchema,
+  // A training tenant has no departments. An academic tenant still gets one,
+  // because its admin UI only ever submits a department id.
+  departmentId: uuidSchema.optional().nullable(),
   title: z.string().min(2),
   code: z.string().min(2).max(20),
   description: z.string().optional(),
@@ -60,3 +62,25 @@ export const brandingSettingsSchema = z.object({
   logo_url: z.string().url().optional(),
   primary_color: z.string().optional(),
 });
+
+export const courseSectionSchema = z
+  .object({
+    id: uuidSchema.optional(),
+    courseId: uuidSchema,
+    // A training cohort has no semester; it carries its own dates instead.
+    semesterId: uuidSchema.optional().nullable(),
+    name: z.string().min(2),
+    capacity: z.coerce.number().int().positive().optional().nullable(),
+    startsOn: z.string().date().optional().nullable(),
+    endsOn: z.string().date().optional().nullable(),
+  })
+  // Mirrors course_sections_schedulable and course_sections_date_order, so a
+  // bad section is refused with a sentence rather than a constraint violation.
+  .refine((value) => Boolean(value.semesterId) || Boolean(value.startsOn), {
+    message: 'Give the cohort a start date, or attach it to a term.',
+    path: ['startsOn'],
+  })
+  .refine((value) => !value.startsOn || !value.endsOn || value.endsOn >= value.startsOn, {
+    message: 'The cohort cannot end before it starts.',
+    path: ['endsOn'],
+  });

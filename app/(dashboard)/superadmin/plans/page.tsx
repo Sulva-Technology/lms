@@ -8,7 +8,7 @@ import { SuperadminService } from "@/lib/services/completion-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { Award, Plus } from "lucide-react";
 
-const inputClass = "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400";
+const inputClass = "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary";
 
 export default async function SuperadminPlansPage() {
   await requireRole("super_admin");
@@ -43,10 +43,10 @@ export default async function SuperadminPlansPage() {
 
   return (
     <GenericList title="Plans" description="Create and maintain platform packages for universities." icon={Award}>
-      <form action={createPlan} className="rounded-[28px] border border-white/10 bg-slate-950/60 p-6 shadow-2xl backdrop-blur-2xl">
+      <form action={createPlan} className="rounded-[28px] border border-line bg-surface p-6 shadow-2xl backdrop-blur-2xl">
         <div className="mb-5 flex items-center gap-3">
-          <Plus className="text-blue-300" size={20} />
-          <h2 className="font-outfit text-xl font-semibold text-white">New platform plan</h2>
+          <Plus className="text-primary" size={20} />
+          <h2 className="font-outfit text-xl font-semibold text-ink">New platform plan</h2>
         </div>
         <div className="grid gap-4 lg:grid-cols-3">
           <input name="name" placeholder="Plan name" className={inputClass} />
@@ -54,11 +54,11 @@ export default async function SuperadminPlansPage() {
           <input name="monthlyPriceCents" type="number" placeholder="Monthly price cents" className={inputClass} />
           <input name="maxStudents" type="number" placeholder="Max students" className={inputClass} />
           <input name="maxStorageGb" type="number" placeholder="Max storage GB" className={inputClass} />
-          <label className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-200">
-            Active <input name="isActive" type="checkbox" defaultChecked className="accent-blue-500" />
+          <label className="flex items-center justify-between rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink">
+            Active <input name="isActive" type="checkbox" defaultChecked className="accent-primary" />
           </label>
           <textarea name="description" placeholder="Description" rows={3} className={`${inputClass} lg:col-span-2`} />
-          <button className="inline-flex h-fit items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-glow-blue hover:bg-blue-500">
+          <button className="inline-flex h-fit items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover">
             <Plus size={16} /> Create plan
           </button>
         </div>
@@ -69,7 +69,7 @@ export default async function SuperadminPlansPage() {
           data={plans}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "name", header: "Plan", cell: (item: any) => <span className="font-medium text-white">{item.name}</span> },
+            { key: "name", header: "Plan", cell: (item: any) => <span className="font-medium text-ink">{item.name}</span> },
             { key: "slug", header: "Slug", cell: (item: any) => item.slug },
             { key: "price", header: "Monthly", cell: (item: any) => `$${(Number(item.monthly_price_cents || 0) / 100).toFixed(2)}` },
             { key: "students", header: "Students", cell: (item: any) => item.max_students || "Unlimited" },

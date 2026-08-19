@@ -50,13 +50,13 @@ export function AccordionItem({ id, title, children, className }: { id: string; 
   const isOpen = ctx.openItems.includes(id);
 
   return (
-    <div className={cn("bg-slate-900/50 border border-white/10 rounded-2xl overflow-hidden glass-panel transition-colors", className)}>
+    <div className={cn("bg-surface border border-line rounded-2xl overflow-hidden panel transition-colors", className)}>
       <button 
         onClick={() => ctx.toggleItem(id)}
-        className="w-full px-6 py-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors text-left"
+        className="w-full px-6 py-5 flex items-center justify-between hover:bg-ink/[0.06] transition-colors text-left"
       >
-        <div className="font-outfit text-lg font-semibold text-slate-100">{title}</div>
-        <motion.div animate={{ rotate: isOpen ? 180 : 0 }} className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+        <div className="font-outfit text-lg font-semibold text-ink">{title}</div>
+        <motion.div animate={{ rotate: isOpen ? 180 : 0 }} className="w-8 h-8 rounded-full bg-surface flex items-center justify-center text-ink-muted shrink-0">
           <ChevronDown size={18} />
         </motion.div>
       </button>
@@ -64,9 +64,9 @@ export function AccordionItem({ id, title, children, className }: { id: string; 
       <motion.div 
         initial={false}
         animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
-        className="overflow-hidden bg-slate-950/50"
+        className="overflow-hidden bg-surface"
       >
-        <div className="p-6 pt-2 border-t border-white/5">
+        <div className="p-6 pt-2 border-t border-line">
           {children}
         </div>
       </motion.div>

@@ -11,8 +11,8 @@ type Section = { id: string; label: string };
 export type GradeItem = Record<string, any>;
 
 const inputClass =
-  "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
-const labelClass = "grid gap-2 text-sm font-medium text-slate-300";
+  "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
+const labelClass = "grid gap-2 text-sm font-medium text-ink-muted";
 
 export function GradeItemManager({ sections, items }: { sections: Section[]; items: GradeItem[] }) {
   const [rows, setRows] = React.useState(items);
@@ -54,17 +54,17 @@ export function GradeItemManager({ sections, items }: { sections: Section[]; ite
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel flex flex-col gap-3 rounded-2xl border border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="panel flex flex-col gap-3 rounded-2xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-white">{rows.length} grade items</p>
-          <p className="text-xs text-slate-400">
+          <p className="text-sm font-semibold text-ink">{rows.length} grade items</p>
+          <p className="text-xs text-ink-muted">
             Assignments create their own grade item automatically. Add items here for exams and participation.
           </p>
         </div>
         <button
           onClick={() => setOpen(true)}
           disabled={sections.length === 0}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow-blue transition hover:bg-blue-500 disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60"
         >
           <Plus size={16} /> Add grade item
         </button>
@@ -95,7 +95,7 @@ export function GradeItemManager({ sections, items }: { sections: Section[]; ite
             {
               key: "item",
               header: "Item",
-              cell: (item) => <span className="font-medium text-white">{item.name || item.title}</span>,
+              cell: (item) => <span className="font-medium text-ink">{item.name || item.title}</span>,
             },
             { key: "course", header: "Course", cell: (item) => sectionLabel(item) },
             { key: "max", header: "Max", cell: (item) => item.max_score || 100 },
@@ -137,7 +137,7 @@ export function GradeItemManager({ sections, items }: { sections: Section[]; ite
           </div>
           <button
             disabled={pending}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60"
           >
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             Save grade item

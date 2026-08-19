@@ -22,13 +22,13 @@ export function LogoutButton({ collapsed = false, className }: LogoutButtonProps
       disabled={pending}
       title={collapsed ? "Log out" : undefined}
       className={cn(
-        "flex items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2.5 text-sm font-semibold text-red-300 transition-all hover:bg-red-500/20 disabled:opacity-60 active:scale-[0.98]",
-        collapsed ? "h-10 w-10 px-0" : "w-full",
+        "flex items-center justify-center gap-2 rounded-[10px] border border-line px-3 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-danger/30 hover:bg-danger/[0.07] hover:text-danger disabled:opacity-60",
+        collapsed ? "size-9 px-0" : "w-full",
         className
       )}
       aria-label="Log out"
     >
-      {pending ? <Loader2 size={18} className="animate-spin" /> : <LogOut size={18} />}
+      {pending ? <Loader2 size={16} className="animate-spin" /> : <LogOut size={16} />}
       {!collapsed && <span>Log out</span>}
     </button>
   )

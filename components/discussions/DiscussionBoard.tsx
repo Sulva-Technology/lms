@@ -35,8 +35,8 @@ export type Discussion = {
 type Section = { id: string; label: string };
 
 const inputClass =
-  "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
-const labelClass = "grid gap-2 text-sm font-medium text-slate-300";
+  "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
+const labelClass = "grid gap-2 text-sm font-medium text-ink-muted";
 
 export function DiscussionBoard({
   mode,
@@ -156,12 +156,12 @@ export function DiscussionBoard({
       <div className="space-y-4">
         {banner}
 
-        <article className="rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl">
+        <article className="rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-blue-300">{thread.course_label}</p>
-              <h2 className="mt-1 font-outfit text-2xl font-bold text-white">{thread.title}</h2>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">{thread.course_label}</p>
+              <h2 className="mt-1 font-outfit text-2xl font-bold text-ink">{thread.title}</h2>
+              <p className="mt-1 text-xs text-ink-subtle">
                 {thread.author_name} · {new Date(thread.created_at).toLocaleString()}
               </p>
             </div>
@@ -173,43 +173,43 @@ export function DiscussionBoard({
               <button
                 onClick={markAnswered}
                 disabled={pending}
-                className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-60"
+                className="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-ink hover:bg-emerald-500 disabled:opacity-60"
               >
                 Mark as answered
               </button>
             ) : null}
           </div>
-          <p className="mt-4 whitespace-pre-wrap leading-7 text-slate-300">{thread.content}</p>
+          <p className="mt-4 whitespace-pre-wrap leading-7 text-ink-muted">{thread.content}</p>
         </article>
 
         <section className="space-y-3">
-          <h3 className="font-outfit text-sm font-semibold uppercase tracking-wide text-slate-400">
+          <h3 className="font-outfit text-sm font-semibold uppercase tracking-wide text-ink-muted">
             {replies.length} {replies.length === 1 ? "reply" : "replies"}
           </h3>
 
           {replies.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-white/10 p-4 text-sm text-slate-500">
+            <p className="rounded-xl border border-dashed border-line p-4 text-sm text-ink-subtle">
               No replies yet.
             </p>
           ) : (
             replies.map((item) => (
-              <div key={item.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <span className="font-semibold text-slate-200">{item.author_name}</span>
+              <div key={item.id} className="rounded-2xl border border-line bg-status-soft p-4">
+                <div className="flex items-center gap-2 text-xs text-ink-muted">
+                  <span className="font-semibold text-ink">{item.author_name}</span>
                   <span>· {new Date(item.created_at).toLocaleString()}</span>
                   {item.is_endorsed && (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-violet-500/10 px-2 py-0.5 font-semibold text-violet-300">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-primary-soft px-2 py-0.5 font-semibold text-primary">
                       <ShieldCheck size={12} /> Lecturer
                     </span>
                   )}
                 </div>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-200">{item.content}</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-ink">{item.content}</p>
               </div>
             ))
           )}
         </section>
 
-        <div className="grid gap-3 rounded-[24px] border border-white/10 bg-slate-950/60 p-6">
+        <div className="grid gap-3 rounded-[24px] border border-line bg-surface p-6">
           <label className={labelClass}>
             Your reply
             <textarea
@@ -223,7 +223,7 @@ export function DiscussionBoard({
           <button
             onClick={reply}
             disabled={pending}
-            className="inline-flex w-fit items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+            className="inline-flex w-fit items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60"
           >
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
             Post reply
@@ -235,10 +235,10 @@ export function DiscussionBoard({
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel flex flex-col gap-3 rounded-2xl border border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="panel flex flex-col gap-3 rounded-2xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-white">{items.length} questions</p>
-          <p className="text-xs text-slate-400">
+          <p className="text-sm font-semibold text-ink">{items.length} questions</p>
+          <p className="text-xs text-ink-muted">
             {mode === "lecturer"
               ? "Answer questions from students in your sections."
               : "Ask your lecturer and classmates a question."}
@@ -247,7 +247,7 @@ export function DiscussionBoard({
         <button
           onClick={() => setAskOpen(true)}
           disabled={sections.length === 0}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow-blue transition hover:bg-blue-500 disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60"
         >
           <MessageSquarePlus size={16} /> Ask a question
         </button>
@@ -269,7 +269,7 @@ export function DiscussionBoard({
               key: "title",
               header: "Question",
               cell: (item) => (
-                <Link href={`${detailHrefBase}/${item.id}`} className="font-medium text-white hover:text-blue-300">
+                <Link href={`${detailHrefBase}/${item.id}`} className="font-medium text-ink hover:text-primary">
                   {item.title}
                 </Link>
               ),
@@ -304,7 +304,7 @@ export function DiscussionBoard({
           </label>
           <button
             disabled={pending}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60"
           >
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
             Post question

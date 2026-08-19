@@ -32,7 +32,7 @@ export function FileList({
   }
 
   if (files.length === 0) {
-    return <p className="text-sm text-slate-500">{emptyLabel}</p>;
+    return <p className="text-sm text-ink-subtle">{emptyLabel}</p>;
   }
 
   return (
@@ -43,16 +43,16 @@ export function FileList({
           key={file.path}
           type="button"
           onClick={() => void open(file.path)}
-          className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left transition hover:bg-white/[0.06]"
+          className="flex items-center justify-between gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-left transition hover:bg-ink/[0.06]"
         >
-          <span className="flex min-w-0 items-center gap-2 text-sm text-slate-200">
-            <Paperclip size={15} className="shrink-0 text-blue-300" />
+          <span className="flex min-w-0 items-center gap-2 text-sm text-ink">
+            <Paperclip size={15} className="shrink-0 text-primary" />
             <span className="truncate">{file.fileName}</span>
           </span>
           {pendingPath === file.path ? (
-            <Loader2 size={15} className="animate-spin text-slate-400" />
+            <Loader2 size={15} className="animate-spin text-ink-muted" />
           ) : (
-            <Download size={15} className="text-slate-400" />
+            <Download size={15} className="text-ink-muted" />
           )}
         </button>
       ))}

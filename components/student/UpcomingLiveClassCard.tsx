@@ -12,7 +12,7 @@ interface Props {
 
 export function UpcomingLiveClassCard({ liveClass, idx }: Props) {
   const themeColors = {
-    blue: "from-blue-500/20 to-indigo-500/5 border-blue-500/30 text-blue-400",
+    blue: "from-blue-500/20 to-indigo-500/5 border-primary/25 text-primary",
     purple: "from-purple-500/20 to-fuchsia-500/5 border-purple-500/30 text-purple-400",
     orange: "from-orange-500/20 to-amber-500/5 border-orange-500/30 text-orange-400",
     emerald: "from-emerald-500/20 to-teal-500/5 border-emerald-500/30 text-emerald-400",
@@ -24,7 +24,7 @@ export function UpcomingLiveClassCard({ liveClass, idx }: Props) {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: idx * 0.1 }}
-      className={`relative overflow-hidden rounded-2xl glass-panel p-5 border cursor-pointer hover:bg-white/[0.02] transition-colors group ${themeColors[colorMode].split(' ')[1]}`}
+      className={`relative overflow-hidden rounded-2xl panel p-5 border cursor-pointer hover:bg-ink/[0.06] transition-colors group ${themeColors[colorMode].split(' ')[1]}`}
     >
       <div className={`absolute top-0 right-0 w-32 h-32 blur-[40px] -mt-10 -mr-10 bg-gradient-to-br ${themeColors[colorMode].split(' ')[0]}`}></div>
       
@@ -33,24 +33,24 @@ export function UpcomingLiveClassCard({ liveClass, idx }: Props) {
           <span className={`px-2 py-0.5 rounded text-[10px] uppercase tracking-wider font-bold border ${themeColors[colorMode]}`}>
             Live class
           </span>
-          <span className="text-xs text-slate-400 font-medium">{liveClass.course}</span>
+          <span className="text-xs text-ink-muted font-medium">{liveClass.course}</span>
         </div>
         
-        <h4 className="font-outfit font-semibold text-lg text-slate-100 mb-4 group-hover:text-white transition-colors">{liveClass.title}</h4>
+        <h4 className="font-outfit font-semibold text-lg text-ink mb-4 group-hover:text-ink transition-colors">{liveClass.title}</h4>
         
         <div className="flex items-center justify-between mt-auto">
           <div className="flex items-center gap-2">
             {liveClass.instructorAvatar ? (
                <Image src={liveClass.instructorAvatar} alt={liveClass.instructor} width={24} height={24} className="rounded-full" />
             ) : (
-               <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center"><User size={12} className="text-slate-400" /></div>
+               <div className="w-6 h-6 rounded-full bg-surface flex items-center justify-center"><User size={12} className="text-ink-muted" /></div>
             )}
-            <span className="text-sm text-slate-300">{liveClass.instructor}</span>
+            <span className="text-sm text-ink-muted">{liveClass.instructor}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-300 text-sm font-medium">
+          <div className="flex items-center gap-1.5 text-ink-muted text-sm font-medium">
              <Clock size={14} className={themeColors[colorMode].split(' ')[2]} />
              <span>{liveClass.startTime}</span>
-             <span className="text-slate-500 text-xs ml-1">({liveClass.duration})</span>
+             <span className="text-ink-subtle text-xs ml-1">({liveClass.duration})</span>
           </div>
         </div>
       </div>

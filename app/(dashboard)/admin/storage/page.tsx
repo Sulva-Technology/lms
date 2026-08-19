@@ -20,7 +20,7 @@ export default async function AdminStoragePage() {
           data={files}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "name", header: "File", cell: (item: any) => <span className="font-medium text-white">{item.file_name}</span> },
+            { key: "name", header: "File", cell: (item: any) => <span className="font-medium text-ink">{item.file_name}</span> },
             { key: "type", header: "Type", cell: (item: any) => item.file_type },
             { key: "size", header: "Size", cell: (item: any) => `${(Number(item.file_size || 0) / 1024 / 1024).toFixed(2)} MB` },
             { key: "visibility", header: "Visibility", cell: (item: any) => item.is_public ? "Public" : "Private" },

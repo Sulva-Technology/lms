@@ -44,7 +44,7 @@ export default async function StudentDiscussionThreadPage({
       <div className="mb-4">
         <Link
           href="/student/discussions"
-          className="flex items-center gap-2 font-medium text-blue-400 hover:text-blue-300"
+          className="flex items-center gap-2 font-medium text-primary hover:text-primary"
         >
           <ArrowLeft size={16} /> Back to Discussions
         </Link>

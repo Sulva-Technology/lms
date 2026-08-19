@@ -1,48 +1,60 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { GlassCard } from "./glass-card"
 
 export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string;
-  value: string | number;
+  title: string
+  value: string | number
   trend?: {
-    value: number;
-    label?: string;
-    direction: "up" | "down" | "neutral";
-  };
-  icon?: React.ReactNode;
-  colorClass?: string;
+    value: number
+    label?: string
+    direction: "up" | "down" | "neutral"
+  }
+  icon?: React.ReactNode
+  colorClass?: string
 }
 
-export function StatCard({ title, value, trend, icon, colorClass = "text-blue-400 bg-blue-500/10", className, ...props }: StatCardProps) {
+const TREND_TONE = {
+  up: "text-success bg-success/10",
+  down: "text-danger bg-danger/10",
+  neutral: "text-ink-muted bg-status-soft",
+} as const
+
+export function StatCard({
+  title,
+  value,
+  trend,
+  icon,
+  colorClass = "text-primary-soft-contrast bg-primary-soft",
+  className,
+  ...props
+}: StatCardProps) {
   return (
-    <GlassCard className={cn("flex flex-col gap-4", className)} hover {...props}>
+    <div className={cn("panel rounded-card p-5", className)} {...props}>
       <div className="flex items-start justify-between gap-4">
-        <h3 className="text-slate-400 text-sm font-medium">{title}</h3>
-        {icon && (
-          <div className={cn("p-2 rounded-lg border border-white/5", colorClass)}>
+        <p className="text-sm font-medium text-ink-muted">{title}</p>
+        {icon ? (
+          <span className={cn("grid size-9 shrink-0 place-items-center rounded-[10px]", colorClass)}>
             {icon}
-          </div>
-        )}
+          </span>
+        ) : null}
       </div>
-      <div>
-        <div className="text-3xl font-outfit font-semibold text-white">
-          {value}
+
+      <p className="mt-4 font-display text-3xl font-semibold tabular-nums text-ink">{value}</p>
+
+      {trend ? (
+        <div className="mt-2.5 flex items-center gap-2">
+          <span
+            className={cn(
+              "rounded-pill px-2 py-0.5 text-xs font-semibold tabular-nums",
+              TREND_TONE[trend.direction],
+            )}
+          >
+            {trend.direction === "up" ? "+" : ""}
+            {trend.value}%
+          </span>
+          {trend.label ? <span className="text-xs text-ink-subtle">{trend.label}</span> : null}
         </div>
-        {trend && (
-          <div className="flex items-center gap-2 mt-2">
-            <span className={cn(
-              "text-xs font-semibold px-2 py-0.5 rounded",
-              trend.direction === "up" ? "text-emerald-400 bg-emerald-500/10" : 
-              trend.direction === "down" ? "text-red-400 bg-red-500/10" : 
-              "text-slate-400 bg-slate-500/10"
-            )}>
-              {trend.direction === "up" ? "+" : ""}{trend.value}%
-            </span>
-            {trend.label && <span className="text-slate-500 text-xs">{trend.label}</span>}
-          </div>
-        )}
-      </div>
-    </GlassCard>
+      ) : null}
+    </div>
   )
 }

@@ -24,7 +24,7 @@ export function StructureBootstrapCard() {
 
   return (
     <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5">
-      <h2 className="font-outfit text-base font-semibold text-white">Finish setting up</h2>
+      <h2 className="font-outfit text-base font-semibold text-ink">Finish setting up</h2>
       <p className="mt-1 text-sm text-amber-100/80">
         Courses need a faculty, a department and a term before they can exist. Create one of each with
         sensible defaults, and rename them later if you like.

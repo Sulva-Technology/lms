@@ -9,7 +9,7 @@ export class CourseService {
       .from('courses')
       .insert({
         university_id: universityId,
-        department_id: payload.departmentId,
+        department_id: payload.departmentId ?? null,
         title: payload.title,
         code: payload.code,
         description: payload.description || null,
@@ -27,7 +27,7 @@ export class CourseService {
     const { data, error } = await this.supabase
       .from('courses')
       .update({
-        ...(payload.departmentId && { department_id: payload.departmentId }),
+        ...(payload.departmentId !== undefined && { department_id: payload.departmentId || null }),
         ...(payload.title && { title: payload.title }),
         ...(payload.code && { code: payload.code }),
         ...(payload.description !== undefined && { description: payload.description || null }),

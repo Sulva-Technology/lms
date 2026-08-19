@@ -27,9 +27,9 @@ export default async function AdminReportsPage() {
     <GenericList title="Reports" description="University-level operational metrics." icon={BarChart}>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map(([label, value]) => (
-          <div key={label} className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5">
-            <p className="text-xs uppercase tracking-wider text-slate-500">{label}</p>
-            <p className="font-outfit text-3xl font-semibold text-white mt-2">{value}</p>
+          <div key={label} className="bg-surface backdrop-blur-2xl border border-line rounded-[24px] p-5">
+            <p className="text-xs uppercase tracking-wider text-ink-subtle">{label}</p>
+            <p className="font-outfit text-3xl font-semibold text-ink mt-2">{value}</p>
           </div>
         ))}
       </div>
@@ -40,7 +40,7 @@ export default async function AdminReportsPage() {
         ]}
         keyExtractor={(item) => item.metric}
         columns={[
-          { key: "metric", header: "Metric", cell: (item) => <span className="font-medium text-white">{item.metric}</span> },
+          { key: "metric", header: "Metric", cell: (item) => <span className="font-medium text-ink">{item.metric}</span> },
           { key: "value", header: "Value", cell: (item) => item.value },
           { key: "detail", header: "Detail", cell: (item) => item.detail },
         ]}

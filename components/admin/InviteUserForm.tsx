@@ -52,15 +52,15 @@ export function InviteUserForm({
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[32px] p-6 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.45)]"
+      className="bg-surface backdrop-blur-2xl border border-line rounded-[32px] p-6 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.45)]"
     >
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-11 h-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-300 flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-primary-soft border border-primary/25 text-primary flex items-center justify-center">
           <MailPlus size={22} />
         </div>
         <div>
-          <h2 className="font-outfit text-xl font-semibold text-white">Invite user</h2>
-          <p className="text-sm text-slate-400">Secure role and tenant metadata are attached server-side.</p>
+          <h2 className="font-outfit text-xl font-semibold text-ink">Invite user</h2>
+          <p className="text-sm text-ink-muted">Secure role and tenant metadata are attached server-side.</p>
         </div>
       </div>
 
@@ -69,24 +69,24 @@ export function InviteUserForm({
         <input
           name="firstName"
           placeholder="First name"
-          className="bg-slate-900/70 border border-slate-700/70 rounded-xl px-3 py-3 text-sm text-white outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20"
+          className="bg-surface border border-line rounded-xl px-3 py-3 text-sm text-ink outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30"
         />
         <input
           name="lastName"
           placeholder="Last name"
-          className="bg-slate-900/70 border border-slate-700/70 rounded-xl px-3 py-3 text-sm text-white outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20"
+          className="bg-surface border border-line rounded-xl px-3 py-3 text-sm text-ink outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30"
         />
         <input
           name="email"
           type="email"
           required
           placeholder="user@university.edu"
-          className="bg-slate-900/70 border border-slate-700/70 rounded-xl px-3 py-3 text-sm text-white outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20"
+          className="bg-surface border border-line rounded-xl px-3 py-3 text-sm text-ink outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30"
         />
         <select
           name="role"
           defaultValue={defaultRole}
-          className="bg-slate-900/70 border border-slate-700/70 rounded-xl px-3 py-3 text-sm text-white outline-none focus:border-blue-500/60 focus:ring-2 focus:ring-blue-500/20"
+          className="bg-surface border border-line rounded-xl px-3 py-3 text-sm text-ink outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/30"
         >
           {allowedRoles.map((role) => (
             <option key={role} value={role}>{roleLabels[role]}</option>
@@ -95,7 +95,7 @@ export function InviteUserForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-60 text-white font-semibold px-4 py-3 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+          className="rounded-xl bg-primary hover:bg-primary-hover disabled:opacity-60 text-primary-contrast font-semibold px-4 py-3 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
         >
           {isLoading ? <Loader2 size={18} className="animate-spin" /> : <><Send size={16} /> Send</>}
         </button>

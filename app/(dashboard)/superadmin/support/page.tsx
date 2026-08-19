@@ -8,7 +8,7 @@ import { SuperadminService } from "@/lib/services/completion-read.service";
 import { createClient } from "@/lib/supabase/server";
 import { HelpCircle } from "lucide-react";
 
-const selectClass = "rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2 text-xs text-white outline-none focus:border-blue-400";
+const selectClass = "rounded-xl border border-line bg-surface px-3 py-2 text-xs text-ink outline-none focus:border-primary";
 
 export default async function SuperadminSupportPage() {
   await requireRole("super_admin");
@@ -30,7 +30,7 @@ export default async function SuperadminSupportPage() {
           data={tickets}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "subject", header: "Subject", cell: (item: any) => <span className="font-medium text-white">{item.subject}</span> },
+            { key: "subject", header: "Subject", cell: (item: any) => <span className="font-medium text-ink">{item.subject}</span> },
             { key: "university", header: "University", cell: (item: any) => item.universities?.name || "Platform" },
             { key: "requester", header: "Requester", cell: (item: any) => [item.profiles?.first_name, item.profiles?.last_name].filter(Boolean).join(" ") || item.profiles?.email || "Unknown" },
             { key: "created", header: "Created", cell: (item: any) => new Date(item.created_at).toLocaleDateString() },
@@ -46,7 +46,7 @@ export default async function SuperadminSupportPage() {
                   <select name="status" defaultValue={item.status} className={selectClass}>
                     {["open", "pending", "resolved", "closed"].map((value) => <option key={value} value={value}>{value}</option>)}
                   </select>
-                  <button className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-500">Save</button>
+                  <button className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-contrast hover:bg-primary-hover">Save</button>
                 </form>
               )
             },

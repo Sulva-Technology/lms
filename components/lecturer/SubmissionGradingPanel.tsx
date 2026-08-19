@@ -77,12 +77,12 @@ export function SubmissionGradingPanel({
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel flex items-center justify-between rounded-2xl border border-white/10 p-4">
+      <div className="panel flex items-center justify-between rounded-2xl border border-line p-4">
         <div>
-          <p className="text-sm font-semibold text-white">
+          <p className="text-sm font-semibold text-ink">
             {graded} of {rows.length} graded
           </p>
-          <p className="text-xs text-slate-400">Out of {assignment.totalPoints} points.</p>
+          <p className="text-xs text-ink-muted">Out of {assignment.totalPoints} points.</p>
         </div>
       </div>
 
@@ -99,7 +99,7 @@ export function SubmissionGradingPanel({
           {
             key: "student",
             header: "Student",
-            cell: (row) => <span className="font-medium text-white">{row.student_name}</span>,
+            cell: (row) => <span className="font-medium text-ink">{row.student_name}</span>,
           },
           {
             key: "submitted",
@@ -119,7 +119,7 @@ export function SubmissionGradingPanel({
             cell: (row) => (
               <button
                 onClick={() => open(row)}
-                className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-500"
+                className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-contrast hover:bg-primary-hover"
               >
                 {row.score == null ? "Grade" : "Edit grade"}
               </button>
@@ -137,20 +137,20 @@ export function SubmissionGradingPanel({
         {active && (
           <div className="grid gap-5">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Written answer</p>
-              <p className="mt-2 whitespace-pre-wrap rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-slate-200">
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Written answer</p>
+              <p className="mt-2 whitespace-pre-wrap rounded-xl border border-line bg-status-soft p-4 text-sm text-ink">
                 {active.content || "No written answer."}
               </p>
             </div>
 
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Attachments</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Attachments</p>
               <div className="mt-2">
                 <FileList bucket={STORAGE_BUCKETS.ASSIGNMENT_SUBMISSIONS} files={active.file_metadata || []} />
               </div>
             </div>
 
-            <label className="grid gap-2 text-sm font-medium text-slate-300">
+            <label className="grid gap-2 text-sm font-medium text-ink-muted">
               Score (max {assignment.totalPoints})
               <input
                 type="number"
@@ -158,17 +158,17 @@ export function SubmissionGradingPanel({
                 max={assignment.totalPoints}
                 value={score}
                 onChange={(event) => setScore(event.target.value)}
-                className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400"
+                className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary"
               />
             </label>
 
-            <label className="grid gap-2 text-sm font-medium text-slate-300">
+            <label className="grid gap-2 text-sm font-medium text-ink-muted">
               Feedback
               <textarea
                 rows={6}
                 value={feedback}
                 onChange={(event) => setFeedback(event.target.value)}
-                className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400"
+                className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary"
               />
             </label>
 
@@ -181,7 +181,7 @@ export function SubmissionGradingPanel({
             <button
               onClick={save}
               disabled={pending}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60"
             >
               {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
               Save grade

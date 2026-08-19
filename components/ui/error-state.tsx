@@ -1,33 +1,47 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { AlertCircle, RefreshCw } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export interface ErrorStateProps extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string;
-  message?: string;
-  onRetry?: () => void;
+  title?: string
+  message?: string
+  onRetry?: () => void
 }
 
-export function ErrorState({ title = "Something went wrong", message = "We encountered an error loading this content.", onRetry, className, ...props }: ErrorStateProps) {
+export function ErrorState({
+  title = "Something went wrong",
+  message = "We could not load this content.",
+  onRetry,
+  className,
+  ...props
+}: ErrorStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center p-8 bg-red-500/5 border border-red-500/20 rounded-2xl text-center glass-panel", className)} {...props}>
-      <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 mb-4 border border-red-500/20">
-        <AlertCircle size={24} />
-      </div>
-      <h3 className="font-outfit text-lg font-semibold text-red-200 mb-2">{title}</h3>
-      <p className="text-red-400/70 text-sm max-w-sm mb-6">{message}</p>
-      
-      {onRetry && (
-        <button
-          onClick={onRetry}
-          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg text-sm font-medium transition-colors border border-red-500/20"
-        >
-          <RefreshCw size={16} />
-          Try Again
-        </button>
+    <div
+      role="alert"
+      className={cn(
+        "flex flex-col items-center justify-center rounded-card border border-danger/25 bg-danger/[0.05] p-8 text-center",
+        className,
       )}
+      {...props}
+    >
+      <span className="grid size-11 place-items-center rounded-full bg-danger/10 text-danger">
+        <AlertCircle size={22} />
+      </span>
+      <h3 className="mt-4 font-display text-lg font-semibold text-ink">{title}</h3>
+      <p className="mt-2 max-w-sm text-sm text-ink-muted">{message}</p>
+
+      {onRetry ? (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-6 inline-flex items-center gap-2 rounded-[10px] border border-danger/25 px-4 py-2 text-sm font-medium text-danger transition-colors hover:bg-danger/10"
+        >
+          <RefreshCw size={15} />
+          Try again
+        </button>
+      ) : null}
     </div>
   )
 }

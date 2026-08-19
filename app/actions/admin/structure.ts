@@ -25,7 +25,7 @@ export async function bootstrapAcademicStructureAction() {
         userId: session.user!.id,
         action: 'ADMIN_STRUCTURE_BOOTSTRAPPED',
         entityType: 'departments',
-        entityId: result.departmentId,
+        entityId: result.departmentId ?? undefined,
       });
     }
 

@@ -17,10 +17,10 @@ export default async function StudentAttendancePage() {
     <GenericList title="Attendance" description="Review attendance by course and session." icon={UserCheck}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {attendance.summary.map((item) => (
-          <div key={item.course} className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5">
-            <p className="text-sm text-slate-400">{item.course}</p>
-            <p className="font-outfit text-3xl font-semibold text-white mt-2">{item.total ? Math.round((item.present / item.total) * 100) : 0}%</p>
-            <p className="text-xs text-slate-500 mt-1">{item.present} of {item.total} sessions present or late</p>
+          <div key={item.course} className="bg-surface backdrop-blur-2xl border border-line rounded-[24px] p-5">
+            <p className="text-sm text-ink-muted">{item.course}</p>
+            <p className="font-outfit text-3xl font-semibold text-ink mt-2">{item.total ? Math.round((item.present / item.total) * 100) : 0}%</p>
+            <p className="text-xs text-ink-subtle mt-1">{item.present} of {item.total} sessions present or late</p>
           </div>
         ))}
       </div>
@@ -32,7 +32,7 @@ export default async function StudentAttendancePage() {
           keyExtractor={(item: any) => item.id}
           columns={[
             { key: "course", header: "Course", cell: (item: any) => item.course },
-            { key: "title", header: "Session", cell: (item: any) => <span className="font-medium text-white">{item.title}</span> },
+            { key: "title", header: "Session", cell: (item: any) => <span className="font-medium text-ink">{item.title}</span> },
             { key: "date", header: "Date", cell: (item: any) => new Date(item.date).toLocaleDateString() },
             { key: "period", header: "Period", cell: (item: any) => item.period ?? 1 },
             { key: "status", header: "Status", cell: (item: any) => <span className="capitalize">{item.status}</span> },

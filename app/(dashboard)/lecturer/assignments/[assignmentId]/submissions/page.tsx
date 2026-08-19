@@ -59,7 +59,7 @@ export default async function LecturerSubmissionsPage({
       <div className="mb-4">
         <Link
           href="/lecturer/assignments"
-          className="flex items-center gap-2 font-medium text-blue-400 hover:text-blue-300"
+          className="flex items-center gap-2 font-medium text-primary hover:text-primary"
         >
           <ArrowLeft size={16} /> Back to Assignments
         </Link>

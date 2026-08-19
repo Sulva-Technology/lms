@@ -88,10 +88,10 @@ export function LiveClassManager({ courses, sessions }: { courses: Course[]; ses
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="font-outfit text-3xl font-bold text-white mb-2 tracking-tight">Manage Live Classes</h1>
-          <p className="text-slate-400">Host scheduled classes, view attendance, and manage recordings.</p>
+          <h1 className="font-outfit text-3xl font-bold text-ink mb-2 tracking-tight">Manage Live Classes</h1>
+          <p className="text-ink-muted">Host scheduled classes, view attendance, and manage recordings.</p>
         </div>
-        <button onClick={openCreate} className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_15px_rgba(37,99,235,0.3)] transition hover:bg-blue-500">
+        <button onClick={openCreate} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast shadow-[0_0_15px_rgba(37,99,235,0.3)] transition hover:bg-primary-hover">
           <CalendarPlus size={16} /> Schedule Class
         </button>
       </div>
@@ -108,7 +108,7 @@ export function LiveClassManager({ courses, sessions }: { courses: Course[]; ses
             <LiveClassList role="lecturer" sessions={[session]} />
             {session.status === "scheduled" && (
               <div className="absolute right-4 top-4 flex gap-2">
-                <button onClick={() => openEdit(session)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10">
+                <button onClick={() => openEdit(session)} className="inline-flex items-center gap-2 rounded-lg border border-line bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]">
                   <Pencil size={14} /> Edit
                 </button>
                 <button onClick={() => cancel(session.id)} className="inline-flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
@@ -123,19 +123,19 @@ export function LiveClassManager({ courses, sessions }: { courses: Course[]; ses
 
       <Drawer isOpen={drawerOpen} onClose={() => { setDrawerOpen(false); setEditing(null); }} title={editing ? "Edit live class" : "Schedule live class"} className="max-w-xl">
         <form action={submit} className="grid gap-4">
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Course section<select name="courseSectionId" required defaultValue={(editing as any)?.course_section_id || ""} className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400">{courses.map((course) => <option key={course.id} value={course.id}>{course.code} - {course.title}</option>)}</select></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Topic<input name="topic" required defaultValue={(editing as any)?.topic || (editing as any)?.title || ""} className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Description<textarea name="description" rows={4} defaultValue={(editing as any)?.description || ""} className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Course section<select name="courseSectionId" required defaultValue={(editing as any)?.course_section_id || ""} className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary">{courses.map((course) => <option key={course.id} value={course.id}>{course.code} - {course.title}</option>)}</select></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Topic<input name="topic" required defaultValue={(editing as any)?.topic || (editing as any)?.title || ""} className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary" /></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Description<textarea name="description" rows={4} defaultValue={(editing as any)?.description || ""} className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary" /></label>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="grid gap-2 text-sm font-medium text-slate-300">Start time<input name="startTime" type="datetime-local" required className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /></label>
-            <label className="grid gap-2 text-sm font-medium text-slate-300">Duration<input name="durationMinutes" type="number" min={15} max={300} defaultValue={60} required className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /></label>
+            <label className="grid gap-2 text-sm font-medium text-ink-muted">Start time<input name="startTime" type="datetime-local" required className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary" /></label>
+            <label className="grid gap-2 text-sm font-medium text-ink-muted">Duration<input name="durationMinutes" type="number" min={15} max={300} defaultValue={60} required className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary" /></label>
           </div>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Attendance tracking<select name="trackingRule" className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400"><option value="duration">Duration based</option><option value="join">Join based</option></select><span className="text-xs font-normal text-slate-500">Duration based marks a student present only once they have attended enough of the class.</span></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Present at (% of class)<input name="attendanceThresholdPercent" type="number" min={1} max={100} defaultValue={75} className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400" /><span className="text-xs font-normal text-slate-500">Below half of this a student is marked absent, in between they are late.</span></label>
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="isRecordingEnabled" type="checkbox" className="h-4 w-4 accent-blue-500" /> Enable recording</label>
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="isWaitingRoomEnabled" type="checkbox" className="h-4 w-4 accent-blue-500" /> Enable waiting room</label>
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="joinBeforeHost" type="checkbox" className="h-4 w-4 accent-blue-500" /> Allow students to join before host</label>
-          <button disabled={pending || courses.length === 0} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60">
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Attendance tracking<select name="trackingRule" className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary"><option value="duration">Duration based</option><option value="join">Join based</option></select><span className="text-xs font-normal text-ink-subtle">Duration based marks a student present only once they have attended enough of the class.</span></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Present at (% of class)<input name="attendanceThresholdPercent" type="number" min={1} max={100} defaultValue={75} className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary" /><span className="text-xs font-normal text-ink-subtle">Below half of this a student is marked absent, in between they are late.</span></label>
+          <label className="flex items-center gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink-muted"><input name="isRecordingEnabled" type="checkbox" className="h-4 w-4 accent-primary" /> Enable recording</label>
+          <label className="flex items-center gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink-muted"><input name="isWaitingRoomEnabled" type="checkbox" className="h-4 w-4 accent-primary" /> Enable waiting room</label>
+          <label className="flex items-center gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink-muted"><input name="joinBeforeHost" type="checkbox" className="h-4 w-4 accent-primary" /> Allow students to join before host</label>
+          <button disabled={pending || courses.length === 0} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60">
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             {editing ? "Save changes" : "Schedule class"}
           </button>

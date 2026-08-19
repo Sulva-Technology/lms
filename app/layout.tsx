@@ -4,6 +4,8 @@ import { AuthHashBridge } from '@/components/auth/AuthHashBridge';
 import { MotionProvider } from '@/components/layout/MotionProvider';
 import { buildBrandStyle } from '@/lib/branding';
 import { getTenantContext } from '@/lib/tenant/context';
+import { parseThemeChoice, THEME_COOKIE } from '@/lib/ui/theme';
+import { cookies } from 'next/headers';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -22,8 +24,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const tenant = await getTenantContext();
   const brandStyle = buildBrandStyle(tenant?.primaryColor, tenant?.secondaryColor);
 
+  // Rendering the person's own choice server-side is what stops the first
+  // paint being the other theme.
+  const theme = parseThemeChoice((await cookies()).get(THEME_COOKIE)?.value);
+
   return (
-    <html lang="en" data-theme="light" className={`${inter.variable} ${outfit.variable}`}>
+    <html lang="en" data-theme={theme} className={`${inter.variable} ${outfit.variable}`}>
       <head>
         <style id="school-brand" dangerouslySetInnerHTML={{ __html: brandStyle }} />
       </head>

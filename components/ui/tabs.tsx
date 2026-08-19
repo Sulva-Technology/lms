@@ -13,7 +13,7 @@ export interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onChange, className }: TabsProps) {
   return (
-    <div className={cn("flex overflow-x-auto no-scrollbar border-b border-slate-800", className)}>
+    <div className={cn("flex overflow-x-auto no-scrollbar border-b border-line", className)}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
@@ -22,14 +22,14 @@ export function Tabs({ tabs, activeTab, onChange, className }: TabsProps) {
             onClick={() => onChange(tab.id)}
             className={cn(
               "relative px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors",
-              isActive ? "text-white" : "text-slate-400 hover:text-slate-300"
+              isActive ? "text-ink" : "text-ink-muted hover:text-ink-muted"
             )}
           >
             {tab.label}
             {isActive && (
               <motion.div 
                 layoutId="vui-tabs-indicator"
-                className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-t-lg"
+                className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-lg"
               />
             )}
           </button>

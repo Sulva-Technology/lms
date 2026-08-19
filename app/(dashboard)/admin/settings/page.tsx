@@ -38,18 +38,18 @@ export default async function AdminSettingsPage() {
         initialSecondary={school?.secondary_color ?? null}
       />
 
-      <form action={save} className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-6 grid gap-5 max-w-3xl">
-        <label className="grid gap-2 text-sm text-slate-300">
+      <form action={save} className="bg-surface backdrop-blur-2xl border border-line rounded-[24px] p-6 grid gap-5 max-w-3xl">
+        <label className="grid gap-2 text-sm text-ink-muted">
           Vocabulary
           <select
             name="vocabulary"
             defaultValue={values.vocabulary || "academic"}
-            className="rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-white outline-none focus:border-blue-400"
+            className="rounded-xl border border-line bg-surface px-4 py-3 text-ink outline-none focus:border-primary"
           >
             <option value="academic">Academic — university, lecturer, student, semester</option>
             <option value="organization">Organization — trainer, trainee, programme, cohort</option>
           </select>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-ink-subtle">
             Changes what people read across the app. Nothing about your data or links changes.
           </span>
         </label>
@@ -60,12 +60,12 @@ export default async function AdminSettingsPage() {
           ["registrationPolicy", "Registration policy", values.registrationPolicy || "Advisor approval required"],
           ["supportEmail", "Support email", values.supportEmail || ""],
         ].map(([name, label, value]) => (
-          <label key={name} className="grid gap-2 text-sm text-slate-300">
+          <label key={name} className="grid gap-2 text-sm text-ink-muted">
             {label}
-            <input name={name} defaultValue={value} className="rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-white outline-none focus:border-blue-400" />
+            <input name={name} defaultValue={value} className="rounded-xl border border-line bg-surface px-4 py-3 text-ink outline-none focus:border-primary" />
           </label>
         ))}
-        <button className="w-fit rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500">Save settings</button>
+        <button className="w-fit rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-contrast hover:bg-primary-hover">Save settings</button>
       </form>
     </GenericList>
   );

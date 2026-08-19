@@ -23,12 +23,12 @@ export default async function StudentQuizzesPage() {
           data={quizzes}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "title", header: "Quiz", cell: (item: any) => <span className="font-medium text-white">{item.title}</span> },
+            { key: "title", header: "Quiz", cell: (item: any) => <span className="font-medium text-ink">{item.title}</span> },
             { key: "course", header: "Course", cell: (item: any) => item.course_sections?.courses?.code || "Course" },
             { key: "window", header: "Window", cell: (item: any) => item.start_time ? new Date(item.start_time).toLocaleString() : "Open" },
             { key: "status", header: "Status", cell: (item: any) => item.attempt?.status || "not_started" },
             { key: "score", header: "Score", cell: (item: any) => item.attempt?.percentage == null ? "Pending" : `${item.attempt.percentage}%` },
-            { key: "action", header: "Action", cell: (item: any) => <Link href={`/student/quizzes/${item.id}`} className="text-blue-300 hover:text-blue-200">Open</Link> },
+            { key: "action", header: "Action", cell: (item: any) => <Link href={`/student/quizzes/${item.id}`} className="text-primary hover:text-primary">Open</Link> },
           ]}
         />
       )}

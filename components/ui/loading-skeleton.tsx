@@ -16,7 +16,7 @@ export function LoadingSkeleton({ shape = "rect", className, ...props }: Loading
       initial="initial"
       animate="animate"
       className={cn(
-        "bg-slate-800/80 border border-white/5",
+        "bg-surface/80 border border-line",
         {
           "rounded-full": shape === "circle",
           "rounded-xl": shape === "rect",

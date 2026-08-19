@@ -212,62 +212,6 @@
     color: var(--c-ink);
   }
 
-  /* The dark shell the dashboards were designed against.
-     
-     Their accent is still written as Tailwind's literal `blue-*`, `indigo-*`
-     and `violet-*` scales across several hundred call sites. Those utilities
-     compile to `var(--color-blue-N)`, so re-pointing the scales at the school's
-     derived ramp inside this shell rebrands every one of them without editing
-     a single component — and each one stops depending on this the moment its
-     screen moves to the semantic tokens.
-
-     Status scales (emerald, red, amber, rose) are deliberately left alone. */
-  .legacy-shell {
-    background-color: #08050c;
-    color: #f8fafc;
-    background-image:
-      radial-gradient(circle at 10% 20%, color-mix(in oklab, var(--brand-ramp-700, #1e3a8a) 30%, transparent) 0%, transparent 60%),
-      radial-gradient(circle at 90% 80%, color-mix(in oklab, var(--brand-ramp-900, #581c87) 34%, transparent) 0%, transparent 60%);
-    background-attachment: fixed;
-    min-height: 100vh;
-
-    --color-blue-50: var(--brand-ramp-50);
-    --color-blue-100: var(--brand-ramp-100);
-    --color-blue-200: var(--brand-ramp-200);
-    --color-blue-300: var(--brand-ramp-300);
-    --color-blue-400: var(--brand-ramp-400);
-    --color-blue-500: var(--brand-ramp-500);
-    --color-blue-600: var(--brand-ramp-600);
-    --color-blue-700: var(--brand-ramp-700);
-    --color-blue-800: var(--brand-ramp-800);
-    --color-blue-900: var(--brand-ramp-900);
-    --color-blue-950: var(--brand-ramp-950);
-
-    /* Gradients pair blue with indigo and violet, so those follow the same
-       ramp one step apart rather than staying the stock hues. */
-    --color-indigo-50: var(--brand-ramp-100);
-    --color-indigo-100: var(--brand-ramp-200);
-    --color-indigo-200: var(--brand-ramp-300);
-    --color-indigo-300: var(--brand-ramp-400);
-    --color-indigo-400: var(--brand-ramp-500);
-    --color-indigo-500: var(--brand-ramp-600);
-    --color-indigo-600: var(--brand-ramp-700);
-    --color-indigo-700: var(--brand-ramp-800);
-    --color-indigo-800: var(--brand-ramp-900);
-    --color-indigo-900: var(--brand-ramp-950);
-    --color-indigo-950: var(--brand-ramp-950);
-
-    --color-violet-300: var(--brand-ramp-300);
-    --color-violet-400: var(--brand-ramp-400);
-    --color-violet-500: var(--brand-ramp-500);
-    --color-violet-600: var(--brand-ramp-600);
-    --color-violet-700: var(--brand-ramp-700);
-
-    --color-sky-400: var(--brand-ramp-400);
-    --color-sky-500: var(--brand-ramp-500);
-    --color-cyan-400: var(--brand-ramp-400);
-    --color-cyan-500: var(--brand-ramp-500);
-  }
 }
 
 @layer utilities {
@@ -294,56 +238,6 @@
   /* Film-grain texture. Inline SVG so it needs no network request. */
   .noise-overlay {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-}
-
-/* ---------------------------------------------------------------------------
-   Legacy utilities.
-
-   The dashboards still in the old dark language rely on these. They are kept
-   verbatim so nothing regresses while those screens are rebuilt, and they are
-   deliberately fixed-colour: nothing here reads the token layer, so removing a
-   class from a rebuilt screen is the only thing that retires it.
---------------------------------------------------------------------------- */
-@layer utilities {
-  .glass-panel {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10;
-  }
-
-  .glass-panel-heavy {
-    @apply bg-slate-950/60 backdrop-blur-2xl border border-white/10;
-  }
-
-  .glass-card {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-slate-900/60 transition-colors shadow-lg hover:shadow-xl;
-  }
-
-  .glass-button {
-    @apply bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all;
-  }
-
-  .glass-navbar {
-    @apply bg-slate-950/70 backdrop-blur-3xl border-b border-white/10;
-  }
-
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-300;
-  }
-
-  .text-gradient-purple {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-400 to-violet-400;
-  }
-
-  .shadow-glow-blue {
-    box-shadow: 0 0 20px color-mix(in oklab, var(--brand-ramp-500, #3b82f6) 40%, transparent);
-  }
-
-  .shadow-glow-emerald {
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-  }
-
-  .shadow-glow-red {
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
   }
 }
 

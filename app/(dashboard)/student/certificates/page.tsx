@@ -32,13 +32,13 @@ export default async function StudentCertificatesPage() {
           {certificates.map((certificate: any) => (
             <div
               key={certificate.id}
-              className="rounded-[24px] border border-white/10 bg-slate-950/60 p-5 backdrop-blur-2xl"
+              className="rounded-[24px] border border-line bg-surface p-5 backdrop-blur-2xl"
             >
-              <p className="font-outfit text-lg font-semibold text-white">
+              <p className="font-outfit text-lg font-semibold text-ink">
                 {certificate.snapshot?.courseTitle || "Course"}
               </p>
-              <p className="mt-1 font-mono text-xs text-slate-500">{certificate.serial}</p>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-1 font-mono text-xs text-ink-subtle">{certificate.serial}</p>
+              <p className="mt-2 text-sm text-ink-muted">
                 Issued {new Date(certificate.issued_at).toLocaleDateString()}
                 {certificate.final_score !== null ? ` · ${certificate.final_score}%` : ""}
               </p>
@@ -50,7 +50,7 @@ export default async function StudentCertificatesPage() {
               ) : (
                 <Link
                   href={`/certificates/${certificate.serial}`}
-                  className="mt-4 inline-flex rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+                  className="mt-4 inline-flex rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-contrast hover:bg-primary-hover"
                 >
                   View and print
                 </Link>

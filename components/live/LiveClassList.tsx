@@ -11,8 +11,8 @@ interface Props {
 export function LiveClassList({ role, sessions }: Props) {
   if (sessions.length === 0) {
     return (
-      <div className="glass-panel p-10 rounded-2xl flex flex-col items-center justify-center text-center border border-white/5 border-dashed">
-        <p className="text-slate-400">No scheduled sessions found.</p>
+      <div className="panel p-10 rounded-2xl flex flex-col items-center justify-center text-center border border-line border-dashed">
+        <p className="text-ink-muted">No scheduled sessions found.</p>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export function LiveClassList({ role, sessions }: Props) {
 
       {scheduledSessions.length > 0 && (
         <section>
-          <h2 className="font-outfit text-xl font-semibold mb-6 text-slate-200">Upcoming Sessions</h2>
+          <h2 className="font-outfit text-xl font-semibold mb-6 text-ink">Upcoming Sessions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {scheduledSessions.map(session => (
               <LiveClassCard key={session.id} session={session} role={role} />
@@ -50,7 +50,7 @@ export function LiveClassList({ role, sessions }: Props) {
 
       {pastSessions.length > 0 && (
         <section>
-          <h2 className="font-outfit text-xl font-semibold mb-6 text-slate-400">Past Sessions</h2>
+          <h2 className="font-outfit text-xl font-semibold mb-6 text-ink-muted">Past Sessions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75 grayscale-[20%] hover:opacity-100 hover:grayscale-0 transition-all duration-500">
             {pastSessions.map(session => (
               <LiveClassCard key={session.id} session={session} role={role} />

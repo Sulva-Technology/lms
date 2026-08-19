@@ -12,11 +12,11 @@ export const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>
       <button
         ref={ref}
         className={cn(
-          "inline-flex items-center justify-center rounded-xl font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex items-center justify-center rounded-[10px] font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-50",
           {
-            "glass-button": variant === "outline" || variant === "ghost",
-            "border-transparent hover:bg-white/10": variant === "ghost",
-            "bg-blue-600 text-white hover:bg-blue-500 shadow-glow-blue border border-blue-500/50": variant === "solid",
+            "border border-line bg-surface text-ink hover:border-line-strong": variant === "outline",
+            "text-ink-muted hover:bg-ink/[0.06] hover:text-ink": variant === "ghost",
+            "bg-primary text-primary-contrast hover:bg-primary-hover": variant === "solid",
             "h-9 px-4 text-sm": size === "sm",
             "h-11 px-6": size === "md",
             "h-14 px-8 text-lg": size === "lg",

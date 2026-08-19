@@ -9,7 +9,7 @@ import { Drawer } from "@/components/ui/drawer";
 type Row = Record<string, any>;
 type Option = { id: string; code?: string; title?: string; name?: string; email?: string; first_name?: string; last_name?: string };
 
-const inputClass = "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
+const inputClass = "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
 
 function one<T>(value: T | T[] | null | undefined): T | null {
   return Array.isArray(value) ? value[0] ?? null : value ?? null;
@@ -112,12 +112,12 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel flex flex-col gap-3 rounded-2xl border border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="panel flex flex-col gap-3 rounded-2xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-white">Course sections and lecturer assignment</p>
-          <p className="text-xs text-slate-400">Create sections first, then assign one or more lecturers to each section.</p>
+          <p className="text-sm font-semibold text-ink">Course sections and lecturer assignment</p>
+          <p className="text-xs text-ink-muted">Create sections first, then assign one or more lecturers to each section.</p>
         </div>
-        <button onClick={() => setDrawer("section")} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow-blue transition hover:bg-blue-500">
+        <button onClick={() => setDrawer("section")} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover">
           <Plus size={16} /> Add Section
         </button>
       </div>
@@ -128,20 +128,20 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
         data={items}
         keyExtractor={(item) => item.id}
         columns={[
-          { key: "section", header: "Section", cell: (item) => <span className="font-semibold text-white">{item.name}</span> },
+          { key: "section", header: "Section", cell: (item) => <span className="font-semibold text-ink">{item.name}</span> },
           { key: "course", header: "Course", cell: (item) => {
             const course = one(item.courses);
-            return <span className="text-blue-300">{course?.code || "Course"} - {course?.title || ""}</span>;
+            return <span className="text-primary">{course?.code || "Course"} - {course?.title || ""}</span>;
           } },
           { key: "semester", header: "Semester", cell: (item) => one(item.semesters)?.name || "Semester" },
           { key: "lecturers", header: "Lecturers", cell: (item) => (
             <div className="flex flex-wrap gap-2">
-              {(item.course_lecturers || []).length === 0 ? <span className="text-slate-500">Unassigned</span> : item.course_lecturers.map((assignment: any) => {
+              {(item.course_lecturers || []).length === 0 ? <span className="text-ink-subtle">Unassigned</span> : item.course_lecturers.map((assignment: any) => {
                 const profile = one(assignment.profiles);
                 return (
-                  <span key={assignment.id} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200">
+                  <span key={assignment.id} className="inline-flex items-center gap-2 rounded-full border border-line bg-status-soft px-3 py-1.5 text-xs text-ink">
                     {lecturerName(profile)}
-                    <button onClick={() => removeLecturer(item.id, assignment.lecturer_id)} className="text-slate-500 hover:text-red-300" aria-label="Remove lecturer"><X size={12} /></button>
+                    <button onClick={() => removeLecturer(item.id, assignment.lecturer_id)} className="text-ink-subtle hover:text-red-300" aria-label="Remove lecturer"><X size={12} /></button>
                   </span>
                 );
               })}
@@ -159,11 +159,11 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
 
       <Drawer isOpen={drawer === "section"} onClose={() => setDrawer(null)} title="Add course section" className="max-w-xl">
         <form action={createSection} className="grid gap-4">
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Course<select name="courseId" required className={inputClass}>{courses.map((course) => <option key={course.id} value={course.id}>{course.code} - {course.title}</option>)}</select></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Semester<select name="semesterId" required className={inputClass}>{semesters.map((semester) => <option key={semester.id} value={semester.id}>{semester.name}</option>)}</select></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Section name<input name="name" required placeholder="Group A / 2026 Cohort" className={inputClass} /></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Capacity<input name="capacity" type="number" min={1} className={inputClass} /></label>
-          <button disabled={pending || courses.length === 0 || semesters.length === 0} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60">
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Course<select name="courseId" required className={inputClass}>{courses.map((course) => <option key={course.id} value={course.id}>{course.code} - {course.title}</option>)}</select></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Semester<select name="semesterId" required className={inputClass}>{semesters.map((semester) => <option key={semester.id} value={semester.id}>{semester.name}</option>)}</select></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Section name<input name="name" required placeholder="Group A / 2026 Cohort" className={inputClass} /></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Capacity<input name="capacity" type="number" min={1} className={inputClass} /></label>
+          <button disabled={pending || courses.length === 0 || semesters.length === 0} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60">
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} Save section
           </button>
         </form>
@@ -172,12 +172,12 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
       <Drawer isOpen={drawer === "assign"} onClose={() => setDrawer(null)} title="Assign lecturer" className="max-w-xl">
         <form action={assignLecturer} className="grid gap-4">
           <input type="hidden" name="courseSectionId" value={selected?.id || ""} />
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
-            Section: <span className="font-semibold text-white">{selected?.name || "Selected section"}</span>
+          <div className="rounded-xl border border-line bg-status-soft p-4 text-sm text-ink-muted">
+            Section: <span className="font-semibold text-ink">{selected?.name || "Selected section"}</span>
           </div>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Lecturer<select name="lecturerId" required className={inputClass}>{lecturers.map((lecturer) => <option key={lecturer.id} value={lecturer.id}>{lecturerName(lecturer)} ({lecturer.email || "no email"})</option>)}</select></label>
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="isPrimary" type="checkbox" className="h-4 w-4 accent-emerald-500" /> Primary lecturer</label>
-          <button disabled={pending || lecturers.length === 0} className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-60">
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Lecturer<select name="lecturerId" required className={inputClass}>{lecturers.map((lecturer) => <option key={lecturer.id} value={lecturer.id}>{lecturerName(lecturer)} ({lecturer.email || "no email"})</option>)}</select></label>
+          <label className="flex items-center gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink-muted"><input name="isPrimary" type="checkbox" className="h-4 w-4 accent-emerald-500" /> Primary lecturer</label>
+          <button disabled={pending || lecturers.length === 0} className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-ink hover:bg-emerald-500 disabled:opacity-60">
             {pending ? <Loader2 size={16} className="animate-spin" /> : <UserPlus size={16} />} Assign lecturer
           </button>
         </form>

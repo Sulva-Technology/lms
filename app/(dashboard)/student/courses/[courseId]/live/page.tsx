@@ -39,7 +39,7 @@ export default async function CourseLiveClassesPage({ params }: { params: Promis
       description={course?.title || "Join scheduled course sessions and recordings from your enrolled section."}
       icon={Video}
     >
-      <Link href={`/student/courses/${courseId}`} className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-blue-300 hover:text-blue-200">
+      <Link href={`/student/courses/${courseId}`} className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary">
         <ArrowLeft size={16} />
         Back to course
       </Link>
@@ -54,15 +54,15 @@ export default async function CourseLiveClassesPage({ params }: { params: Promis
             <Link
               key={liveClass.id}
               href={`/student/live-classes/${liveClass.id}`}
-              className="rounded-[24px] border border-white/10 bg-slate-950/60 p-5 transition hover:border-blue-400/30 hover:bg-white/[0.04]"
+              className="rounded-[24px] border border-line bg-surface p-5 transition hover:border-primary/25 hover:bg-ink/[0.06]"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">{liveClass.status || "scheduled"}</p>
-                  <h2 className="mt-2 font-outfit text-xl font-semibold text-white">{liveClass.topic || liveClass.title}</h2>
-                  {liveClass.description && <p className="mt-1 text-sm text-slate-400">{liveClass.description}</p>}
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{liveClass.status || "scheduled"}</p>
+                  <h2 className="mt-2 font-outfit text-xl font-semibold text-ink">{liveClass.topic || liveClass.title}</h2>
+                  {liveClass.description && <p className="mt-1 text-sm text-ink-muted">{liveClass.description}</p>}
                 </div>
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300">
+                <span className="rounded-full border border-line bg-status-soft px-4 py-2 text-sm font-medium text-ink-muted">
                   {formatDateTime(liveClass.start_time)}
                 </span>
               </div>

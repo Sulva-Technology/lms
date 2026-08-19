@@ -28,9 +28,9 @@ export default async function LecturerLiveClassRoomPage({ params }: { params: Pr
             role="host"
             topic={liveClass.topic || liveClass.title}
           />
-          <div className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5">
-            <h2 className="font-outfit text-lg font-semibold text-white">Participants</h2>
-            <p className="mt-2 text-sm text-slate-400">{(liveClass.live_class_participants || []).length} participant records captured for this session.</p>
+          <div className="bg-surface backdrop-blur-2xl border border-line rounded-[24px] p-5">
+            <h2 className="font-outfit text-lg font-semibold text-ink">Participants</h2>
+            <p className="mt-2 text-sm text-ink-muted">{(liveClass.live_class_participants || []).length} participant records captured for this session.</p>
           </div>
         </div>
       )}

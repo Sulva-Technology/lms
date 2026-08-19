@@ -24,10 +24,10 @@ export default async function StudentCoursesPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <div>
-        <h1 className="font-outfit text-3xl font-bold text-white flex items-center gap-3">
-          <BookOpen className="text-blue-500" /> My Courses
+        <h1 className="font-outfit text-3xl font-bold text-ink flex items-center gap-3">
+          <BookOpen className="text-primary" /> My Courses
         </h1>
-        <p className="text-slate-400 mt-2">Your approved enrollments and learning progress.</p>
+        <p className="text-ink-muted mt-2">Your approved enrollments and learning progress.</p>
       </div>
 
       {courses.length === 0 ? (

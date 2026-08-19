@@ -11,7 +11,7 @@ import { tenantOrigin } from "@/lib/tenant/url";
 import { Building } from "lucide-react";
 import { redirect } from "next/navigation";
 
-const inputClass = "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none focus:border-blue-400";
+const inputClass = "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-primary";
 const statusValues = ["active", "trialing", "suspended", "archived"];
 
 export default async function SuperadminUniversitiesPage({
@@ -59,7 +59,7 @@ export default async function SuperadminUniversitiesPage({
           School created at {params.created}. An invite email is on its way to the school administrator.
         </p>
       ) : null}
-      <form action={createUniversity} className="grid gap-4 rounded-[28px] border border-white/10 bg-slate-950/60 p-6 shadow-2xl backdrop-blur-2xl lg:grid-cols-3">
+      <form action={createUniversity} className="grid gap-4 rounded-[28px] border border-line bg-surface p-6 shadow-2xl backdrop-blur-2xl lg:grid-cols-3">
         <input name="name" required placeholder="School name" className={inputClass} />
         <input name="subdomain" required placeholder="unilag" pattern="[a-zA-Z0-9- ]+" className={inputClass} />
         <input name="domain" placeholder="domain.edu (optional)" className={inputClass} />
@@ -69,19 +69,19 @@ export default async function SuperadminUniversitiesPage({
         <select name="status" defaultValue="trialing" className={inputClass}>
           {statusValues.map((status) => <option key={status} value={status}>{status}</option>)}
         </select>
-        <p className="self-center text-xs text-slate-400">
-          The school goes live at <span className="text-slate-200">{`<subdomain>.${rootDomain}`}</span> and the admin receives an invite email.
+        <p className="self-center text-xs text-ink-muted">
+          The school goes live at <span className="text-ink">{`<subdomain>.${rootDomain}`}</span> and the admin receives an invite email.
         </p>
-        <button className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-glow-blue hover:bg-blue-500">Create school</button>
+        <button className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover">Create school</button>
       </form>
       {universities.length === 0 ? <EmptyState title="No schools" description="New tenants appear here after creation." /> : (
         <DataTable
           data={universities}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "name", header: "School", cell: (item: any) => <span className="font-medium text-white">{item.name}</span> },
+            { key: "name", header: "School", cell: (item: any) => <span className="font-medium text-ink">{item.name}</span> },
             { key: "address", header: "Address", cell: (item: any) => (
-              <a href={tenantOrigin(item.subdomain, rootDomain)} target="_blank" rel="noreferrer" className="text-blue-300 hover:text-blue-200">
+              <a href={tenantOrigin(item.subdomain, rootDomain)} target="_blank" rel="noreferrer" className="text-primary hover:text-primary">
                 {item.subdomain}.{rootDomain}
               </a>
             ) },
@@ -91,10 +91,10 @@ export default async function SuperadminUniversitiesPage({
             { key: "actions", header: "Update", cell: (item: any) => (
               <form action={updateStatus} className="flex min-w-[220px] items-center gap-2">
                 <input type="hidden" name="universityId" value={item.id} />
-                <select name="status" defaultValue={item.status} className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-xs text-white outline-none focus:border-blue-400">
+                <select name="status" defaultValue={item.status} className="rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink outline-none focus:border-primary">
                   {statusValues.map((status) => <option key={status} value={status}>{status}</option>)}
                 </select>
-                <button className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-500">Save</button>
+                <button className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-contrast hover:bg-primary-hover">Save</button>
               </form>
             ) },
           ]}

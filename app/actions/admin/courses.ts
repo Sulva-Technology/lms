@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth/guards';
-import { courseSchema } from '@/lib/validation/admin';
+import { courseSchema, courseSectionSchema as sectionSchema } from '@/lib/validation/admin';
 import { CourseService } from '@/lib/services/admin/course.service';
 import { AuditService } from '@/lib/audit/audit.service';
 import { actionError, actionSuccess } from '@/lib/api/response';
@@ -11,13 +11,6 @@ import { z } from 'zod';
 
 const courseMutationSchema = courseSchema.extend({ id: z.string().uuid().optional() });
 const courseIdSchema = z.object({ id: z.string().uuid() });
-const sectionSchema = z.object({
-  id: z.string().uuid().optional(),
-  courseId: z.string().uuid(),
-  semesterId: z.string().uuid(),
-  name: z.string().min(2),
-  capacity: z.coerce.number().int().positive().optional().nullable(),
-});
 const assignLecturerSchema = z.object({
   courseSectionId: z.string().uuid(),
   lecturerId: z.string().uuid(),
@@ -121,9 +114,11 @@ export async function upsertCourseSectionAction(payload: unknown) {
     const row = {
       university_id: session.profile!.university_id!,
       course_id: data.courseId,
-      semester_id: data.semesterId,
+      semester_id: data.semesterId ?? null,
       name: data.name,
       capacity: data.capacity || null,
+      starts_on: data.startsOn ?? null,
+      ends_on: data.endsOn ?? null,
       deleted_at: null,
     };
 

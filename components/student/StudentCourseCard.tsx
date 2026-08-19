@@ -18,10 +18,10 @@ export function StudentCourseCard({ course, idx }: Props) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: idx * 0.1 }}
       whileHover={{ y: -5, scale: 1.01 }}
-      className="glass-panel group rounded-[24px] overflow-hidden flex flex-col cursor-pointer border border-white/5 hover:border-blue-500/40 hover:shadow-[0_10px_40px_-10px_rgba(59,130,246,0.3)] transition-all ease-out duration-300 relative"
+      className="panel group rounded-[24px] overflow-hidden flex flex-col cursor-pointer border border-line hover:border-primary/25 hover:shadow-[0_10px_40px_-10px_rgba(59,130,246,0.3)] transition-all ease-out duration-300 relative"
     >
       <div className="relative h-48 w-full overflow-hidden">
-        <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent transition-colors z-10" />
+        <div className="absolute inset-0 bg-surface group-hover:bg-transparent transition-colors z-10" />
         {course.thumbnailUrl ? (
           <Image
             src={course.thumbnailUrl}
@@ -35,45 +35,45 @@ export function StudentCourseCard({ course, idx }: Props) {
             style={{ background: gradientFor(course.code || course.title) }}
           />
         )}
-        <div className="absolute top-4 left-4 z-20 glass-panel px-3 py-1.5 rounded-full text-xs font-medium border-white/20 text-white">
+        <div className="absolute top-4 left-4 z-20 panel px-3 py-1.5 rounded-full text-xs font-medium border-line-strong text-ink">
           Core Module
         </div>
         
         {/* Play overlay on hover */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-blue-600 rounded-full p-4 transform translate-y-4 group-hover:translate-y-0 transition-all shadow-[0_0_20px_rgba(37,99,235,0.8)]">
-            <PlayCircle size={28} className="text-white ml-1" />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 bg-surface backdrop-blur-sm">
+          <div className="bg-primary rounded-full p-4 transform translate-y-4 group-hover:translate-y-0 transition-all shadow-[0_0_20px_rgba(37,99,235,0.8)]">
+            <PlayCircle size={28} className="text-ink ml-1" />
           </div>
         </div>
       </div>
 
       <div className="p-6 flex flex-col flex-1">
         <div className="mb-4">
-          <h3 className="font-outfit text-xl font-semibold mb-1 line-clamp-2 leading-tight group-hover:text-blue-400 transition-colors text-slate-100">
+          <h3 className="font-outfit text-xl font-semibold mb-1 line-clamp-2 leading-tight group-hover:text-primary transition-colors text-ink">
             {course.title}
           </h3>
-          <p className="text-sm text-slate-400">{course.instructor}</p>
+          <p className="text-sm text-ink-muted">{course.instructor}</p>
         </div>
 
         <div className="mt-auto space-y-4">
-          <div className="flex items-center justify-between text-xs text-slate-300">
-            <span className="flex items-center gap-1.5"><BookOpen size={14} className="text-blue-400" /> {course.completedChapters}/{course.totalChapters} Chapters</span>
+          <div className="flex items-center justify-between text-xs text-ink-muted">
+            <span className="flex items-center gap-1.5"><BookOpen size={14} className="text-primary" /> {course.completedChapters}/{course.totalChapters} Chapters</span>
             <span className="flex items-center gap-1.5"><Clock size={14} className="text-purple-400" /> {course.timeRemaining || '2h 15m left'}</span>
           </div>
           
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-medium">
-              <span className="text-slate-400">Progress</span>
-              <span className="text-blue-400">{course.progress}%</span>
+              <span className="text-ink-muted">Progress</span>
+              <span className="text-primary">{course.progress}%</span>
             </div>
-            <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-surface rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${course.progress}%` }}
                 transition={{ duration: 1, delay: idx * 0.1 + 0.2, ease: "easeOut" }}
                 className="h-full bg-gradient-to-r from-blue-600 to-purple-500 rounded-full relative"
               >
-                <div className="absolute inset-0 bg-white/20 w-1/2 rounded-full blur-[2px] right-0 translate-x-1/2"></div>
+                <div className="absolute inset-0 bg-status-soft w-1/2 rounded-full blur-[2px] right-0 translate-x-1/2"></div>
               </motion.div>
             </div>
           </div>

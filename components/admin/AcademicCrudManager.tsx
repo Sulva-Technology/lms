@@ -36,8 +36,8 @@ function actionSet(type: EntityType) {
   return { create: createCourseAction, update: updateCourseAction, archive: archiveCourseAction, restore: restoreCourseAction };
 }
 
-const inputClass = "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
-const labelClass = "grid gap-2 text-sm font-medium text-slate-300";
+const inputClass = "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
+const labelClass = "grid gap-2 text-sm font-medium text-ink-muted";
 
 export function AcademicCrudManager({ type, rows, faculties = [], departments = [] }: Props) {
   const [items, setItems] = useState(rows);
@@ -57,12 +57,12 @@ export function AcademicCrudManager({ type, rows, faculties = [], departments = 
         header: type === "courses" ? "Course" : copy.singular,
         cell: (item) => (
           <div>
-            <p className="font-semibold text-white">{item.title || item.name}</p>
-            {item.description && <p className="mt-1 line-clamp-1 text-xs text-slate-500">{item.description}</p>}
+            <p className="font-semibold text-ink">{item.title || item.name}</p>
+            {item.description && <p className="mt-1 line-clamp-1 text-xs text-ink-subtle">{item.description}</p>}
           </div>
         ),
       },
-      { key: "code", header: "Code", cell: (item) => <span className="font-medium text-blue-300">{item.code}</span> },
+      { key: "code", header: "Code", cell: (item) => <span className="font-medium text-primary">{item.code}</span> },
     ];
 
     if (type === "courses") {
@@ -81,14 +81,14 @@ export function AcademicCrudManager({ type, rows, faculties = [], departments = 
           <button
             type="button"
             onClick={() => openEdit(item)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-status-soft px-3 py-2 text-xs font-semibold text-ink transition hover:bg-ink/[0.06]"
           >
             <Edit3 size={13} /> Edit
           </button>
           <button
             type="button"
             onClick={() => item.deleted_at ? restore(item) : setConfirming(item)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-status-soft px-3 py-2 text-xs font-semibold text-ink transition hover:bg-ink/[0.06]"
           >
             {item.deleted_at ? <RotateCcw size={13} /> : <Archive size={13} />}
             {item.deleted_at ? "Restore" : "Archive"}
@@ -166,15 +166,15 @@ export function AcademicCrudManager({ type, rows, faculties = [], departments = 
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel flex flex-col gap-3 rounded-2xl border border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="panel flex flex-col gap-3 rounded-2xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-white">{items.length} records</p>
-          <p className="text-xs text-slate-400">Create, update, archive, and restore {copy.singular.toLowerCase()} records.</p>
+          <p className="text-sm font-semibold text-ink">{items.length} records</p>
+          <p className="text-xs text-ink-muted">Create, update, archive, and restore {copy.singular.toLowerCase()} records.</p>
         </div>
         <button
           type="button"
           onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow-blue transition hover:bg-blue-500 active:scale-[0.98]"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover active:scale-[0.98]"
         >
           <Plus size={16} /> Add {copy.singular}
         </button>
@@ -251,7 +251,7 @@ export function AcademicCrudManager({ type, rows, faculties = [], departments = 
               </label>
             </div>
           )}
-          <button disabled={pending} className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:opacity-60">
+          <button disabled={pending} className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60">
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             Save {copy.singular}
           </button>
@@ -260,12 +260,12 @@ export function AcademicCrudManager({ type, rows, faculties = [], departments = 
 
       <Modal isOpen={Boolean(confirming)} onClose={() => setConfirming(null)} title={`Archive ${copy.singular}`}>
         <div className="space-y-5">
-          <p className="text-sm leading-6 text-slate-300">
-            This will hide <span className="font-semibold text-white">{confirming?.[copy.titleKey]}</span> from active lists while preserving history, enrollments, submissions, and audit trails.
+          <p className="text-sm leading-6 text-ink-muted">
+            This will hide <span className="font-semibold text-ink">{confirming?.[copy.titleKey]}</span> from active lists while preserving history, enrollments, submissions, and audit trails.
           </p>
           <div className="flex justify-end gap-3">
-            <button type="button" onClick={() => setConfirming(null)} className="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-slate-200 hover:bg-white/10">Cancel</button>
-            <button type="button" disabled={pending} onClick={archiveConfirmed} className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-500 disabled:opacity-60">
+            <button type="button" onClick={() => setConfirming(null)} className="rounded-xl border border-line px-4 py-2.5 text-sm font-semibold text-ink hover:bg-ink/[0.06]">Cancel</button>
+            <button type="button" disabled={pending} onClick={archiveConfirmed} className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-ink hover:bg-red-500 disabled:opacity-60">
               {pending && <Loader2 size={15} className="animate-spin" />}
               Archive
             </button>

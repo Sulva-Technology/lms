@@ -85,12 +85,12 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
 
   return (
     <div className="space-y-5">
-      <div className="glass-panel flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 p-4">
+      <div className="panel flex flex-wrap items-center gap-3 rounded-2xl border border-line p-4">
         <select
           value={sectionId}
           onChange={(event) => load(event.target.value)}
           aria-label="Course section"
-          className="rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-blue-400"
+          className="rounded-xl border border-line bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
         >
           {sections.map((section) => (
             <option key={section.id} value={section.id}>
@@ -101,7 +101,7 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
         <button
           onClick={() => load(sectionId)}
           disabled={pending || !sectionId}
-          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60"
         >
           {pending ? <Loader2 size={16} className="animate-spin" /> : <Award size={16} />}
           Check completion
@@ -121,17 +121,17 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
       )}
 
       {loaded ? (
-        <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-          <p className="mb-3 text-sm font-semibold text-white">{candidates.length} enrolled</p>
+        <div className="rounded-2xl border border-line bg-surface p-4">
+          <p className="mb-3 text-sm font-semibold text-ink">{candidates.length} enrolled</p>
           <ul className="grid gap-2">
             {candidates.map((candidate) => (
               <li
                 key={candidate.studentId}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white/[0.03] px-3 py-2.5"
+                className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-status-soft px-3 py-2.5"
               >
                 <div className="text-sm">
-                  <span className="text-slate-200">{candidate.studentName}</span>
-                  <span className="ml-2 text-xs text-slate-500">
+                  <span className="text-ink">{candidate.studentName}</span>
+                  <span className="ml-2 text-xs text-ink-subtle">
                     {candidate.lessonsCompleted}/{candidate.lessonsTotal} lessons
                     {candidate.finalScore !== null ? ` · ${candidate.finalScore}%` : ""}
                   </span>
@@ -148,7 +148,7 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
                   <button
                     onClick={() => issue(candidate.studentId)}
                     disabled={pending || !candidate.eligible}
-                    className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-40"
+                    className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-40"
                   >
                     Issue
                   </button>
@@ -159,20 +159,20 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
         </div>
       ) : null}
 
-      <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-        <p className="mb-3 text-sm font-semibold text-white">{records.length} issued certificates</p>
+      <div className="rounded-2xl border border-line bg-surface p-4">
+        <p className="mb-3 text-sm font-semibold text-ink">{records.length} issued certificates</p>
         {records.length === 0 ? (
-          <p className="text-xs text-slate-500">Nothing issued yet.</p>
+          <p className="text-xs text-ink-subtle">Nothing issued yet.</p>
         ) : (
           <ul className="grid gap-2">
             {records.map((record) => (
               <li
                 key={record.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white/[0.03] px-3 py-2.5 text-sm"
+                className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-status-soft px-3 py-2.5 text-sm"
               >
                 <div>
-                  <span className="text-slate-200">{record.snapshot?.studentName || "Learner"}</span>
-                  <span className="ml-2 font-mono text-xs text-slate-500">{record.serial}</span>
+                  <span className="text-ink">{record.snapshot?.studentName || "Learner"}</span>
+                  <span className="ml-2 font-mono text-xs text-ink-subtle">{record.serial}</span>
                   {record.revoked_at ? (
                     <span className="ml-2 text-xs font-semibold text-red-300">Revoked</span>
                   ) : null}
@@ -181,7 +181,7 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
                   <button
                     onClick={() => revoke(record.id)}
                     disabled={pending}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/10 disabled:opacity-60"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-status-soft px-3 py-1.5 text-xs font-semibold text-ink-muted hover:bg-ink/[0.06] disabled:opacity-60"
                   >
                     <ShieldOff size={13} /> Revoke
                   </button>

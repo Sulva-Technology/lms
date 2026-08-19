@@ -15,9 +15,9 @@ export default async function StudentGradesPage() {
 
   return (
     <GenericList title="Grades" description="Weighted gradebook results across enrolled courses." icon={Award}>
-      <div className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-6">
-        <p className="text-sm text-slate-400">Current average</p>
-        <p className="font-outfit text-4xl font-semibold text-white mt-2">{grades.average}%</p>
+      <div className="bg-surface backdrop-blur-2xl border border-line rounded-[24px] p-6">
+        <p className="text-sm text-ink-muted">Current average</p>
+        <p className="font-outfit text-4xl font-semibold text-ink mt-2">{grades.average}%</p>
       </div>
       {grades.rows.length === 0 ? (
         <EmptyState title="No grades posted" description="Grades appear after lecturers publish scores." />
@@ -26,7 +26,7 @@ export default async function StudentGradesPage() {
           data={grades.rows}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "item", header: "Item", cell: (item: any) => <span className="font-medium text-white">{item.item}</span> },
+            { key: "item", header: "Item", cell: (item: any) => <span className="font-medium text-ink">{item.item}</span> },
             { key: "course", header: "Course", cell: (item: any) => item.course },
             { key: "score", header: "Score", cell: (item: any) => `${item.score}/${item.maxScore}` },
             { key: "weight", header: "Weight", cell: (item: any) => `${item.weight}%` },

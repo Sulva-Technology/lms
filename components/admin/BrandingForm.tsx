@@ -58,9 +58,9 @@ export function BrandingForm({ schoolName, initialPrimary, initialSecondary }: B
 
   return (
     <section className="grid gap-6 lg:grid-cols-[minmax(0,22rem)_1fr]">
-      <div className="rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl">
-        <h2 className="font-outfit text-lg font-semibold text-white">Brand colours</h2>
-        <p className="mt-2 text-sm text-slate-400">
+      <div className="rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl">
+        <h2 className="font-outfit text-lg font-semibold text-ink">Brand colours</h2>
+        <p className="mt-2 text-sm text-ink-muted">
           Used across {schoolName}&apos;s portal, sign-in page and public site.
         </p>
 
@@ -84,7 +84,7 @@ export function BrandingForm({ schoolName, initialPrimary, initialSecondary }: B
             type="button"
             onClick={save}
             disabled={pending}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60"
           >
             {pending ? <Loader2 size={16} className="animate-spin" /> : null}
             Save colours
@@ -92,7 +92,7 @@ export function BrandingForm({ schoolName, initialPrimary, initialSecondary }: B
           <button
             type="button"
             onClick={reset}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/5"
+            className="inline-flex items-center gap-2 rounded-xl border border-line px-4 py-2.5 text-sm font-medium text-ink-muted transition hover:bg-ink/[0.06]"
           >
             <RotateCcw size={15} />
             Platform default
@@ -112,17 +112,17 @@ export function BrandingForm({ schoolName, initialPrimary, initialSecondary }: B
         ) : null}
 
         {adjusted ? (
-          <p className="mt-4 text-xs leading-relaxed text-slate-500">
+          <p className="mt-4 text-xs leading-relaxed text-ink-subtle">
             One of your colours was adjusted for legibility in {mode} mode. The hue you picked is
             kept; only its lightness moves, and only far enough to keep text on it readable.
           </p>
         ) : null}
       </div>
 
-      <div className="rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl">
+      <div className="rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="font-outfit text-lg font-semibold text-white">Preview</h2>
-          <div className="flex rounded-full border border-white/10 p-1 text-xs font-medium">
+          <h2 className="font-outfit text-lg font-semibold text-ink">Preview</h2>
+          <div className="flex rounded-full border border-line p-1 text-xs font-medium">
             {(["light", "dark"] as const).map((option) => (
               <button
                 key={option}
@@ -131,7 +131,7 @@ export function BrandingForm({ schoolName, initialPrimary, initialSecondary }: B
                 className={
                   mode === option
                     ? "rounded-full bg-white px-3 py-1 text-slate-900"
-                    : "rounded-full px-3 py-1 text-slate-400"
+                    : "rounded-full px-3 py-1 text-ink-muted"
                 }
               >
                 {option === "light" ? "Light" : "Dark"}
@@ -162,7 +162,7 @@ function ColorField({
 
   return (
     <div className="grid gap-2">
-      <label htmlFor={id} className="text-sm font-medium text-slate-200">
+      <label htmlFor={id} className="text-sm font-medium text-ink">
         {label}
       </label>
       <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ function ColorField({
           type="color"
           value={valid ?? "#690dab"}
           onChange={(event) => onChange(event.target.value)}
-          className="size-11 shrink-0 cursor-pointer rounded-xl border border-white/10 bg-transparent"
+          className="size-11 shrink-0 cursor-pointer rounded-xl border border-line bg-transparent"
           aria-label={`${label} colour picker`}
         />
         <input
@@ -179,11 +179,11 @@ function ColorField({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           spellCheck={false}
-          className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-4 py-2.5 font-mono text-sm text-white outline-none focus:border-blue-400"
+          className="w-full rounded-xl border border-line bg-surface px-4 py-2.5 font-mono text-sm text-ink outline-none focus:border-primary"
           aria-invalid={!valid}
         />
       </div>
-      <p className="text-xs text-slate-500">{hint}</p>
+      <p className="text-xs text-ink-subtle">{hint}</p>
       {!valid ? <p className="text-xs text-rose-400">Enter a hex colour like #690dab.</p> : null}
     </div>
   )

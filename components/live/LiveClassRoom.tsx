@@ -53,18 +53,18 @@ export function LiveClassRoom({ sessionId, roomUrl, role, topic }: Props) {
 
   return (
     <div className="grid gap-4">
-      <div className="aspect-video rounded-[32px] border border-white/10 bg-slate-950/80 p-6 shadow-2xl">
+      <div className="aspect-video rounded-[32px] border border-line bg-surface p-6 shadow-2xl">
         {embedUrl ? (
           <iframe
             src={embedUrl}
             title={topic}
-            className="h-full w-full rounded-[24px] border-0 bg-slate-900"
+            className="h-full w-full rounded-[24px] border-0 bg-surface"
             allow="camera; microphone; fullscreen; display-capture; autoplay"
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-4 rounded-[24px] bg-slate-900/60 text-center">
-            <Video className="h-10 w-10 text-slate-500" aria-hidden />
-            <p className="max-w-sm text-sm text-slate-400">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4 rounded-[24px] bg-surface text-center">
+            <Video className="h-10 w-10 text-ink-subtle" aria-hidden />
+            <p className="max-w-sm text-sm text-ink-muted">
               {role === "host"
                 ? "Start the room when you are ready. Students can only enter once they join from their own dashboard."
                 : "Join to enter the live class. Your camera and microphone stay off until you allow them."}

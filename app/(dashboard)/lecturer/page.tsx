@@ -60,33 +60,33 @@ export default async function LecturerOverviewPage() {
 
   const name = toDisplayName(session.profile.first_name, session.profile.last_name, "Lecturer");
   const statCards: LecturerStatCard[] = [
-    { label: "Students", value: data.stats.totalStudents, Icon: Users, colorClass: "text-indigo-400 bg-indigo-500/10" },
+    { label: "Students", value: data.stats.totalStudents, Icon: Users, colorClass: "text-primary bg-primary-soft" },
     { label: "Attendance", value: `${data.stats.averageAttendance}%`, Icon: TrendingUp, colorClass: "text-emerald-400 bg-emerald-500/10" },
     { label: "To Grade", value: data.stats.assignmentsToGrade, Icon: CheckCircle, colorClass: "text-orange-400 bg-orange-500/10" },
-    { label: "Questions", value: data.stats.unansweredQuestions, Icon: HelpCircle, colorClass: "text-blue-400 bg-blue-500/10" },
+    { label: "Questions", value: data.stats.unansweredQuestions, Icon: HelpCircle, colorClass: "text-primary bg-primary-soft" },
   ];
 
   return (
       <div className="max-w-7xl mx-auto space-y-8 pb-20">
-        <section className="relative rounded-[32px] overflow-hidden bg-slate-950/60 backdrop-blur-2xl border border-white/10 shadow-2xl">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 blur-[120px] rounded-full translate-x-1/3 -translate-y-1/3" />
+        <section className="relative rounded-[32px] overflow-hidden bg-surface backdrop-blur-2xl border border-line shadow-2xl">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-soft blur-[120px] rounded-full translate-x-1/3 -translate-y-1/3" />
           <div className="relative z-10 p-8 md:p-12">
             <div className="max-w-2xl mb-8">
-              <h1 className="font-outfit text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 text-balance">
+              <h1 className="font-outfit text-4xl md:text-5xl font-bold text-ink tracking-tight mb-4 text-balance">
                 Welcome back, {name}
               </h1>
-              <p className="text-lg text-slate-300">
+              <p className="text-lg text-ink-muted">
                 You have {data.upcomingClasses.length} upcoming classes and {data.stats.assignmentsToGrade} submissions waiting for review.
               </p>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {statCards.map(({ label, value, Icon, colorClass }) => (
-                <div key={label} className="glass-panel p-5 rounded-2xl flex items-center gap-4 bg-slate-900/40 border border-white/5">
+                <div key={label} className="panel p-5 rounded-2xl flex items-center gap-4 bg-surface border border-line">
                   <div className={`p-3 rounded-xl ${colorClass}`}><Icon size={20} /></div>
                   <div>
-                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">{label}</p>
-                    <h4 className="font-outfit text-2xl font-bold text-white">{value}</h4>
+                    <p className="text-xs text-ink-muted font-medium uppercase tracking-wider mb-0.5">{label}</p>
+                    <h4 className="font-outfit text-2xl font-bold text-ink">{value}</h4>
                   </div>
                 </div>
               ))}
@@ -98,8 +98,8 @@ export default async function LecturerOverviewPage() {
           <div className="xl:col-span-2 space-y-8">
             <section>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-outfit text-xl font-semibold text-white">Your Courses</h2>
-                <Link href="/lecturer/courses" className="text-sm font-medium text-indigo-400 hover:text-indigo-300">View All</Link>
+                <h2 className="font-outfit text-xl font-semibold text-ink">Your Courses</h2>
+                <Link href="/lecturer/courses" className="text-sm font-medium text-primary hover:text-primary">View All</Link>
               </div>
               {data.courses.length === 0 ? (
                 <EmptyState icon={<BookOpen size={28} />} title="No assigned courses" description="Courses assigned by admins will appear here." />
@@ -113,7 +113,7 @@ export default async function LecturerOverviewPage() {
             </section>
 
             <section>
-              <h2 className="font-outfit text-xl font-semibold text-white mb-4">Upcoming Classes</h2>
+              <h2 className="font-outfit text-xl font-semibold text-ink mb-4">Upcoming Classes</h2>
               <div className="space-y-4">
                 {data.upcomingClasses.length > 0 ? data.upcomingClasses.map((cls, i) => (
                   <UpcomingClassCard key={cls.id} cls={cls} delay={i * 0.05} />
@@ -127,16 +127,16 @@ export default async function LecturerOverviewPage() {
           <div className="space-y-8">
             <AnnouncementComposer courses={data.courses.map((course) => ({ id: course.id, code: course.code, title: course.title }))} />
 
-            <div className="bg-slate-950/60 backdrop-blur-2xl p-6 rounded-2xl border border-white/10">
+            <div className="bg-surface backdrop-blur-2xl p-6 rounded-2xl border border-line">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-outfit font-semibold text-lg text-white">Needs Grading</h3>
-                <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs text-slate-400 font-medium">{data.pendingGrading.length} items</span>
+                <h3 className="font-outfit font-semibold text-lg text-ink">Needs Grading</h3>
+                <span className="px-2 py-0.5 rounded-full bg-surface text-xs text-ink-muted font-medium">{data.pendingGrading.length} items</span>
               </div>
               <div className="space-y-3">
                 {data.pendingGrading.length > 0 ? data.pendingGrading.map((grading) => (
                   <PendingGradingCard key={grading.id} grading={grading} />
                 )) : (
-                  <p className="text-sm text-slate-400 text-center py-4">Nothing waiting for review.</p>
+                  <p className="text-sm text-ink-muted text-center py-4">Nothing waiting for review.</p>
                 )}
               </div>
             </div>

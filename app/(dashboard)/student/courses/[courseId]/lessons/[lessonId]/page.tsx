@@ -44,16 +44,16 @@ export default async function LessonPage({ params }: { params: Promise<{ courseI
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 pb-20">
-      <Link href={`/student/courses/${courseId}`} className="inline-flex items-center gap-2 text-sm font-medium text-blue-300 hover:text-blue-200">
+      <Link href={`/student/courses/${courseId}`} className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary">
         <ArrowLeft size={16} /> Back to course
       </Link>
-      <div className="rounded-[32px] border border-white/10 bg-slate-950/60 p-6 shadow-2xl backdrop-blur-2xl">
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-400/20 bg-blue-500/10 text-blue-300">
+      <div className="rounded-[32px] border border-line bg-surface p-6 shadow-2xl backdrop-blur-2xl">
+        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/25 bg-primary-soft text-primary">
           <PlayCircle size={24} />
         </div>
-        <p className="mb-2 text-sm font-semibold text-blue-200">{courseModule?.title || "Lesson"}</p>
-        <h1 className="font-outfit text-3xl font-semibold tracking-tight text-white">{lesson.title}</h1>
-        <p className="mt-2 text-slate-400">{lesson.resource_type || "Learning"} module</p>
+        <p className="mb-2 text-sm font-semibold text-primary">{courseModule?.title || "Lesson"}</p>
+        <h1 className="font-outfit text-3xl font-semibold tracking-tight text-ink">{lesson.title}</h1>
+        <p className="mt-2 text-ink-muted">{lesson.resource_type || "Learning"} module</p>
       </div>
       {!enrollment ? (
         <EmptyState title="Lesson unavailable" description="You need an active enrollment to view this lesson." />

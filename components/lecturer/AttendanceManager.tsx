@@ -51,8 +51,8 @@ export type AttendanceRate = {
 };
 
 const inputClass =
-  "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
-const labelClass = "grid gap-2 text-sm font-medium text-slate-300";
+  "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
+const labelClass = "grid gap-2 text-sm font-medium text-ink-muted";
 
 const STATUSES: AttendanceStatus[] = ["present", "absent", "late", "excused"];
 
@@ -242,10 +242,10 @@ export function AttendanceManager({
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel flex flex-col gap-3 rounded-2xl border border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="panel flex flex-col gap-3 rounded-2xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-white">{items.length} attendance sessions</p>
-          <p className="text-xs text-slate-400">Take a roll call, or derive one from live class participation.</p>
+          <p className="text-sm font-semibold text-ink">{items.length} attendance sessions</p>
+          <p className="text-xs text-ink-muted">Take a roll call, or derive one from live class participation.</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {sections.length > 0 ? (
@@ -253,7 +253,7 @@ export function AttendanceManager({
               value={sectionId}
               onChange={(event) => setSectionId(event.target.value)}
               aria-label="Section to export"
-              className="rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-sm text-white outline-none focus:border-blue-400"
+              className="rounded-xl border border-line bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-primary"
             >
               {sections.map((section) => (
                 <option key={section.id} value={section.id}>
@@ -265,14 +265,14 @@ export function AttendanceManager({
           <a
             href={sectionId ? `/api/exports/attendance/${sectionId}` : undefined}
             aria-disabled={!sectionId}
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10 aria-disabled:pointer-events-none aria-disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-status-soft px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-ink/[0.06] aria-disabled:pointer-events-none aria-disabled:opacity-60"
           >
             <Download size={16} /> Export CSV
           </a>
           <button
             onClick={openCreate}
             disabled={sections.length === 0}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow-blue transition hover:bg-blue-500 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60"
           >
             <Plus size={16} /> Take attendance
           </button>
@@ -292,9 +292,9 @@ export function AttendanceManager({
       )}
 
       {liveClasses.length > 0 && (
-        <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-          <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
-            <Video size={15} className="text-violet-300" /> Derive from a live class
+        <div className="rounded-2xl border border-line bg-surface p-4">
+          <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink">
+            <Video size={15} className="text-primary" /> Derive from a live class
           </p>
           <div className="flex flex-wrap gap-2">
             {liveClasses.map((liveClass) => (
@@ -302,7 +302,7 @@ export function AttendanceManager({
                 key={liveClass.id}
                 onClick={() => pullFromLiveClass(liveClass.id)}
                 disabled={pending}
-                className="rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10 disabled:opacity-60"
+                className="rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink transition hover:bg-ink/[0.06] disabled:opacity-60"
               >
                 {liveClass.topic}
               </button>
@@ -312,18 +312,18 @@ export function AttendanceManager({
       )}
 
       {sectionRates.length > 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+        <div className="rounded-2xl border border-line bg-surface p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="flex items-center gap-2 text-sm font-semibold text-white">
+            <p className="flex items-center gap-2 text-sm font-semibold text-ink">
               <TriangleAlert size={15} className="text-amber-300" /> Below {THRESHOLD}% attendance
             </p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-ink-subtle">
               {defaulters.length} of {sectionRates.length} students in this section
             </p>
           </div>
 
           {defaulters.length === 0 ? (
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-ink-muted">
               Every student in this section is at or above {THRESHOLD}%.
             </p>
           ) : (
@@ -331,15 +331,15 @@ export function AttendanceManager({
               {defaulters.map((student) => (
                 <li
                   key={student.studentId}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-white/[0.03] px-3 py-2 text-xs"
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-status-soft px-3 py-2 text-xs"
                 >
-                  <span className="text-slate-200">
+                  <span className="text-ink">
                     {student.name}
-                    {student.identifier ? <span className="text-slate-500"> · {student.identifier}</span> : null}
+                    {student.identifier ? <span className="text-ink-subtle"> · {student.identifier}</span> : null}
                   </span>
                   <span className="font-semibold text-amber-300">
                     {student.rate}%{" "}
-                    <span className="font-normal text-slate-500">
+                    <span className="font-normal text-ink-subtle">
                       ({student.attended} of {student.total})
                     </span>
                   </span>
@@ -363,7 +363,7 @@ export function AttendanceManager({
             {
               key: "title",
               header: "Session",
-              cell: (item) => <span className="font-medium text-white">{item.title}</span>,
+              cell: (item) => <span className="font-medium text-ink">{item.title}</span>,
             },
             { key: "course", header: "Course", cell: (item) => sectionLabel(item) },
             { key: "date", header: "Date", cell: (item) => new Date(item.date).toLocaleDateString() },
@@ -381,7 +381,7 @@ export function AttendanceManager({
               cell: (item) => (
                 <button
                   onClick={() => openRoll(item)}
-                  className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-500"
+                  className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-contrast hover:bg-primary-hover"
                 >
                   Edit roll
                 </button>
@@ -444,19 +444,19 @@ export function AttendanceManager({
                 defaultValue={activeSession?.period ?? 1}
                 className={inputClass}
               />
-              <span className="text-xs font-normal text-slate-500">
+              <span className="text-xs font-normal text-ink-subtle">
                 Which meeting of the day this register covers.
               </span>
             </label>
           </div>
 
           <div className="grid gap-2">
-            <p className="flex items-center gap-2 text-sm font-medium text-slate-300">
-              <Users size={15} className="text-blue-300" /> {students.length} enrolled students
+            <p className="flex items-center gap-2 text-sm font-medium text-ink-muted">
+              <Users size={15} className="text-primary" /> {students.length} enrolled students
             </p>
 
             {students.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-white/10 p-4 text-sm text-slate-500">
+              <p className="rounded-xl border border-dashed border-line p-4 text-sm text-ink-subtle">
                 No active enrollments in this section yet.
               </p>
             ) : (
@@ -464,10 +464,10 @@ export function AttendanceManager({
                 {students.map((student) => (
                   <div
                     key={student.id}
-                    className="grid gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3"
+                    className="grid gap-2 rounded-xl border border-line bg-status-soft p-3"
                   >
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <span className="text-sm text-slate-200">{student.name}</span>
+                      <span className="text-sm text-ink">{student.name}</span>
                       <div className="flex flex-wrap gap-1.5">
                         {STATUSES.map((status) => (
                           <button
@@ -476,8 +476,8 @@ export function AttendanceManager({
                             onClick={() => setMarks((current) => ({ ...current, [student.id]: status }))}
                             className={
                               marks[student.id] === status
-                                ? "rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold capitalize text-white"
-                                : "rounded-lg bg-white/5 px-3 py-1.5 text-xs font-semibold capitalize text-slate-300 hover:bg-white/10"
+                                ? "rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold capitalize text-primary-contrast"
+                                : "rounded-lg bg-status-soft px-3 py-1.5 text-xs font-semibold capitalize text-ink-muted hover:bg-ink/[0.06]"
                             }
                           >
                             {status}
@@ -493,7 +493,7 @@ export function AttendanceManager({
                       maxLength={500}
                       placeholder="Reason or note (optional)"
                       aria-label={`Note for ${student.name}`}
-                      className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-xs text-slate-200 outline-none transition focus:border-blue-400"
+                      className="rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink outline-none transition focus:border-primary"
                     />
                   </div>
                 ))}
@@ -502,11 +502,11 @@ export function AttendanceManager({
           </div>
 
           {drawer === "roll" && activeSession ? (
-            <div className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <div className="grid gap-3 rounded-xl border border-line bg-status-soft p-4">
               <button
                 type="button"
                 onClick={loadHistory}
-                className="flex items-center gap-2 text-left text-sm font-semibold text-slate-200 hover:text-white"
+                className="flex items-center gap-2 text-left text-sm font-semibold text-ink hover:text-ink"
               >
                 <History size={15} className="text-amber-300" />
                 Change log
@@ -514,32 +514,32 @@ export function AttendanceManager({
 
               {historyOpen ? (
                 history.length === 0 ? (
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-ink-subtle">
                     {pending ? "Loading the change log…" : "No changes recorded for this register yet."}
                   </p>
                 ) : (
                   <ul className="grid gap-2">
                     {history.map((change) => (
-                      <li key={change.id} className="rounded-lg bg-slate-950/60 px-3 py-2 text-xs text-slate-300">
-                        <span className="font-medium text-white">{studentName(change.studentId)}</span>{" "}
+                      <li key={change.id} className="rounded-lg bg-surface px-3 py-2 text-xs text-ink-muted">
+                        <span className="font-medium text-ink">{studentName(change.studentId)}</span>{" "}
                         {change.previousStatus ? (
                           <>
                             changed from <span className="capitalize">{change.previousStatus}</span> to{" "}
-                            <span className="capitalize text-white">{change.newStatus}</span>
+                            <span className="capitalize text-ink">{change.newStatus}</span>
                           </>
                         ) : (
                           <>
-                            marked <span className="capitalize text-white">{change.newStatus}</span>
+                            marked <span className="capitalize text-ink">{change.newStatus}</span>
                           </>
                         )}{" "}
                         by {change.changedByName} on {new Date(change.changedAt).toLocaleString()}
-                        {change.newNotes ? <span className="block text-slate-500">Note: {change.newNotes}</span> : null}
+                        {change.newNotes ? <span className="block text-ink-subtle">Note: {change.newNotes}</span> : null}
                       </li>
                     ))}
                   </ul>
                 )
               ) : (
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-ink-subtle">
                   Every status and note change on this register, with who made it and when.
                 </p>
               )}
@@ -554,7 +554,7 @@ export function AttendanceManager({
 
           <button
             disabled={pending || students.length === 0}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60"
           >
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <CalendarCheck size={16} /> Save attendance

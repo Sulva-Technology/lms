@@ -24,8 +24,8 @@ export default async function RegistrationPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <div>
-        <h1 className="font-outfit text-4xl font-semibold text-white tracking-tight">Course Registration</h1>
-        <p className="text-slate-400 mt-2">Select courses for the active registration window and submit them for approval.</p>
+        <h1 className="font-outfit text-4xl font-semibold text-ink tracking-tight">Course Registration</h1>
+        <p className="text-ink-muted mt-2">Select courses for the active registration window and submit them for approval.</p>
       </div>
 
       <StudentRegistrationClient

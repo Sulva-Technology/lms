@@ -10,7 +10,7 @@ import { Drawer } from "@/components/ui/drawer";
 type Course = { id: string; code: string; title: string };
 type Assignment = Record<string, any>;
 
-const inputClass = "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
+const inputClass = "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
 
 export function AssignmentManager({ courses, assignments }: { courses: Course[]; assignments: Assignment[] }) {
   const [items, setItems] = useState(assignments);
@@ -67,12 +67,12 @@ export function AssignmentManager({ courses, assignments }: { courses: Course[];
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel flex flex-col gap-3 rounded-2xl border border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="panel flex flex-col gap-3 rounded-2xl border border-line p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-white">{items.length} assignments</p>
-          <p className="text-xs text-slate-400">Create, update, publish, and archive coursework.</p>
+          <p className="text-sm font-semibold text-ink">{items.length} assignments</p>
+          <p className="text-xs text-ink-muted">Create, update, publish, and archive coursework.</p>
         </div>
-        <button onClick={() => { setEditing(null); setDrawerOpen(true); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow-blue transition hover:bg-blue-500">
+        <button onClick={() => { setEditing(null); setDrawerOpen(true); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover">
           <Plus size={16} /> Add Assignment
         </button>
       </div>
@@ -81,15 +81,15 @@ export function AssignmentManager({ courses, assignments }: { courses: Course[];
         data={items}
         keyExtractor={(item) => item.id}
         columns={[
-          { key: "title", header: "Assignment", cell: (item) => <span className="font-medium text-white">{item.title}</span> },
+          { key: "title", header: "Assignment", cell: (item) => <span className="font-medium text-ink">{item.title}</span> },
           { key: "course", header: "Course", cell: (item) => item.course_sections?.courses?.code || courses.find((course) => course.id === item.course_section_id)?.code || "Course" },
           { key: "due", header: "Due", cell: (item) => new Date(item.due_date).toLocaleDateString() },
           { key: "points", header: "Points", cell: (item) => item.total_points },
           { key: "status", header: "Status", cell: (item) => item.is_published ? "Published" : "Draft" },
           { key: "actions", header: "", align: "right", cell: (item) => (
             <div className="flex justify-end gap-2">
-              <Link href={`/lecturer/assignments/${item.id}/submissions`} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"><ClipboardCheck size={13} /> Submissions</Link>
-              <button onClick={() => { setEditing(item); setDrawerOpen(true); }} className="rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"><Edit3 size={13} /></button>
+              <Link href={`/lecturer/assignments/${item.id}/submissions`} className="inline-flex items-center gap-1.5 rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]"><ClipboardCheck size={13} /> Submissions</Link>
+              <button onClick={() => { setEditing(item); setDrawerOpen(true); }} className="rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]"><Edit3 size={13} /></button>
               <button onClick={() => publish(item)} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20"><Send size={13} /> {item.is_published ? "Unpublish" : "Publish"}</button>
               <button onClick={() => archive(item)} className="rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20"><Archive size={13} /></button>
             </div>
@@ -98,17 +98,17 @@ export function AssignmentManager({ courses, assignments }: { courses: Course[];
       />
       <Drawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} title={`${editing ? "Edit" : "Add"} assignment`} className="max-w-xl">
         <form action={submit} className="grid gap-4">
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Course section<select name="courseSectionId" required defaultValue={editing?.course_section_id || ""} className={inputClass}>{courses.map((course) => <option key={course.id} value={course.id}>{course.code} - {course.title}</option>)}</select></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Title<input name="title" required defaultValue={editing?.title || ""} className={inputClass} /></label>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Description<textarea name="description" rows={4} defaultValue={editing?.description || ""} className={inputClass} /></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Course section<select name="courseSectionId" required defaultValue={editing?.course_section_id || ""} className={inputClass}>{courses.map((course) => <option key={course.id} value={course.id}>{course.code} - {course.title}</option>)}</select></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Title<input name="title" required defaultValue={editing?.title || ""} className={inputClass} /></label>
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Description<textarea name="description" rows={4} defaultValue={editing?.description || ""} className={inputClass} /></label>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="grid gap-2 text-sm font-medium text-slate-300">Due date<input name="dueDate" type="datetime-local" required className={inputClass} /></label>
-            <label className="grid gap-2 text-sm font-medium text-slate-300">Points<input name="totalPoints" type="number" min={0} defaultValue={editing?.total_points || 100} className={inputClass} /></label>
+            <label className="grid gap-2 text-sm font-medium text-ink-muted">Due date<input name="dueDate" type="datetime-local" required className={inputClass} /></label>
+            <label className="grid gap-2 text-sm font-medium text-ink-muted">Points<input name="totalPoints" type="number" min={0} defaultValue={editing?.total_points || 100} className={inputClass} /></label>
           </div>
-          <label className="grid gap-2 text-sm font-medium text-slate-300">Resubmissions<input name="maxResubmissions" type="number" min={1} defaultValue={editing?.max_resubmissions || 1} className={inputClass} /></label>
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="isPublished" type="checkbox" defaultChecked={editing?.is_published} className="h-4 w-4 accent-blue-500" /> Publish immediately</label>
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="allowLateSubmissions" type="checkbox" defaultChecked={editing?.allow_late_submissions} className="h-4 w-4 accent-blue-500" /> Allow late submissions</label>
-          <button disabled={pending} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60">
+          <label className="grid gap-2 text-sm font-medium text-ink-muted">Resubmissions<input name="maxResubmissions" type="number" min={1} defaultValue={editing?.max_resubmissions || 1} className={inputClass} /></label>
+          <label className="flex items-center gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink-muted"><input name="isPublished" type="checkbox" defaultChecked={editing?.is_published} className="h-4 w-4 accent-primary" /> Publish immediately</label>
+          <label className="flex items-center gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink-muted"><input name="allowLateSubmissions" type="checkbox" defaultChecked={editing?.allow_late_submissions} className="h-4 w-4 accent-primary" /> Allow late submissions</label>
+          <button disabled={pending} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60">
             {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             Save assignment
           </button>

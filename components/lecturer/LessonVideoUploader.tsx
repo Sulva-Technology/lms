@@ -69,16 +69,16 @@ export function LessonVideoUploader({
   }
 
   return (
-    <div className="grid gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-5">
-      <div className="flex items-center gap-2 text-sm font-semibold text-white">
-        <Film size={16} className="text-violet-300" /> Lesson video
+    <div className="grid gap-3 rounded-2xl border border-line bg-surface p-5">
+      <div className="flex items-center gap-2 text-sm font-semibold text-ink">
+        <Film size={16} className="text-primary" /> Lesson video
       </div>
 
       {current ? (
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-line bg-status-soft px-4 py-3">
           <span className="flex min-w-0 items-center gap-2 text-sm text-emerald-300">
             <CheckCircle2 size={15} className="shrink-0" />
-            <span className="truncate text-slate-200">{current.file_name || "Attached video"}</span>
+            <span className="truncate text-ink">{current.file_name || "Attached video"}</span>
           </span>
           <button
             type="button"
@@ -91,7 +91,7 @@ export function LessonVideoUploader({
           </button>
         </div>
       ) : (
-        <p className="text-sm text-slate-400">No video attached yet.</p>
+        <p className="text-sm text-ink-muted">No video attached yet.</p>
       )}
 
       <FileUploader

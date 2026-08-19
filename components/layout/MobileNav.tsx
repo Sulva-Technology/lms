@@ -3,13 +3,16 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { AnimatePresence, motion } from "motion/react"
+import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { getNavigationForRole } from "@/lib/navigation"
-import { motion, AnimatePresence } from "motion/react"
-import { X, LayoutTemplate, Building, BookOpen, GraduationCap } from "lucide-react"
+import { roleLabels } from "@/lib/auth/roles"
+import { Avatar } from "@/components/ui/avatar"
+import { SchoolBrandMark } from "@/components/landing/SchoolBrandMark"
 import { AppShellUser } from "./AppShell"
 import { LogoutButton } from "./LogoutButton"
-import { Avatar } from "@/components/ui/avatar"
+import { ThemeToggle } from "./ThemeToggle"
 
 interface MobileNavProps {
   user: AppShellUser
@@ -20,117 +23,146 @@ interface MobileNavProps {
 export function MobileNav({ user, isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname()
   const navItems = getNavigationForRole(user.role, user.vocabulary)
-  
-  // We take the first 4 items for the bottom tab bar (mobile)
   const tabItems = navItems.slice(0, 4)
+  const brandName = user.university?.name ?? "VUI LMS"
 
-  const BrandIcon = user.role === "super_admin" ? LayoutTemplate : 
-                    user.role === "admin" ? Building : 
-                    user.role === "lecturer" ? BookOpen : GraduationCap
+  // A drawer that leaves the page scrolling behind it feels broken on a phone.
+  React.useEffect(() => {
+    if (!isOpen) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [isOpen])
+
+  React.useEffect(() => {
+    if (!isOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [isOpen, onClose])
 
   return (
     <>
-      {/* Bottom Tab Navigation (visible on mobile only) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-3xl border-t border-white/10 z-40 flex items-center justify-around px-2 pb-safe">
+      <nav
+        aria-label="Primary"
+        className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-stretch justify-around border-t border-line bg-canvas/95 px-2 backdrop-blur-xl lg:hidden"
+      >
         {tabItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+          const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
           return (
-            <Link 
-              key={item.id} 
+            <Link
+              key={item.id}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex flex-col items-center justify-center w-16 h-full gap-1 transition-colors relative",
-                isActive ? "text-blue-400" : "text-slate-400 hover:text-slate-300"
+                "relative flex w-16 flex-col items-center justify-center gap-1 transition-colors",
+                isActive ? "text-primary" : "text-ink-subtle",
               )}
             >
-              {isActive && (
-                <motion.div 
+              {isActive ? (
+                <motion.span
                   layoutId="mobile-tab-active"
-                  className="absolute top-0 w-8 h-0.5 bg-blue-500 rounded-b-full"
+                  aria-hidden
+                  className="absolute top-0 h-0.5 w-8 rounded-b-full bg-primary"
                 />
-              )}
-              <item.icon size={20} className={cn(isActive && "drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]")} />
-              <span className="text-[10px] font-medium truncate w-full text-center">{item.label}</span>
-              {item.badge && (
-                <span className="absolute top-2 right-3 w-2 h-2 bg-blue-500 rounded-full border border-slate-900" />
-              )}
+              ) : null}
+              <item.icon size={19} />
+              <span className="w-full truncate text-center text-[10px] font-medium">
+                {item.label}
+              </span>
+              {item.badge ? (
+                <span className="absolute top-2.5 right-3 size-1.5 rounded-full bg-primary" />
+              ) : null}
             </Link>
           )
         })}
-      </div>
+      </nav>
 
-      {/* Mobile Drawer */}
       <AnimatePresence>
-        {isOpen && (
+        {isOpen ? (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden"
+              className="fixed inset-0 z-[60] bg-[#160d1b]/40 backdrop-blur-sm lg:hidden"
             />
-            <motion.div 
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="fixed top-0 bottom-0 left-0 w-[280px] bg-slate-900/95 backdrop-blur-3xl border-r border-white/10 z-[70] lg:hidden flex flex-col"
+              transition={{ type: "spring", bounce: 0, duration: 0.38 }}
+              className="fixed inset-y-0 left-0 z-[70] flex w-[280px] flex-col border-r border-line bg-canvas-sunken lg:hidden"
             >
-              <div className="h-16 flex items-center justify-between px-6 border-b border-white/10 shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-glow-blue">
-                    <BrandIcon className="text-white" size={18} />
-                  </div>
-                  <span className="font-outfit font-bold text-lg text-white">VUI LMS</span>
+              <div className="flex h-16 shrink-0 items-center gap-3 border-b border-line px-4">
+                <SchoolBrandMark name={brandName} logoUrl={user.university?.logoUrl} size={30} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-display text-sm font-semibold text-ink">{brandName}</p>
+                  <p className="truncate text-xs text-ink-subtle">{roleLabels[user.role]}</p>
                 </div>
-                <button onClick={onClose} className="p-2 -mr-2 text-slate-400 hover:text-white rounded-lg">
-                  <X size={20} />
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close menu"
+                  className="-mr-1 grid size-9 place-items-center rounded-[10px] text-ink-muted transition-colors hover:bg-ink/[0.06] hover:text-ink"
+                >
+                  <X size={18} />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto py-4 px-3 custom-scrollbar">
-                <nav className="flex flex-col gap-1">
+              <div className="custom-scrollbar flex-1 overflow-y-auto px-3 py-4">
+                <ul className="flex flex-col gap-0.5">
                   {navItems.map((item) => {
-                    const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+                    const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
                     return (
-                      <Link 
-                        key={item.id} 
-                        href={item.href}
-                        onClick={onClose}
-                        className={cn(
-                          "flex items-center gap-3 px-3 py-3 rounded-xl transition-all",
-                          isActive 
-                            ? "bg-blue-500/15 text-blue-400" 
-                            : "text-slate-400 active:bg-white/5"
-                        )}
-                      >
-                        <item.icon size={20} />
-                        <span className="font-medium text-sm flex-1">{item.label}</span>
-                        {item.badge && (
-                          <span className="bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                           {item.badge}
-                          </span>
-                        )}
-                      </Link>
+                      <li key={item.id}>
+                        <Link
+                          href={item.href}
+                          onClick={onClose}
+                          aria-current={isActive ? "page" : undefined}
+                          className={cn(
+                            "flex items-center gap-3 rounded-[10px] px-3 py-3 text-sm transition-colors",
+                            isActive
+                              ? "bg-primary-soft font-medium text-primary-soft-contrast"
+                              : "text-ink-muted active:bg-ink/[0.05]",
+                          )}
+                        >
+                          <item.icon size={19} />
+                          <span className="flex-1 truncate">{item.label}</span>
+                          {item.badge ? (
+                            <span className="rounded-pill bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-contrast">
+                              {item.badge}
+                            </span>
+                          ) : null}
+                        </Link>
+                      </li>
                     )
                   })}
-                </nav>
+                </ul>
               </div>
-              
-              <div className="p-4 border-t border-white/10 shrink-0">
-                <div className="flex items-center gap-3 mb-4 px-2">
-                  <Avatar name={user.name} src={user.avatarUrl} size={40} />
-                  <div className="flex-1 overflow-hidden">
-                    <p className="text-sm font-semibold text-white truncate">{user.name}</p>
-                    <p className="text-xs text-slate-400 truncate">{user.email}</p>
+
+              <div className="shrink-0 border-t border-line p-4">
+                <div className="mb-3 flex items-center gap-3">
+                  <Avatar name={user.name} src={user.avatarUrl} size={36} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-ink">{user.name}</p>
+                    <p className="truncate text-xs text-ink-subtle">{user.email}</p>
                   </div>
+                  <ThemeToggle />
                 </div>
                 <LogoutButton />
               </div>
             </motion.div>
           </>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   )

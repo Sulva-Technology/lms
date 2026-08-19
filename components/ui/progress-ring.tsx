@@ -17,7 +17,7 @@ export function ProgressRing({
   value,
   size = 64,
   strokeWidth = 4,
-  colorClass = "text-blue-500",
+  colorClass = "text-primary",
   trackColorClass = "text-slate-800",
   showValue = true,
   className,
@@ -56,7 +56,7 @@ export function ProgressRing({
         />
       </svg>
       {showValue && (
-        <span className="absolute font-outfit font-bold text-sm text-white">
+        <span className="absolute font-outfit font-bold text-sm text-ink">
           {percent}%
         </span>
       )}

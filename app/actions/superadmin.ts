@@ -40,6 +40,8 @@ const universitySchema = z.object({
     }),
   domain: z.string().min(2).optional().or(z.literal('')),
   status: z.enum(['active', 'trialing', 'suspended', 'archived']).default('trialing'),
+  // A training tenant gets no fabricated faculty, department, session or term.
+  mode: z.enum(['academic', 'training']).default('academic'),
   adminEmail: z.string().email(),
   adminFirstName: z.string().trim().optional().or(z.literal('')),
   adminLastName: z.string().trim().optional().or(z.literal('')),
@@ -106,6 +108,7 @@ export async function createUniversityAction(payload: any) {
       subdomain: parsed.data.subdomain,
       domain: parsed.data.domain || null,
       status: parsed.data.status,
+      mode: parsed.data.mode,
     })
     .select('id,subdomain')
     .single();
@@ -141,7 +144,7 @@ export async function createUniversityAction(payload: any) {
   // the admin dashboard.
   let structureWarning: string | undefined;
   try {
-    await bootstrapAcademicStructure(createAdminClient() as any, created.id);
+    await bootstrapAcademicStructure(createAdminClient() as any, created.id, { mode: parsed.data.mode });
   } catch (bootstrapError) {
     structureWarning =
       bootstrapError instanceof Error ? bootstrapError.message : 'Could not create the default structure.';

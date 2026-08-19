@@ -41,12 +41,12 @@ export function NotificationBell({
   return (
     <Link
       href={href}
-      className="relative rounded-full p-2 text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
+      className="relative rounded-full p-2 text-ink-muted transition-colors hover:bg-ink/[0.06] hover:text-ink"
       aria-label={badgeCount > 0 ? `${badgeCount} unread notifications` : "Notifications"}
     >
       <Bell size={20} />
       {badgeCount > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-ink">
           {badgeCount > 9 ? "9+" : badgeCount}
         </span>
       )}

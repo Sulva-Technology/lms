@@ -8,7 +8,7 @@ export function NotificationReadButton({ id, isRead }: { id: string; isRead: boo
   const [read, setRead] = useState(isRead);
   const [pending, startTransition] = useTransition();
 
-  if (read) return <span className="text-xs text-slate-500">Read</span>;
+  if (read) return <span className="text-xs text-ink-subtle">Read</span>;
 
   return (
     <button

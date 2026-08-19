@@ -17,7 +17,8 @@ export interface ProgramPayload {
 }
 
 export interface CoursePayload {
-  departmentId: string;
+  /** Null for a training tenant, which has no departments. */
+  departmentId?: string | null;
   title: string;
   code: string;
   description?: string;

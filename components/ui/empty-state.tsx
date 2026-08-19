@@ -1,34 +1,39 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { motion, HTMLMotionProps } from "motion/react"
+import { cn } from "@/lib/utils"
 import { fadeUp } from "@/lib/motion"
 
 export interface EmptyStateProps extends HTMLMotionProps<"div"> {
-  icon?: React.ReactNode;
-  title: string;
-  description?: string;
-  action?: React.ReactNode;
+  icon?: React.ReactNode
+  title: string
+  description?: string
+  action?: React.ReactNode
 }
 
 export function EmptyState({ icon, title, description, action, className, ...props }: EmptyStateProps) {
   return (
-    <motion.div 
+    <motion.div
       variants={fadeUp}
       initial="hidden"
       animate="visible"
-      className={cn("flex flex-col items-center justify-center py-16 px-6 text-center glass-panel rounded-2xl", className)} 
+      className={cn(
+        "panel flex flex-col items-center justify-center rounded-card px-6 py-14 text-center",
+        className,
+      )}
       {...props}
     >
-      {icon && (
-        <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center text-slate-400 mb-6 border border-white/5">
+      {icon ? (
+        <span className="grid size-12 place-items-center rounded-full bg-status-soft text-ink-subtle">
           {icon}
-        </div>
-      )}
-      <h3 className="font-outfit text-xl font-semibold text-slate-200 mb-2">{title}</h3>
-      {description && <p className="text-slate-400 text-sm max-w-sm mb-6">{description}</p>}
-      {action && <div>{action}</div>}
+        </span>
+      ) : null}
+      <h3 className="mt-5 font-display text-lg font-semibold text-ink">{title}</h3>
+      {description ? (
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink-muted">{description}</p>
+      ) : null}
+      {action ? <div className="mt-6">{action}</div> : null}
     </motion.div>
   )
 }

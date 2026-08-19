@@ -3,10 +3,7 @@ import { cn } from "@/lib/utils"
 
 export function GlassPanel({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn("glass-panel rounded-2xl p-6", className)}
-      {...props}
-    >
+    <div className={cn("panel rounded-panel p-6", className)} {...props}>
       {children}
     </div>
   )

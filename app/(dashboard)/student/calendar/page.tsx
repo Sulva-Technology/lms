@@ -22,7 +22,7 @@ export default async function StudentCalendarPage() {
           data={events}
           keyExtractor={(item: any) => `${item.type}-${item.id}`}
           columns={[
-            { key: "title", header: "Event", cell: (item: any) => <span className="font-medium text-white">{item.title}</span> },
+            { key: "title", header: "Event", cell: (item: any) => <span className="font-medium text-ink">{item.title}</span> },
             { key: "type", header: "Type", cell: (item: any) => <span className="capitalize">{String(item.type).replace(/_/g, " ")}</span> },
             { key: "course", header: "Course", cell: (item: any) => item.course || "University" },
             { key: "starts", header: "Starts", cell: (item: any) => item.startsAt ? new Date(item.startsAt).toLocaleString() : "Not scheduled" },

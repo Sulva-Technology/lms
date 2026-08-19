@@ -64,7 +64,7 @@ export function RecordingManager({ recordings }: { recordings: Recording[] }) {
             key: "title",
             header: "Class",
             cell: (item) => (
-              <span className="font-medium text-white">
+              <span className="font-medium text-ink">
                 {item.live_classes?.topic || item.live_classes?.title || "Recording"}
               </span>
             ),
@@ -89,7 +89,7 @@ export function RecordingManager({ recordings }: { recordings: Recording[] }) {
               <div className="flex justify-end gap-2">
                 {item.recording_url || item.playback_url ? (
                   <a
-                    className="rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10"
+                    className="rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]"
                     href={item.playback_url || item.recording_url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -97,7 +97,7 @@ export function RecordingManager({ recordings }: { recordings: Recording[] }) {
                     Open
                   </a>
                 ) : (
-                  <span className="px-3 py-2 text-xs text-slate-500">Processing</span>
+                  <span className="px-3 py-2 text-xs text-ink-subtle">Processing</span>
                 )}
                 <button
                   onClick={() => togglePublish(item)}

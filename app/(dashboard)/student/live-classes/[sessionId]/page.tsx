@@ -36,8 +36,8 @@ export default async function StudentLiveClassRoomPage({ params }: { params: Pro
             role="guest"
             topic={liveClass.topic || liveClass.title}
           />
-          <div className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5 text-sm text-slate-300">
-            Status: <span className="font-medium text-white capitalize">{liveClass.status}</span>
+          <div className="bg-surface backdrop-blur-2xl border border-line rounded-[24px] p-5 text-sm text-ink-muted">
+            Status: <span className="font-medium text-ink capitalize">{liveClass.status}</span>
           </div>
         </div>
       )}

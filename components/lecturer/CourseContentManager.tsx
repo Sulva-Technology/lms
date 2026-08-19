@@ -14,8 +14,8 @@ type Props = {
   modules: Module[];
 };
 
-const inputClass = "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-violet-400";
-const labelClass = "grid gap-2 text-sm font-medium text-slate-300";
+const inputClass = "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
+const labelClass = "grid gap-2 text-sm font-medium text-ink-muted";
 
 export function CourseContentManager({ course, modules }: Props) {
   const [items, setItems] = useState(modules);
@@ -100,21 +100,21 @@ export function CourseContentManager({ course, modules }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 pb-20">
-      <div className="glass-panel rounded-[28px] border border-white/10 p-6 shadow-2xl">
+      <div className="panel rounded-[28px] border border-line p-6 shadow-2xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-300">{course.code}</p>
-            <h1 className="mt-2 font-outfit text-3xl font-bold text-white">{course.title}</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">{course.description || "Build modules, lessons, and materials for this course."}</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{course.code}</p>
+            <h1 className="mt-2 font-outfit text-3xl font-bold text-ink">{course.title}</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-ink-muted">{course.description || "Build modules, lessons, and materials for this course."}</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setDrawer("module")} className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow-violet transition hover:bg-violet-500">
+            <button onClick={() => setDrawer("module")} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-primary-hover">
               <Layers3 size={16} /> Add Module
             </button>
-            <button onClick={() => setDrawer("lesson")} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10">
+            <button onClick={() => setDrawer("lesson")} className="inline-flex items-center gap-2 rounded-xl border border-line bg-status-soft px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-ink/[0.06]">
               <Plus size={16} /> Add Lesson
             </button>
-            <button onClick={() => setDrawer("material")} className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10">
+            <button onClick={() => setDrawer("material")} className="inline-flex items-center gap-2 rounded-xl border border-line bg-status-soft px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-ink/[0.06]">
               <FilePlus2 size={16} /> Attach Material
             </button>
           </div>
@@ -129,13 +129,13 @@ export function CourseContentManager({ course, modules }: Props) {
 
       <div className="grid gap-4">
         {items.length === 0 ? (
-          <div className="glass-panel rounded-2xl border border-white/10 p-8 text-center text-slate-400">No modules yet. Add the first module to start building the course.</div>
+          <div className="panel rounded-2xl border border-line p-8 text-center text-ink-muted">No modules yet. Add the first module to start building the course.</div>
         ) : items.map((module, index) => (
-          <motion.section key={module.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }} className="rounded-2xl border border-white/10 bg-slate-950/60 p-5 shadow-xl">
+          <motion.section key={module.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }} className="rounded-2xl border border-line bg-surface p-5 shadow-xl">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h2 className="font-outfit text-xl font-semibold text-white">{module.title}</h2>
-                {module.description && <p className="mt-1 text-sm text-slate-400">{module.description}</p>}
+                <h2 className="font-outfit text-xl font-semibold text-ink">{module.title}</h2>
+                {module.description && <p className="mt-1 text-sm text-ink-muted">{module.description}</p>}
               </div>
               <button onClick={() => archiveModule(module.id)} className="inline-flex w-fit items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
                 <Archive size={13} /> Archive module
@@ -143,16 +143,16 @@ export function CourseContentManager({ course, modules }: Props) {
             </div>
             <div className="mt-4 grid gap-3">
               {(module.lessons || []).length === 0 ? (
-                <p className="rounded-xl border border-dashed border-white/10 p-4 text-sm text-slate-500">No lessons in this module yet.</p>
+                <p className="rounded-xl border border-dashed border-line p-4 text-sm text-ink-subtle">No lessons in this module yet.</p>
               ) : (module.lessons || []).map((lesson: any) => (
-                <div key={lesson.id} className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                <div key={lesson.id} className="grid gap-3 rounded-xl border border-line bg-status-soft p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="font-semibold text-white">{lesson.title}</p>
-                      <p className="mt-1 text-xs text-slate-400">{lesson.resource_type} · {lesson.is_published ? "Published" : "Draft"}</p>
+                      <p className="font-semibold text-ink">{lesson.title}</p>
+                      <p className="mt-1 text-xs text-ink-muted">{lesson.resource_type} · {lesson.is_published ? "Published" : "Draft"}</p>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => { setSelectedLesson(lesson); setDrawer("material"); }} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-white/10">
+                      <button onClick={() => { setSelectedLesson(lesson); setDrawer("material"); }} className="inline-flex items-center gap-1.5 rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]">
                         <Video size={13} /> Material
                       </button>
                       <button onClick={() => archiveLesson(lesson.id)} className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
@@ -163,12 +163,12 @@ export function CourseContentManager({ course, modules }: Props) {
                   {(lesson.lesson_materials || []).length > 0 && (
                     <ul className="grid gap-2">
                       {(lesson.lesson_materials || []).map((material: any) => (
-                        <li key={material.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-2.5">
-                          <span className="min-w-0 truncate text-sm text-slate-300">
+                        <li key={material.id} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-status-soft px-4 py-2.5">
+                          <span className="min-w-0 truncate text-sm text-ink-muted">
                             {material.url ? (
-                              <a href={material.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-300">{material.title}</a>
+                              <a href={material.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">{material.title}</a>
                             ) : material.title}
-                            <span className="ml-2 text-xs text-slate-500">{material.material_type}</span>
+                            <span className="ml-2 text-xs text-ink-subtle">{material.material_type}</span>
                           </span>
                           <button
                             onClick={() => detachMaterial(lesson.id, material.id)}
@@ -208,7 +208,7 @@ export function CourseContentManager({ course, modules }: Props) {
           <label className={labelClass}>Title<input name="title" required className={inputClass} /></label>
           <label className={labelClass}>Content<textarea name="content" rows={5} className={inputClass} /></label>
           <label className={labelClass}>Type<select name="resourceType" className={inputClass}><option value="document">Document</option><option value="video">Video</option><option value="link">Link</option><option value="other">Other</option></select></label>
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300"><input name="isPublished" type="checkbox" className="h-4 w-4 accent-violet-500" /> Publish immediately</label>
+          <label className="flex items-center gap-3 rounded-xl border border-line bg-status-soft px-4 py-3 text-sm text-ink-muted"><input name="isPublished" type="checkbox" className="h-4 w-4 accent-violet-500" /> Publish immediately</label>
           <SubmitButton pending={pending} label="Save lesson" />
         </form>
       </Drawer>
@@ -228,7 +228,7 @@ export function CourseContentManager({ course, modules }: Props) {
 
 function SubmitButton({ pending, label }: { pending: boolean; label: string }) {
   return (
-    <button disabled={pending} className="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:opacity-60">
+    <button disabled={pending} className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-ink transition hover:bg-primary-hover disabled:opacity-60">
       {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
       {label}
     </button>

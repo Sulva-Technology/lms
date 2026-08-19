@@ -8,8 +8,8 @@ import { FileUploader, type UploadedFile } from "@/components/ui/file-uploader";
 import { STORAGE_BUCKETS } from "@/lib/storage/paths";
 
 const inputClass =
-  "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
-const labelClass = "grid gap-2 text-sm font-medium text-slate-300";
+  "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
+const labelClass = "grid gap-2 text-sm font-medium text-ink-muted";
 
 export function ProfileForm({
   profile,
@@ -49,18 +49,18 @@ export function ProfileForm({
   return (
     <form
       action={submit}
-      className="grid max-w-2xl gap-5 rounded-[24px] border border-white/10 bg-slate-950/60 p-6 backdrop-blur-2xl"
+      className="grid max-w-2xl gap-5 rounded-[24px] border border-line bg-surface p-6 backdrop-blur-2xl"
     >
-      <h2 className="flex items-center gap-2 font-outfit text-lg font-semibold text-white">
-        <UserRound size={18} className="text-blue-300" /> Profile
+      <h2 className="flex items-center gap-2 font-outfit text-lg font-semibold text-ink">
+        <UserRound size={18} className="text-primary" /> Profile
       </h2>
 
       <div className="flex items-center gap-4">
-        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full border border-white/15 bg-slate-900">
+        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full border border-line bg-surface">
           {avatarUrl ? (
             <Image src={avatarUrl} alt="Profile photo" width={64} height={64} className="h-full w-full object-cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-slate-500">
+            <div className="flex h-full w-full items-center justify-center text-ink-subtle">
               <UserRound size={24} />
             </div>
           )}
@@ -104,7 +104,7 @@ export function ProfileForm({
 
       <button
         disabled={pending}
-        className="inline-flex w-fit items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-60"
+        className="inline-flex w-fit items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-60"
       >
         {pending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
         Save profile

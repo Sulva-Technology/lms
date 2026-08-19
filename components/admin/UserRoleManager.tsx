@@ -80,7 +80,7 @@ export function UserRoleManager({ users, currentUserId }: { users: ManagedUser[]
             key: "name",
             header: "Name",
             cell: (item) => (
-              <span className="font-medium text-white">
+              <span className="font-medium text-ink">
                 {[item.first_name, item.last_name].filter(Boolean).join(" ") || "Unnamed user"}
               </span>
             ),
@@ -91,14 +91,14 @@ export function UserRoleManager({ users, currentUserId }: { users: ManagedUser[]
             header: "Role",
             cell: (item) =>
               item.id === currentUserId || item.role === "super_admin" ? (
-                <span className="text-slate-300">{roleLabels[item.role] || item.role}</span>
+                <span className="text-ink-muted">{roleLabels[item.role] || item.role}</span>
               ) : (
                 <select
                   value={drafts[item.id] ?? item.role}
                   onChange={(event) =>
                     setDrafts((current) => ({ ...current, [item.id]: event.target.value as AuthRole }))
                   }
-                  className="rounded-lg border border-white/10 bg-slate-950/70 px-3 py-2 text-xs text-white outline-none focus:border-blue-400"
+                  className="rounded-lg border border-line bg-surface px-3 py-2 text-xs text-ink outline-none focus:border-primary"
                 >
                   {ASSIGNABLE_ROLES.map((role) => (
                     <option key={role} value={role}>
@@ -116,13 +116,13 @@ export function UserRoleManager({ users, currentUserId }: { users: ManagedUser[]
             cell: (item) => {
               const dirty = Boolean(drafts[item.id] && drafts[item.id] !== item.role);
               if (item.id === currentUserId || item.role === "super_admin") {
-                return <span className="text-xs text-slate-500">—</span>;
+                return <span className="text-xs text-ink-subtle">—</span>;
               }
               return (
                 <button
                   onClick={() => save(item)}
                   disabled={!dirty || savingId === item.id}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-500 disabled:opacity-40"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-contrast hover:bg-primary-hover disabled:opacity-40"
                 >
                   {savingId === item.id ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
                   Save

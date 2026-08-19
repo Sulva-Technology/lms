@@ -110,13 +110,13 @@ export function FileUploader({
         type="button"
         disabled={disabled || busy}
         onClick={() => inputRef.current?.click()}
-        className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/15 bg-slate-950/50 px-5 py-6 text-sm font-medium text-slate-300 transition hover:border-blue-400/50 hover:text-white disabled:opacity-60"
+        className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-line bg-surface px-5 py-6 text-sm font-medium text-ink-muted transition hover:border-primary/25 hover:text-ink disabled:opacity-60"
       >
         <span className="flex items-center gap-2">
           {busy ? <Loader2 size={18} className="animate-spin" /> : <Upload size={18} />}
           {busy ? "Uploading…" : label || `Choose file${multiple ? "s" : ""}`}
         </span>
-        <span className="text-xs text-slate-500">max {maxSizeMb}MB</span>
+        <span className="text-xs text-ink-subtle">max {maxSizeMb}MB</span>
       </button>
 
       <input
@@ -137,18 +137,18 @@ export function FileUploader({
           {value.map((file) => (
             <li
               key={file.path}
-              className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3"
+              className="flex items-center justify-between gap-3 rounded-xl border border-line bg-status-soft px-4 py-3"
             >
-              <span className="flex min-w-0 items-center gap-2 text-sm text-slate-200">
-                <Paperclip size={15} className="shrink-0 text-blue-300" />
+              <span className="flex min-w-0 items-center gap-2 text-sm text-ink">
+                <Paperclip size={15} className="shrink-0 text-primary" />
                 <span className="truncate">{file.fileName}</span>
-                <span className="shrink-0 text-xs text-slate-500">{Math.ceil(file.fileSize / 1024)}KB</span>
+                <span className="shrink-0 text-xs text-ink-subtle">{Math.ceil(file.fileSize / 1024)}KB</span>
               </span>
               <button
                 type="button"
                 onClick={() => remove(file.path)}
                 disabled={disabled}
-                className="rounded-lg bg-white/5 p-1.5 text-slate-300 transition hover:bg-red-500/20 hover:text-red-300"
+                className="rounded-lg bg-status-soft p-1.5 text-ink-muted transition hover:bg-red-500/20 hover:text-red-300"
                 aria-label={`Remove ${file.fileName}`}
               >
                 <X size={14} />

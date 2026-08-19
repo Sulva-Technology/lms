@@ -20,7 +20,7 @@ export default async function AdminAuditLogsPage() {
           data={logs}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "action", header: "Action", cell: (item: any) => <span className="font-medium text-white">{item.action}</span> },
+            { key: "action", header: "Action", cell: (item: any) => <span className="font-medium text-ink">{item.action}</span> },
             { key: "entity", header: "Entity", cell: (item: any) => item.entity_type },
             { key: "actor", header: "Actor", cell: (item: any) => [item.profiles?.first_name, item.profiles?.last_name].filter(Boolean).join(" ") || item.profiles?.email || "System" },
             { key: "ip", header: "IP", cell: (item: any) => item.ip_address || "N/A" },

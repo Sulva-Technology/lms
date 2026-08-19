@@ -22,7 +22,7 @@ export function RegistrationWarnings({ selectedCourses, config, conflicts, missi
 
   if (totalWarnings === 0) {
     return (
-      <div className="glass-panel p-4 rounded-xl flex items-start gap-3 border border-emerald-500/30 bg-emerald-500/10">
+      <div className="panel p-4 rounded-xl flex items-start gap-3 border border-emerald-500/30 bg-emerald-500/10">
         <CheckCircle className="text-emerald-400 shrink-0 mt-0.5" size={20} />
         <div>
           <h4 className="font-semibold text-emerald-300 text-sm">All Requirements Met</h4>
@@ -33,7 +33,7 @@ export function RegistrationWarnings({ selectedCourses, config, conflicts, missi
   }
 
   return (
-    <div className="glass-panel p-4 rounded-xl flex items-start gap-3 border border-orange-500/30 bg-orange-500/10">
+    <div className="panel p-4 rounded-xl flex items-start gap-3 border border-orange-500/30 bg-orange-500/10">
       <AlertTriangle className="text-orange-400 shrink-0 mt-0.5" size={20} />
       <div className="space-y-2 flex-1">
         <h4 className="font-semibold text-orange-300 text-sm">Action Required</h4>

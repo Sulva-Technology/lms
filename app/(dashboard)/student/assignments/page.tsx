@@ -23,7 +23,7 @@ export default async function StudentAssignmentsPage() {
           data={assignments}
           keyExtractor={(item: any) => item.id}
           columns={[
-            { key: "title", header: "Assignment", cell: (item: any) => <Link href={`/student/assignments/${item.id}`} className="font-medium text-white hover:text-blue-300">{item.title}</Link> },
+            { key: "title", header: "Assignment", cell: (item: any) => <Link href={`/student/assignments/${item.id}`} className="font-medium text-ink hover:text-primary">{item.title}</Link> },
             { key: "course", header: "Course", cell: (item: any) => item.course },
             { key: "due", header: "Due", cell: (item: any) => new Date(item.dueDate).toLocaleString() },
             { key: "points", header: "Points", cell: (item: any) => item.points },

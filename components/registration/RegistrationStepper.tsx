@@ -22,7 +22,7 @@ export function RegistrationStepper({ currentStep }: Props) {
 
   return (
     <div className="w-full mb-8 relative">
-      <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-800 -z-10 -translate-y-1/2"></div>
+      <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-surface -z-10 -translate-y-1/2"></div>
       
       <div className="flex justify-between max-w-3xl mx-auto px-4 sm:px-0">
         {steps.map((step, index) => {
@@ -39,18 +39,18 @@ export function RegistrationStepper({ currentStep }: Props) {
                   borderColor: isCurrent ? "rgb(96 165 250)" : "transparent",
                 }}
                 className={`w-8 h-8 rounded-full flex items-center justify-center border-2 z-10 transition-colors duration-300 ${
-                  isCurrent ? "shadow-glow-blue" : ""
+                  isCurrent ? "" : ""
                 }`}
               >
                 {isCompleted ? (
-                  <CheckCircle size={16} className="text-white" />
+                  <CheckCircle size={16} className="text-ink" />
                 ) : (
-                  <span className="text-xs font-semibold text-white">{index + 1}</span>
+                  <span className="text-xs font-semibold text-ink">{index + 1}</span>
                 )}
               </motion.div>
               
               <span className={`text-xs font-medium absolute -bottom-6 w-24 text-center ${
-                isCurrent ? "text-blue-400" : isCompleted ? "text-slate-300" : "text-slate-500"
+                isCurrent ? "text-primary" : isCompleted ? "text-ink-muted" : "text-ink-subtle"
               }`}>
                 {step.label}
               </span>
@@ -59,7 +59,7 @@ export function RegistrationStepper({ currentStep }: Props) {
         })}
       </div>
       
-      <div className="max-w-3xl mx-auto h-0.5 bg-blue-500 absolute top-1/2 left-4 sm:left-0 -translate-y-1/2 -z-10 transition-all duration-500" 
+      <div className="max-w-3xl mx-auto h-0.5 bg-primary absolute top-1/2 left-4 sm:left-0 -translate-y-1/2 -z-10 transition-all duration-500" 
         style={{ width: `calc(${Math.max(0, currentIndex / (steps.length - 1)) * 100}% - 2rem)` }}>
       </div>
     </div>

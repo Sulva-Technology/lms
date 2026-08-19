@@ -21,14 +21,14 @@ export function Avatar({
 }) {
   return (
     <div
-      className={cn("shrink-0 overflow-hidden rounded-full border border-white/20", className)}
+      className={cn("shrink-0 overflow-hidden rounded-full border border-line-strong", className)}
       style={{ width: size, height: size }}
     >
       {src ? (
         <Image src={src} alt={name} width={size} height={size} className="h-full w-full object-cover" />
       ) : (
         <div
-          className="flex h-full w-full items-center justify-center font-semibold text-white"
+          className="flex h-full w-full items-center justify-center font-semibold text-ink"
           style={{ background: gradientFor(name), fontSize: Math.max(10, Math.round(size * 0.38)) }}
           aria-label={name}
         >

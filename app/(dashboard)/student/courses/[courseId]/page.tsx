@@ -37,16 +37,16 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
           {(modules || []).length === 0 ? (
             <EmptyState title="No modules" description="Published course modules will appear here." />
           ) : (modules || []).map((module: any) => (
-            <section key={module.id} className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[24px] p-6">
-              <h2 className="font-outfit text-xl font-semibold text-white">{module.title}</h2>
-              {module.description && <p className="mt-1 text-sm text-slate-400">{module.description}</p>}
+            <section key={module.id} className="bg-surface backdrop-blur-2xl border border-line rounded-[24px] p-6">
+              <h2 className="font-outfit text-xl font-semibold text-ink">{module.title}</h2>
+              {module.description && <p className="mt-1 text-sm text-ink-muted">{module.description}</p>}
               <div className="mt-5 grid gap-2">
                 {(module.lessons || []).filter((lesson: any) => lesson.is_published).sort((a: any, b: any) => a.order_index - b.order_index).map((lesson: any) => {
                   const progress = lesson.lesson_progress?.[0];
                   return (
-                    <Link key={lesson.id} href={`/student/courses/${courseId}/lessons/${lesson.id}`} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] p-4 hover:bg-white/[0.06]">
-                      <span className="flex items-center gap-3 text-sm font-medium text-slate-200"><PlayCircle size={18} className="text-blue-300" /> {lesson.title}</span>
-                      {progress?.is_completed ? <CheckCircle2 size={18} className="text-emerald-300" /> : <span className="text-xs text-slate-500">{lesson.resource_type || "Lesson"}</span>}
+                    <Link key={lesson.id} href={`/student/courses/${courseId}/lessons/${lesson.id}`} className="flex items-center justify-between rounded-2xl border border-line bg-status-soft p-4 hover:bg-ink/[0.06]">
+                      <span className="flex items-center gap-3 text-sm font-medium text-ink"><PlayCircle size={18} className="text-primary" /> {lesson.title}</span>
+                      {progress?.is_completed ? <CheckCircle2 size={18} className="text-emerald-300" /> : <span className="text-xs text-ink-subtle">{lesson.resource_type || "Lesson"}</span>}
                     </Link>
                   );
                 })}

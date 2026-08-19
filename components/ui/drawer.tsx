@@ -41,7 +41,7 @@ export function Drawer({ isOpen, onClose, title, children, position = "right", c
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-status-soft backdrop-blur-sm"
           />
           <motion.div
             variants={slideVariants}
@@ -52,16 +52,16 @@ export function Drawer({ isOpen, onClose, title, children, position = "right", c
             className={cn(
               "fixed top-0 bottom-0 z-[70] w-full max-w-sm flex flex-col",
               position === "right" ? "right-0" : "left-0",
-              "bg-slate-900/95 backdrop-blur-3xl border-white/10 shadow-2xl",
+              "bg-surface backdrop-blur-3xl border-line shadow-2xl",
               position === "right" ? "border-l" : "border-r",
               className
             )}
           >
-            <div className="flex items-center justify-between p-6 border-b border-white/10">
-              {title && <h2 className="text-xl font-outfit font-semibold text-white">{title}</h2>}
+            <div className="flex items-center justify-between p-6 border-b border-line">
+              {title && <h2 className="text-xl font-outfit font-semibold text-ink">{title}</h2>}
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors ml-auto"
+                className="p-2 rounded-full hover:bg-ink/[0.06] text-ink-muted hover:text-ink transition-colors ml-auto"
                 aria-label="Close drawer"
               >
                 <X size={20} />

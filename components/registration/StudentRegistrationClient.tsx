@@ -80,8 +80,8 @@ export function StudentRegistrationClient({
         <div className="mx-auto w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(16,185,129,0.16)]">
           <CheckCircle2 size={42} className="text-emerald-300" />
         </div>
-        <h1 className="font-outfit text-4xl font-semibold text-white mb-3">Registration {existingStatus}</h1>
-        <p className="text-slate-400 max-w-xl mx-auto">Your current course registration is locked while it is reviewed by your academic team.</p>
+        <h1 className="font-outfit text-4xl font-semibold text-ink mb-3">Registration {existingStatus}</h1>
+        <p className="text-ink-muted max-w-xl mx-auto">Your current course registration is locked while it is reviewed by your academic team.</p>
       </div>
     )
   }
@@ -90,7 +90,7 @@ export function StudentRegistrationClient({
     <div className="grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-8">
       <section className="space-y-4">
         {courses.length === 0 ? (
-          <div className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-[32px] p-10 text-center text-slate-400">
+          <div className="bg-surface backdrop-blur-2xl border border-line rounded-[32px] p-10 text-center text-ink-muted">
             No courses are available for the active registration window.
           </div>
         ) : courses.map((course, index) => {
@@ -104,21 +104,21 @@ export function StudentRegistrationClient({
               onClick={() => toggle(course.id)}
               className={`w-full text-left rounded-2xl border p-5 transition-all ${
                 active
-                  ? "bg-blue-500/10 border-blue-500/40 shadow-[0_0_20px_rgba(59,130,246,0.12)]"
-                  : "bg-slate-950/50 border-white/10 hover:bg-white/[0.04]"
+                  ? "bg-primary-soft border-primary/25 shadow-[0_0_20px_rgba(59,130,246,0.12)]"
+                  : "bg-surface border-line hover:bg-ink/[0.06]"
               }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-outfit font-bold text-blue-300">{course.code}</span>
-                    <span className="text-xs text-slate-500">{course.credits} credits</span>
+                    <span className="font-outfit font-bold text-primary">{course.code}</span>
+                    <span className="text-xs text-ink-subtle">{course.credits} credits</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-white">{course.title}</h3>
-                  {course.description && <p className="text-sm text-slate-400 mt-2 line-clamp-2">{course.description}</p>}
+                  <h3 className="text-lg font-semibold text-ink">{course.title}</h3>
+                  {course.description && <p className="text-sm text-ink-muted mt-2 line-clamp-2">{course.description}</p>}
                 </div>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center border shrink-0 ${
-                  active ? "bg-blue-500 border-blue-400 text-white" : "bg-white/5 border-white/10 text-slate-400"
+                  active ? "bg-primary border-primary text-primary-contrast" : "bg-status-soft border-line text-ink-muted"
                 }`}>
                   {active ? <CheckCircle2 size={19} /> : <Plus size={19} />}
                 </div>
@@ -128,22 +128,22 @@ export function StudentRegistrationClient({
         })}
       </section>
 
-      <aside className="bg-slate-950/70 backdrop-blur-2xl border border-white/10 rounded-[32px] p-6 h-fit sticky top-24">
+      <aside className="bg-surface backdrop-blur-2xl border border-line rounded-[32px] p-6 h-fit sticky top-24">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center justify-center">
             <Lock size={20} />
           </div>
           <div>
-            <h2 className="font-outfit text-xl font-semibold text-white">Review</h2>
-            <p className="text-sm text-slate-400">{credits} / {maxCredits} credits</p>
+            <h2 className="font-outfit text-xl font-semibold text-ink">Review</h2>
+            <p className="text-sm text-ink-muted">{credits} / {maxCredits} credits</p>
           </div>
         </div>
 
         <div className="space-y-2 mb-5">
           {selectedCourses.map((course) => (
-            <div key={course.id} className="flex items-center justify-between rounded-xl bg-white/[0.03] px-3 py-2 text-sm">
-              <span className="text-slate-200">{course.code}</span>
-              <span className="text-slate-500">{course.credits}</span>
+            <div key={course.id} className="flex items-center justify-between rounded-xl bg-status-soft px-3 py-2 text-sm">
+              <span className="text-ink">{course.code}</span>
+              <span className="text-ink-subtle">{course.credits}</span>
             </div>
           ))}
         </div>
@@ -161,7 +161,7 @@ export function StudentRegistrationClient({
           type="button"
           onClick={submit}
           disabled={isSubmitting || selected.length === 0}
-          className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white font-semibold px-4 py-3 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+          className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-ink font-semibold px-4 py-3 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
         >
           {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <><Send size={16} /> Submit Registration</>}
         </button>

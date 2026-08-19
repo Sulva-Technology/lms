@@ -40,7 +40,7 @@ export default async function AdminRegistrationPage() {
           columns={[
             { key: "student", header: "Student", cell: (item: any) => {
               const profile = Array.isArray(item.profiles) ? item.profiles[0] : item.profiles;
-              return <span className="font-medium text-white">{[profile?.first_name, profile?.last_name].filter(Boolean).join(" ") || profile?.email || "Student"}</span>;
+              return <span className="font-medium text-ink">{[profile?.first_name, profile?.last_name].filter(Boolean).join(" ") || profile?.email || "Student"}</span>;
             }},
             { key: "semester", header: "Semester", cell: (item: any) => (Array.isArray(item.semesters) ? item.semesters[0]?.name : item.semesters?.name) || "Semester" },
             { key: "courses", header: "Courses", cell: (item: any) => (item.course_registration_items || []).length },
