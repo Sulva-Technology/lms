@@ -93,3 +93,21 @@ export function renderSubmissionReceivedEmail(input: {
   const text = `${input.studentName} submitted work for "${input.assignmentTitle}". ${input.url}`;
   return { subject, html, text };
 }
+
+export function renderOrganisationAddedEmail(input: {
+  name: string;
+  organisationName: string;
+  url: string;
+}): EmailBody {
+  const subject = `You have been added to ${input.organisationName}`;
+  const html = layout(
+    subject,
+    `<p style="margin:0;color:#cbd5f5;line-height:1.6">Hi ${escapeHtml(input.name)}, you now have access to
+     <strong style="color:#ffffff">${escapeHtml(input.organisationName)}</strong> on Sulva.
+     Sign in with the password you already use — there is nothing new to set up.</p>`,
+    input.url,
+    `Open ${input.organisationName}`,
+  );
+  const text = `Hi ${input.name}, you now have access to ${input.organisationName} on Sulva. Sign in with the password you already use: ${input.url}`;
+  return { subject, html, text };
+}
