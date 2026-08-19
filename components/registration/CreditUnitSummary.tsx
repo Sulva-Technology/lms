@@ -20,10 +20,10 @@ export function CreditUnitSummary({ currentCredits, minCredits, maxCredits }: Pr
     statusText = "bg-orange-500/10 text-orange-400 border-orange-500/20";
   } else if (currentCredits > maxCredits) {
     statusColor = "bg-red-500";
-    statusText = "bg-red-500/10 text-red-400 border-red-500/20";
+    statusText = "bg-red-500/10 text-danger border-red-500/20";
   } else {
     statusColor = "bg-emerald-500";
-    statusText = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+    statusText = "bg-emerald-500/10 text-success border-emerald-500/20";
   }
 
   return (
@@ -62,7 +62,7 @@ export function CreditUnitSummary({ currentCredits, minCredits, maxCredits }: Pr
           <span className="text-orange-400">Need {minCredits - currentCredits} more</span>
         )}
         {currentCredits > maxCredits && (
-          <span className="text-red-400">Over limit by {currentCredits - maxCredits}</span>
+          <span className="text-danger">Over limit by {currentCredits - maxCredits}</span>
         )}
       </div>
     </div>

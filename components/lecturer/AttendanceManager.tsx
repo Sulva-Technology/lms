@@ -283,8 +283,8 @@ export function AttendanceManager({
         <div
           className={
             error
-              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger"
+              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-success"
           }
         >
           {error || message}
@@ -315,7 +315,7 @@ export function AttendanceManager({
         <div className="rounded-2xl border border-line bg-surface p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <p className="flex items-center gap-2 text-sm font-semibold text-ink">
-              <TriangleAlert size={15} className="text-amber-300" /> Below {THRESHOLD}% attendance
+              <TriangleAlert size={15} className="text-warn" /> Below {THRESHOLD}% attendance
             </p>
             <p className="text-xs text-ink-subtle">
               {defaulters.length} of {sectionRates.length} students in this section
@@ -337,7 +337,7 @@ export function AttendanceManager({
                     {student.name}
                     {student.identifier ? <span className="text-ink-subtle"> · {student.identifier}</span> : null}
                   </span>
-                  <span className="font-semibold text-amber-300">
+                  <span className="font-semibold text-warn">
                     {student.rate}%{" "}
                     <span className="font-normal text-ink-subtle">
                       ({student.attended} of {student.total})
@@ -508,7 +508,7 @@ export function AttendanceManager({
                 onClick={loadHistory}
                 className="flex items-center gap-2 text-left text-sm font-semibold text-ink hover:text-ink"
               >
-                <History size={15} className="text-amber-300" />
+                <History size={15} className="text-warn" />
                 Change log
               </button>
 
@@ -547,7 +547,7 @@ export function AttendanceManager({
           ) : null}
 
           {error && (
-            <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+            <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger">
               {error}
             </div>
           )}

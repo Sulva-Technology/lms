@@ -184,7 +184,7 @@ export function AcademicCrudManager({ type, rows, faculties = [], departments = 
         <motion.div
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-red-300" : "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"}`}
+          className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-danger" : "border-emerald-500/20 bg-emerald-500/10 text-success"}`}
         >
           {error || message}
         </motion.div>

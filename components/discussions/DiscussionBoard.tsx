@@ -143,8 +143,8 @@ export function DiscussionBoard({
     <div
       className={
         error
-          ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-          : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+          ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger"
+          : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-success"
       }
     >
       {error || message}
@@ -166,7 +166,7 @@ export function DiscussionBoard({
               </p>
             </div>
             {thread.is_answered ? (
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-300">
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-success">
                 <CheckCircle2 size={14} /> Answered
               </span>
             ) : mode === "lecturer" ? (

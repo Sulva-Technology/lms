@@ -16,7 +16,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
   if (!result.found) {
     return (
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">
-        <ShieldX className="h-12 w-12 text-red-400" aria-hidden />
+        <ShieldX className="h-12 w-12 text-danger" aria-hidden />
         <h1 className="font-outfit text-2xl font-semibold text-ink">No certificate with that serial</h1>
         <p className="text-sm text-ink-muted">
           Check the serial exactly as printed. Serials look like ABCD-EFGH-JKLM.
@@ -40,10 +40,10 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
         }`}
       >
         {status === 'valid' ? (
-          <BadgeCheck className="mx-auto h-14 w-14 text-emerald-400" aria-hidden />
+          <BadgeCheck className="mx-auto h-14 w-14 text-success" aria-hidden />
         ) : (
           <ShieldAlert
-            className={`mx-auto h-14 w-14 ${status === 'expired' ? 'text-amber-400' : 'text-red-400'}`}
+            className={`mx-auto h-14 w-14 ${status === 'expired' ? 'text-warn' : 'text-danger'}`}
             aria-hidden
           />
         )}
@@ -81,13 +81,13 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
         </dl>
 
         {status === 'valid' ? (
-          <p className="mt-8 text-sm font-medium text-emerald-300">This certificate is valid.</p>
+          <p className="mt-8 text-sm font-medium text-success">This certificate is valid.</p>
         ) : status === 'expired' ? (
-          <p className="mt-8 text-sm font-medium text-amber-300">
+          <p className="mt-8 text-sm font-medium text-warn">
             This certificate expired on {new Date(certificate.expires_at!).toLocaleDateString()} and needs renewing.
           </p>
         ) : (
-          <p className="mt-8 text-sm font-medium text-red-300">
+          <p className="mt-8 text-sm font-medium text-danger">
             This certificate was revoked
             {certificate.revoked_reason ? `: ${certificate.revoked_reason}` : "."}
           </p>

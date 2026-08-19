@@ -9,7 +9,7 @@ export function QuickActionsPanel() {
     { label: "New Module", icon: PlusCircle, href: "/lecturer/courses", color: "text-primary", bg: "bg-primary-soft", border: "border-primary/25" },
     { label: "Schedule Class", icon: Video, href: "/lecturer/live-classes", color: "text-primary", bg: "bg-primary-soft", border: "border-primary/25" },
     { label: "Create Quiz", icon: FileText, href: "/lecturer/quizzes", color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20" },
-    { label: "Announcement", icon: Bell, href: "/lecturer/announcements", color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/20" }
+    { label: "Announcement", icon: Bell, href: "/lecturer/announcements", color: "text-warn", bg: "bg-amber-500/10", border: "border-amber-500/20" }
   ];
 
   return (

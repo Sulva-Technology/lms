@@ -15,7 +15,7 @@ export function UpcomingLiveClassCard({ liveClass, idx }: Props) {
     blue: "from-blue-500/20 to-indigo-500/5 border-primary/25 text-primary",
     purple: "from-purple-500/20 to-fuchsia-500/5 border-purple-500/30 text-purple-400",
     orange: "from-orange-500/20 to-amber-500/5 border-orange-500/30 text-orange-400",
-    emerald: "from-emerald-500/20 to-teal-500/5 border-emerald-500/30 text-emerald-400",
+    emerald: "from-emerald-500/20 to-teal-500/5 border-emerald-500/30 text-success",
   }
   const colorMode = liveClass.theme || "blue";
   

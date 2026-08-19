@@ -92,9 +92,11 @@ export class ComplianceService {
         dueSoon: dueSoon.length,
         completed: completed.length,
         expiring: expiring.length,
-        // Nothing assigned is full compliance, not zero: an organisation with
-        // no required training has not failed at it.
-        compliantPercent: live.length === 0 ? 100 : Math.round((completed.length / live.length) * 100),
+        // Null, not 100: with nothing assigned there is no compliance rate to
+        // report, and showing a perfect score for an empty organisation tells
+        // an administrator their training is covered when none exists.
+        compliantPercent:
+          live.length === 0 ? null : Math.round((completed.length / live.length) * 100),
       },
       overdue,
       dueSoon,

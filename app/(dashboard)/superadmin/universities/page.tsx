@@ -52,10 +52,10 @@ export default async function SuperadminUniversitiesPage({
   return (
     <GenericList title="Schools" description="Create tenants, manage status and plan posture." icon={Building}>
       {params.error ? (
-        <p className="rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-red-200">{params.error}</p>
+        <p className="rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-danger">{params.error}</p>
       ) : null}
       {params.created ? (
-        <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-200">
+        <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-sm text-success">
           School created at {params.created}. An invite email is on its way to the school administrator.
         </p>
       ) : null}

@@ -11,7 +11,7 @@ interface Props {
 
 export function AssignmentDueCard({ assignment, idx }: Props) {
   const urgencyStyles = {
-    high: "bg-red-500/10 text-red-400 border-red-500/20",
+    high: "bg-red-500/10 text-danger border-red-500/20",
     medium: "bg-orange-500/10 text-orange-400 border-orange-500/20",
     low: "bg-slate-500/10 text-ink-muted border-slate-500/20",
   }
@@ -32,7 +32,7 @@ export function AssignmentDueCard({ assignment, idx }: Props) {
       </div>
       <p className="text-xs text-ink-muted flex justify-between items-center">
         <span>{assignment.course}</span>
-        <button className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 hover:text-emerald-400"><CheckCircle size={14} /> Mark Done</button>
+        <button className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 hover:text-success"><CheckCircle size={14} /> Mark Done</button>
       </p>
     </motion.div>
   )

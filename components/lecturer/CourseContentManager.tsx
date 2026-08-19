@@ -122,7 +122,7 @@ export function CourseContentManager({ course, modules }: Props) {
       </div>
 
       {(message || error) && (
-        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-red-300" : "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"}`}>
+        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-danger" : "border-emerald-500/20 bg-emerald-500/10 text-success"}`}>
           {error || message}
         </motion.div>
       )}
@@ -137,7 +137,7 @@ export function CourseContentManager({ course, modules }: Props) {
                 <h2 className="font-outfit text-xl font-semibold text-ink">{module.title}</h2>
                 {module.description && <p className="mt-1 text-sm text-ink-muted">{module.description}</p>}
               </div>
-              <button onClick={() => archiveModule(module.id)} className="inline-flex w-fit items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
+              <button onClick={() => archiveModule(module.id)} className="inline-flex w-fit items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-danger hover:bg-red-500/20">
                 <Archive size={13} /> Archive module
               </button>
             </div>
@@ -155,7 +155,7 @@ export function CourseContentManager({ course, modules }: Props) {
                       <button onClick={() => { setSelectedLesson(lesson); setDrawer("material"); }} className="inline-flex items-center gap-1.5 rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]">
                         <Video size={13} /> Material
                       </button>
-                      <button onClick={() => archiveLesson(lesson.id)} className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
+                      <button onClick={() => archiveLesson(lesson.id)} className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-danger hover:bg-red-500/20">
                         <Archive size={13} /> Archive
                       </button>
                     </div>
@@ -173,7 +173,7 @@ export function CourseContentManager({ course, modules }: Props) {
                           <button
                             onClick={() => detachMaterial(lesson.id, material.id)}
                             disabled={pending}
-                            className="shrink-0 rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-300 transition hover:bg-red-500/20 disabled:opacity-60"
+                            className="shrink-0 rounded-lg bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-danger transition hover:bg-red-500/20 disabled:opacity-60"
                           >
                             Remove
                           </button>

@@ -30,7 +30,7 @@ export function CourseSelectionCard({ course, isSelected, onToggle, isCompulsory
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-3">
           <span className={`px-2.5 py-1 text-xs font-bold rounded-lg border ${
-            isCompulsory ? "bg-purple-500/10 border-purple-500/20 text-purple-400" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+            isCompulsory ? "bg-purple-500/10 border-purple-500/20 text-purple-400" : "bg-emerald-500/10 border-emerald-500/20 text-success"
           }`}>
             {course.code}
           </span>
@@ -45,7 +45,7 @@ export function CourseSelectionCard({ course, isSelected, onToggle, isCompulsory
               e.stopPropagation();
               onToggle(course.id);
             }} 
-            className={`transition-colors ${isSelected ? "text-red-400 hover:text-red-300" : "text-primary hover:text-primary"}`}
+            className={`transition-colors ${isSelected ? "text-danger hover:text-danger" : "text-primary hover:text-primary"}`}
           >
             {isSelected ? <MinusCircle size={24} /> : <PlusCircle size={24} />}
           </button>
@@ -76,8 +76,8 @@ export function CourseSelectionCard({ course, isSelected, onToggle, isCompulsory
       </div>
 
       {(conflict || prereqWarning) && (
-        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-2 text-sm text-red-200">
-          <AlertCircle size={16} className="text-red-400 shrink-0 mt-0.5" />
+        <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-2 text-sm text-danger">
+          <AlertCircle size={16} className="text-danger shrink-0 mt-0.5" />
           <div>
             {prereqWarning && <p>{prereqWarning}</p>}
             {conflict && <p>{conflict}</p>}

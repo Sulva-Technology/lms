@@ -48,8 +48,8 @@ export function RecordingManager({ recordings }: { recordings: Recording[] }) {
         <div
           className={
             error
-              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger"
+              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-success"
           }
         >
           {error || message}
@@ -104,8 +104,8 @@ export function RecordingManager({ recordings }: { recordings: Recording[] }) {
                   disabled={busyId === item.id}
                   className={
                     item.is_published
-                      ? "inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20 disabled:opacity-60"
-                      : "inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20 disabled:opacity-60"
+                      ? "inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-danger hover:bg-red-500/20 disabled:opacity-60"
+                      : "inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-success hover:bg-emerald-500/20 disabled:opacity-60"
                   }
                 >
                   {busyId === item.id ? (

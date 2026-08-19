@@ -70,7 +70,7 @@ export function LecturerSettingsForm({ profile }: { profile: any }) {
       <section className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-[28px] border border-line bg-surface p-6 shadow-2xl backdrop-blur-2xl">
           <div className="mb-6 flex items-center gap-3">
-            <Bell className="text-emerald-300" size={22} />
+            <Bell className="text-success" size={22} />
             <div>
               <h2 className="font-outfit text-xl font-semibold text-ink">Teaching Workflow</h2>
               <p className="text-sm text-ink-muted">Defaults used by live classes and grading queues.</p>
@@ -104,7 +104,7 @@ export function LecturerSettingsForm({ profile }: { profile: any }) {
       </section>
 
       {message && (
-        <div className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${message === "Settings saved." ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-200" : "border-red-500/20 bg-red-500/10 text-red-200"}`}>
+        <div className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${message === "Settings saved." ? "border-emerald-500/20 bg-emerald-500/10 text-success" : "border-red-500/20 bg-red-500/10 text-danger"}`}>
           <CheckCircle2 size={17} /> {message}
         </div>
       )}

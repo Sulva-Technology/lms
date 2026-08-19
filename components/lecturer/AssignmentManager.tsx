@@ -76,7 +76,7 @@ export function AssignmentManager({ courses, assignments }: { courses: Course[];
           <Plus size={16} /> Add Assignment
         </button>
       </div>
-      {(message || error) && <div className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-red-300" : "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"}`}>{error || message}</div>}
+      {(message || error) && <div className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-danger" : "border-emerald-500/20 bg-emerald-500/10 text-success"}`}>{error || message}</div>}
       <DataTable
         data={items}
         keyExtractor={(item) => item.id}
@@ -90,8 +90,8 @@ export function AssignmentManager({ courses, assignments }: { courses: Course[];
             <div className="flex justify-end gap-2">
               <Link href={`/lecturer/assignments/${item.id}/submissions`} className="inline-flex items-center gap-1.5 rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]"><ClipboardCheck size={13} /> Submissions</Link>
               <button onClick={() => { setEditing(item); setDrawerOpen(true); }} className="rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]"><Edit3 size={13} /></button>
-              <button onClick={() => publish(item)} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20"><Send size={13} /> {item.is_published ? "Unpublish" : "Publish"}</button>
-              <button onClick={() => archive(item)} className="rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20"><Archive size={13} /></button>
+              <button onClick={() => publish(item)} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-success hover:bg-emerald-500/20"><Send size={13} /> {item.is_published ? "Unpublish" : "Publish"}</button>
+              <button onClick={() => archive(item)} className="rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-danger hover:bg-red-500/20"><Archive size={13} /></button>
             </div>
           ) },
         ]}

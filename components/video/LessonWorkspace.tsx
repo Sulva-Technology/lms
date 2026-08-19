@@ -99,7 +99,7 @@ export function LessonWorkspace({
             <h2 className="font-outfit text-xl font-semibold text-ink">Private note</h2>
           </div>
           <textarea name="note" rows={5} className="w-full rounded-xl border border-line bg-surface p-3 text-sm text-ink outline-none focus:border-primary" placeholder="Capture a thought, question, or timestamp..." />
-          {noteState && <p className="mt-3 text-sm text-emerald-300">{noteState}</p>}
+          {noteState && <p className="mt-3 text-sm text-success">{noteState}</p>}
           <button className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-primary-hover">
             <Save size={16} /> Save note
           </button>

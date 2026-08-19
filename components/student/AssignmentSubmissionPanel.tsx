@@ -134,8 +134,8 @@ export function AssignmentSubmissionPanel({
                 <div
                   className={
                     error
-                      ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-                      : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+                      ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger"
+                      : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-success"
                   }
                 >
                   {error || message}
@@ -143,7 +143,7 @@ export function AssignmentSubmissionPanel({
               )}
 
               {isPastDue && assignment.allowLateSubmissions && (
-                <p className="flex items-center gap-2 text-sm text-amber-300">
+                <p className="flex items-center gap-2 text-sm text-warn">
                   <AlertTriangle size={15} /> The deadline has passed. This will be marked as a late submission.
                 </p>
               )}
@@ -167,11 +167,11 @@ export function AssignmentSubmissionPanel({
           <div className="mt-4 grid gap-4 text-sm">
             <div className="flex items-center gap-2 text-ink">
               {isGraded ? (
-                <CheckCircle2 size={16} className="text-emerald-300" />
+                <CheckCircle2 size={16} className="text-success" />
               ) : current ? (
                 <CheckCircle2 size={16} className="text-primary" />
               ) : isPastDue ? (
-                <AlertTriangle size={16} className="text-amber-300" />
+                <AlertTriangle size={16} className="text-warn" />
               ) : (
                 <Clock size={16} className="text-ink-muted" />
               )}
@@ -195,7 +195,7 @@ export function AssignmentSubmissionPanel({
                 {attemptsUsed} of {assignment.maxResubmissions} used
               </p>
             </div>
-            {current?.is_late && <p className="text-xs font-medium text-amber-300">Submitted late</p>}
+            {current?.is_late && <p className="text-xs font-medium text-warn">Submitted late</p>}
           </div>
         </div>
 

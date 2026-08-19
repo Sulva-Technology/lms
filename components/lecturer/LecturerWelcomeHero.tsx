@@ -36,7 +36,7 @@ export function LecturerWelcomeHero({ stats }: Props) {
            </motion.div>
            
            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="panel p-5 rounded-2xl flex items-center gap-4 bg-surface border border-line">
-              <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl"><TrendingUp size={20} /></div>
+              <div className="p-3 bg-emerald-500/10 text-success rounded-xl"><TrendingUp size={20} /></div>
               <div>
                  <p className="text-xs text-ink-muted font-medium uppercase tracking-wider mb-0.5">Attendance</p>
                  <h4 className="font-outfit text-2xl font-bold text-ink">{stats.averageAttendance}%</h4>

@@ -76,7 +76,7 @@ export function LessonVideoUploader({
 
       {current ? (
         <div className="flex items-center justify-between gap-3 rounded-xl border border-line bg-status-soft px-4 py-3">
-          <span className="flex min-w-0 items-center gap-2 text-sm text-emerald-300">
+          <span className="flex min-w-0 items-center gap-2 text-sm text-success">
             <CheckCircle2 size={15} className="shrink-0" />
             <span className="truncate text-ink">{current.file_name || "Attached video"}</span>
           </span>
@@ -84,7 +84,7 @@ export function LessonVideoUploader({
             type="button"
             onClick={remove}
             disabled={pending}
-            className="rounded-lg bg-red-500/10 p-2 text-red-300 transition hover:bg-red-500/20 disabled:opacity-60"
+            className="rounded-lg bg-red-500/10 p-2 text-danger transition hover:bg-red-500/20 disabled:opacity-60"
             aria-label="Remove lesson video"
           >
             {pending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
@@ -109,8 +109,8 @@ export function LessonVideoUploader({
         <p
           className={
             error
-              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger"
+              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-success"
           }
         >
           {error || message}

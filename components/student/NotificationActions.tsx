@@ -17,7 +17,7 @@ export function NotificationReadButton({ id, isRead }: { id: string; isRead: boo
         if (result.success) setRead(true);
       })}
       disabled={pending}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/20 disabled:opacity-60"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-success transition hover:bg-emerald-500/20 disabled:opacity-60"
     >
       {pending ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
       Mark read

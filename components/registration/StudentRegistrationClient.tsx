@@ -78,7 +78,7 @@ export function StudentRegistrationClient({
     return (
       <div className="max-w-4xl mx-auto py-16 text-center">
         <div className="mx-auto w-24 h-24 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(16,185,129,0.16)]">
-          <CheckCircle2 size={42} className="text-emerald-300" />
+          <CheckCircle2 size={42} className="text-success" />
         </div>
         <h1 className="font-outfit text-4xl font-semibold text-ink mb-3">Registration {existingStatus}</h1>
         <p className="text-ink-muted max-w-xl mx-auto">Your current course registration is locked while it is reviewed by your academic team.</p>
@@ -130,7 +130,7 @@ export function StudentRegistrationClient({
 
       <aside className="bg-surface backdrop-blur-2xl border border-line rounded-[32px] p-6 h-fit sticky top-24">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center justify-center">
+          <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-success flex items-center justify-center">
             <Lock size={20} />
           </div>
           <div>
@@ -150,7 +150,7 @@ export function StudentRegistrationClient({
 
         {(error || success) && (
           <div className={`mb-4 rounded-xl border px-3 py-3 text-sm flex items-center gap-2 ${
-            error ? "bg-red-500/10 border-red-500/20 text-red-300" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"
+            error ? "bg-red-500/10 border-red-500/20 text-danger" : "bg-emerald-500/10 border-emerald-500/20 text-success"
           }`}>
             {error ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
             {error || success}

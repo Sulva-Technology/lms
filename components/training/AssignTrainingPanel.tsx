@@ -7,8 +7,8 @@ import { assignTeamTrainingAction, assignTrainingAction } from "@/app/actions/tr
 type Option = { id: string; label: string };
 
 const inputClass =
-  "rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-blue-400";
-const labelClass = "grid gap-2 text-sm font-medium text-slate-300";
+  "rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-primary";
+const labelClass = "grid gap-2 text-sm font-medium text-ink-muted";
 
 export function AssignTrainingPanel({
   cohorts,
@@ -56,10 +56,10 @@ export function AssignTrainingPanel({
   }
 
   return (
-    <form action={submit} className="glass-panel grid gap-4 rounded-[24px] border border-white/10 p-5">
+    <form action={submit} className="panel grid gap-4 rounded-[24px] border border-line p-5">
       <div>
-        <h2 className="font-outfit text-lg font-semibold text-white">Assign training</h2>
-        <p className="mt-1 text-sm text-slate-400">
+        <h2 className="font-outfit text-lg font-semibold text-ink">Assign training</h2>
+        <p className="mt-1 text-sm text-ink-muted">
           Assigning enrols the person as well, so the training opens the moment they sign in.
         </p>
       </div>
@@ -83,8 +83,8 @@ export function AssignTrainingPanel({
             onClick={() => setTarget(option)}
             className={
               target === option
-                ? "inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white"
-                : "inline-flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-white/10"
+                ? "inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-contrast"
+                : "inline-flex items-center gap-2 rounded-lg bg-status-soft px-3 py-2 text-xs font-semibold text-ink-muted hover:bg-ink/[0.06]"
             }
           >
             {option === "person" ? <UserPlus size={14} /> : <Users size={14} />}
@@ -120,7 +120,7 @@ export function AssignTrainingPanel({
       <label className={labelClass}>
         Due by
         <input name="dueOn" type="date" className={inputClass} />
-        <span className="text-xs font-normal text-slate-500">
+        <span className="text-xs font-normal text-ink-subtle">
           Leave empty for training with no deadline. It will not appear in the overdue list.
         </span>
       </label>
@@ -129,8 +129,8 @@ export function AssignTrainingPanel({
         <p
           className={
             error
-              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger"
+              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-success"
           }
         >
           {error || message}
@@ -139,7 +139,7 @@ export function AssignTrainingPanel({
 
       <button
         disabled={pending || cohorts.length === 0}
-        className="inline-flex w-fit items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:opacity-60"
+        className="inline-flex w-fit items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-contrast transition hover:bg-primary-hover disabled:opacity-60"
       >
         {pending ? <Loader2 size={16} className="animate-spin" /> : <CalendarClock size={16} />}
         Assign training

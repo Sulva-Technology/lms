@@ -44,7 +44,7 @@ export default async function StudentCertificatesPage() {
               </p>
 
               {certificate.revoked_at ? (
-                <p className="mt-3 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+                <p className="mt-3 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-danger">
                   Revoked{certificate.revoked_reason ? `: ${certificate.revoked_reason}` : ""}
                 </p>
               ) : (

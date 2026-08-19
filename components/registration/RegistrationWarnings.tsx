@@ -23,10 +23,10 @@ export function RegistrationWarnings({ selectedCourses, config, conflicts, missi
   if (totalWarnings === 0) {
     return (
       <div className="panel p-4 rounded-xl flex items-start gap-3 border border-emerald-500/30 bg-emerald-500/10">
-        <CheckCircle className="text-emerald-400 shrink-0 mt-0.5" size={20} />
+        <CheckCircle className="text-success shrink-0 mt-0.5" size={20} />
         <div>
-          <h4 className="font-semibold text-emerald-300 text-sm">All Requirements Met</h4>
-          <p className="text-emerald-400/80 text-xs mt-1">Your course selection satisfies all academic regulations and shows no scheduling conflicts.</p>
+          <h4 className="font-semibold text-success text-sm">All Requirements Met</h4>
+          <p className="text-success/80 text-xs mt-1">Your course selection satisfies all academic regulations and shows no scheduling conflicts.</p>
         </div>
       </div>
     );
@@ -45,7 +45,7 @@ export function RegistrationWarnings({ selectedCourses, config, conflicts, missi
         )}
         
         {hasMaxCreditIssue && (
-          <div className="flex items-center gap-1.5 text-xs text-red-300 bg-red-500/20 border border-red-500/30 px-2 py-1 rounded w-fit">
+          <div className="flex items-center gap-1.5 text-xs text-danger bg-red-500/20 border border-red-500/30 px-2 py-1 rounded w-fit">
             <AlertCircle size={12} /> Maximum {config.maxCredits} credits exceeded. Currently at {currentCredits}.
           </div>
         )}
@@ -62,9 +62,9 @@ export function RegistrationWarnings({ selectedCourses, config, conflicts, missi
         )}
 
         {hasPrereqs && (
-           <div className="flex flex-col gap-1.5 text-xs text-red-300 bg-red-500/20 px-2 py-1.5 border border-red-500/30 rounded w-fit">
+           <div className="flex flex-col gap-1.5 text-xs text-danger bg-red-500/20 px-2 py-1.5 border border-red-500/30 rounded w-fit">
              <div className="flex items-center gap-1.5 font-medium"><AlertCircle size={12} /> Missing Prerequisites:</div>
-             <ul className="list-disc pl-4 space-y-0.5 text-red-400/80">
+             <ul className="list-disc pl-4 space-y-0.5 text-danger/80">
                {Object.values(missingPrereqs).map((prereqMsg, i) => (
                  <li key={i}>{prereqMsg}</li>
                ))}

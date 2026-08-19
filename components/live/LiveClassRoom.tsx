@@ -77,7 +77,7 @@ export function LiveClassRoom({ sessionId, roomUrl, role, topic }: Props) {
         )}
       </div>
       {error ? (
-        <p role="alert" className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <p role="alert" className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-danger">
           {error}
         </p>
       ) : null}

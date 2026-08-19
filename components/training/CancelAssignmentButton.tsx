@@ -13,7 +13,7 @@ export function CancelAssignmentButton({ assignmentId }: { assignmentId: string 
   const [error, setError] = React.useState("");
   const [pending, startTransition] = React.useTransition();
 
-  if (done) return <span className="text-xs text-slate-500">Withdrawn</span>;
+  if (done) return <span className="text-xs text-ink-subtle">Withdrawn</span>;
 
   return (
     <span className="inline-flex flex-col items-end gap-1">
@@ -31,12 +31,12 @@ export function CancelAssignmentButton({ assignmentId }: { assignmentId: string 
             setDone(true);
           })
         }
-        className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:bg-white/10 disabled:opacity-60"
+        className="inline-flex items-center gap-1.5 rounded-lg bg-status-soft px-3 py-1.5 text-xs font-semibold text-ink-muted transition hover:bg-ink/[0.06] disabled:opacity-60"
       >
         {pending ? <Loader2 size={13} className="animate-spin" /> : <XCircle size={13} />}
         Withdraw
       </button>
-      {error ? <span className="text-xs text-red-300">{error}</span> : null}
+      {error ? <span className="text-xs text-danger">{error}</span> : null}
     </span>
   );
 }

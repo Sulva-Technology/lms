@@ -122,7 +122,7 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
         </button>
       </div>
 
-      {(message || error) && <div className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-red-300" : "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"}`}>{error || message}</div>}
+      {(message || error) && <div className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-danger" : "border-emerald-500/20 bg-emerald-500/10 text-success"}`}>{error || message}</div>}
 
       <DataTable
         data={items}
@@ -141,7 +141,7 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
                 return (
                   <span key={assignment.id} className="inline-flex items-center gap-2 rounded-full border border-line bg-status-soft px-3 py-1.5 text-xs text-ink">
                     {lecturerName(profile)}
-                    <button onClick={() => removeLecturer(item.id, assignment.lecturer_id)} className="text-ink-subtle hover:text-red-300" aria-label="Remove lecturer"><X size={12} /></button>
+                    <button onClick={() => removeLecturer(item.id, assignment.lecturer_id)} className="text-ink-subtle hover:text-danger" aria-label="Remove lecturer"><X size={12} /></button>
                   </span>
                 );
               })}
@@ -150,8 +150,8 @@ export function CourseSectionManager({ courses, semesters, lecturers, sections }
           { key: "status", header: "Status", cell: (item) => item.deleted_at ? "Archived" : "Active" },
           { key: "actions", header: "Actions", align: "right", cell: (item) => (
             <div className="flex justify-end gap-2">
-              <button onClick={() => { setSelected(item); setDrawer("assign"); }} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/20"><UserPlus size={13} /> Assign</button>
-              <button onClick={() => archiveSection(item)} className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20"><Archive size={13} /> Archive</button>
+              <button onClick={() => { setSelected(item); setDrawer("assign"); }} className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-success hover:bg-emerald-500/20"><UserPlus size={13} /> Assign</button>
+              <button onClick={() => archiveSection(item)} className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-danger hover:bg-red-500/20"><Archive size={13} /> Archive</button>
             </div>
           ) },
         ]}

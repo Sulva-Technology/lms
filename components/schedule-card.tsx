@@ -41,7 +41,7 @@ export function ScheduleCard({ title, time, duration, type, location, instructor
         </div>
         
         <div className={`p-2 rounded-xl flex items-center justify-center
-          ${isLive ? 'bg-red-500/10 text-red-400' : 'bg-surface/50 text-ink-muted'}
+          ${isLive ? 'bg-red-500/10 text-danger' : 'bg-surface/50 text-ink-muted'}
         `}>
           {isLive ? (
             <div className="relative flex items-center justify-center">

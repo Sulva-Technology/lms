@@ -103,8 +103,8 @@ export function BrandingForm({ schoolName, initialPrimary, initialSecondary }: B
           <p
             className={
               message.tone === "ok"
-                ? "mt-4 text-sm text-emerald-400"
-                : "mt-4 text-sm text-rose-400"
+                ? "mt-4 text-sm text-success"
+                : "mt-4 text-sm text-danger"
             }
           >
             {message.text}
@@ -184,7 +184,7 @@ function ColorField({
         />
       </div>
       <p className="text-xs text-ink-subtle">{hint}</p>
-      {!valid ? <p className="text-xs text-rose-400">Enter a hex colour like #690dab.</p> : null}
+      {!valid ? <p className="text-xs text-danger">Enter a hex colour like #690dab.</p> : null}
     </div>
   )
 }

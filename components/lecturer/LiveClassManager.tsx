@@ -97,7 +97,7 @@ export function LiveClassManager({ courses, sessions }: { courses: Course[]; ses
       </div>
 
       {(message || error) && (
-        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-red-300" : "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"}`}>
+        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={`rounded-xl border px-4 py-3 text-sm ${error ? "border-red-500/20 bg-red-500/10 text-danger" : "border-emerald-500/20 bg-emerald-500/10 text-success"}`}>
           {error || message}
         </motion.div>
       )}
@@ -111,7 +111,7 @@ export function LiveClassManager({ courses, sessions }: { courses: Course[]; ses
                 <button onClick={() => openEdit(session)} className="inline-flex items-center gap-2 rounded-lg border border-line bg-status-soft px-3 py-2 text-xs font-semibold text-ink hover:bg-ink/[0.06]">
                   <Pencil size={14} /> Edit
                 </button>
-                <button onClick={() => cancel(session.id)} className="inline-flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-300 hover:bg-red-500/20">
+                <button onClick={() => cancel(session.id)} className="inline-flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-danger hover:bg-red-500/20">
                   <XCircle size={14} /> Cancel
                 </button>
               </div>

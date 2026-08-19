@@ -90,7 +90,7 @@ export function AnnouncementComposer({ courses = [] }: { courses?: CourseOption[
            initial={{ opacity: 0, y: -6 }}
            animate={{ opacity: 1, y: 0 }}
            className={`mt-3 rounded-xl border px-3 py-2 text-sm flex items-center gap-2 ${
-             error ? "bg-red-500/10 border-red-500/20 text-red-300" : "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"
+             error ? "bg-red-500/10 border-red-500/20 text-danger" : "bg-emerald-500/10 border-emerald-500/20 text-success"
            }`}
          >
            {error ? <AlertCircle size={15} /> : <CheckCircle2 size={15} />}

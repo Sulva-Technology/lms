@@ -37,7 +37,7 @@ export function FileList({
 
   return (
     <div className="grid gap-2">
-      {error && <p className="text-sm text-red-300">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
       {files.map((file) => (
         <button
           key={file.path}

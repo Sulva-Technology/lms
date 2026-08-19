@@ -67,7 +67,7 @@ export function RegistrationReview({ selectedCourses, config, conflicts, missing
                 <p className="text-xs text-ink-muted">{course.instructor} • {course.schedule}</p>
               </div>
               <div className="flex items-center gap-3">
-                 <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded border ${course.type === 'compulsory' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>
+                 <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded border ${course.type === 'compulsory' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-emerald-500/10 text-success border-emerald-500/20'}`}>
                    {course.type}
                  </span>
                  <span className="text-sm font-bold text-ink-muted w-16 text-right">{course.credits} cr</span>

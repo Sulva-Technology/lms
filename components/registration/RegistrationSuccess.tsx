@@ -24,7 +24,7 @@ export function RegistrationSuccess({ onBackToDashboard }: Props) {
            transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.2 }}
            className="w-24 h-24 bg-emerald-500/20 border border-emerald-500/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(16,185,129,0.3)]"
          >
-           <CheckCircle2 size={48} className="text-emerald-400" />
+           <CheckCircle2 size={48} className="text-success" />
          </motion.div>
 
          <h2 className="font-outfit text-3xl font-semibold text-ink mb-4">Registration Submitted!</h2>

@@ -46,7 +46,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ c
                   return (
                     <Link key={lesson.id} href={`/student/courses/${courseId}/lessons/${lesson.id}`} className="flex items-center justify-between rounded-2xl border border-line bg-status-soft p-4 hover:bg-ink/[0.06]">
                       <span className="flex items-center gap-3 text-sm font-medium text-ink"><PlayCircle size={18} className="text-primary" /> {lesson.title}</span>
-                      {progress?.is_completed ? <CheckCircle2 size={18} className="text-emerald-300" /> : <span className="text-xs text-ink-subtle">{lesson.resource_type || "Lesson"}</span>}
+                      {progress?.is_completed ? <CheckCircle2 size={18} className="text-success" /> : <span className="text-xs text-ink-subtle">{lesson.resource_type || "Lesson"}</span>}
                     </Link>
                   );
                 })}

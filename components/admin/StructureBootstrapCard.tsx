@@ -16,7 +16,7 @@ export function StructureBootstrapCard() {
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-200">
+      <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-5 py-4 text-sm text-success">
         Default structure created. You can create a course now.
       </div>
     );
@@ -30,7 +30,7 @@ export function StructureBootstrapCard() {
         sensible defaults, and rename them later if you like.
       </p>
 
-      {error ? <p className="mt-3 text-sm text-red-300">{error}</p> : null}
+      {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
 
       <button
         onClick={() =>

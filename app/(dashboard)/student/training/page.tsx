@@ -8,11 +8,11 @@ import { createClient } from "@/lib/supabase/server";
 import { CalendarClock } from "lucide-react";
 
 const TONE: Record<string, string> = {
-  overdue: "border-amber-500/30 bg-amber-500/10 text-amber-200",
-  due_soon: "border-blue-500/30 bg-blue-500/10 text-blue-200",
-  completed: "border-emerald-500/30 bg-emerald-500/10 text-emerald-200",
-  cancelled: "border-white/10 bg-white/5 text-slate-400",
-  assigned: "border-white/10 bg-white/5 text-slate-300",
+  overdue: "border-amber-500/30 bg-amber-500/10 text-warn",
+  due_soon: "border-primary/25 bg-primary-soft text-primary",
+  completed: "border-emerald-500/30 bg-emerald-500/10 text-success",
+  cancelled: "border-line bg-status-soft text-ink-muted",
+  assigned: "border-line bg-status-soft text-ink-muted",
 };
 
 const WORDING: Record<string, string> = {
@@ -57,11 +57,11 @@ export default async function StudentTrainingPage() {
             return (
               <div
                 key={assignment.id}
-                className="flex flex-col gap-3 rounded-[24px] border border-white/10 bg-slate-950/60 p-5 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-[24px] border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <p className="font-outfit text-lg font-semibold text-white">{course?.title || "Training"}</p>
-                  <p className="mt-1 text-sm text-slate-400">
+                  <p className="font-outfit text-lg font-semibold text-ink">{course?.title || "Training"}</p>
+                  <p className="mt-1 text-sm text-ink-muted">
                     {section?.name ? `${section.name} · ` : ""}
                     {assignment.due_on
                       ? `Due ${new Date(assignment.due_on).toLocaleDateString()}`
@@ -76,7 +76,7 @@ export default async function StudentTrainingPage() {
                   {status === "completed" ? null : (
                     <Link
                       href={`/student/courses`}
-                      className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+                      className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-contrast hover:bg-primary-hover"
                     >
                       Start
                     </Link>

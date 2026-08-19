@@ -112,8 +112,8 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
         <div
           className={
             error
-              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+              ? "rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger"
+              : "rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-success"
           }
         >
           {error || message}
@@ -136,12 +136,12 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
                     {candidate.finalScore !== null ? ` · ${candidate.finalScore}%` : ""}
                   </span>
                   {candidate.blockers.length > 0 ? (
-                    <p className="mt-0.5 text-xs text-amber-300/80">{candidate.blockers.join(" · ")}</p>
+                    <p className="mt-0.5 text-xs text-warn/80">{candidate.blockers.join(" · ")}</p>
                   ) : null}
                 </div>
 
                 {holders.has(candidate.studentId) ? (
-                  <span className="rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300">
+                  <span className="rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-success">
                     Issued
                   </span>
                 ) : (
@@ -174,7 +174,7 @@ export function CertificateManager({ sections, issued }: { sections: Section[]; 
                   <span className="text-ink">{record.snapshot?.studentName || "Learner"}</span>
                   <span className="ml-2 font-mono text-xs text-ink-subtle">{record.serial}</span>
                   {record.revoked_at ? (
-                    <span className="ml-2 text-xs font-semibold text-red-300">Revoked</span>
+                    <span className="ml-2 text-xs font-semibold text-danger">Revoked</span>
                   ) : null}
                 </div>
                 {record.revoked_at ? null : (

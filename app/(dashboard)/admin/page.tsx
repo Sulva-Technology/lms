@@ -48,11 +48,11 @@ export default async function AdminDashboardPage() {
   ]);
 
   const stats = [
-    { label: "Students", value: studentCount, icon: GraduationCap, color: "text-emerald-300 bg-emerald-500/10" },
+    { label: "Students", value: studentCount, icon: GraduationCap, color: "text-success bg-emerald-500/10" },
     { label: "Lecturers", value: lecturerCount, icon: Users, color: "text-teal-300 bg-teal-500/10" },
     { label: "Faculties", value: facultyCount, icon: Building2, color: "text-primary bg-primary-soft" },
     { label: "Departments", value: departmentCount, icon: Activity, color: "text-primary bg-primary-soft" },
-    { label: "Courses", value: courseCount, icon: BookOpen, color: "text-amber-300 bg-amber-500/10" },
+    { label: "Courses", value: courseCount, icon: BookOpen, color: "text-warn bg-amber-500/10" },
   ];
 
   return (

@@ -107,8 +107,8 @@ export function InviteUserForm({
           animate={{ opacity: 1, y: 0 }}
           className={`mt-4 rounded-xl border px-4 py-3 text-sm flex items-center gap-2 ${
             error
-              ? "border-red-500/20 bg-red-500/10 text-red-300"
-              : "border-emerald-500/20 bg-emerald-500/10 text-emerald-300"
+              ? "border-red-500/20 bg-red-500/10 text-danger"
+              : "border-emerald-500/20 bg-emerald-500/10 text-success"
           }`}
         >
           {error ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}

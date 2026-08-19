@@ -85,7 +85,7 @@ export default async function SuperadminPlansPage() {
                 <input type="hidden" name="maxStudents" value={item.max_students || ""} />
                 <input type="hidden" name="maxStorageGb" value={item.max_storage_gb || ""} />
                 <input type="hidden" name="isActive" value={item.is_active ? "false" : "true"} />
-                <button className={`rounded-lg px-3 py-2 text-xs font-semibold ${item.is_active ? "border border-red-500/20 bg-red-500/10 text-red-300 hover:bg-red-500/20" : "border border-emerald-500/20 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"}`}>
+                <button className={`rounded-lg px-3 py-2 text-xs font-semibold ${item.is_active ? "border border-red-500/20 bg-red-500/10 text-danger hover:bg-red-500/20" : "border border-emerald-500/20 bg-emerald-500/10 text-success hover:bg-emerald-500/20"}`}>
                   {item.is_active ? "Archive" : "Reactivate"}
                 </button>
               </form>

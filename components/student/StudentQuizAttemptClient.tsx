@@ -34,7 +34,7 @@ export function StudentQuizAttemptClient({ quiz }: { quiz: any }) {
   if (completed) {
     return (
       <div className="rounded-[32px] border border-emerald-400/20 bg-emerald-500/10 p-8 text-center shadow-2xl backdrop-blur-2xl">
-        <Trophy className="mx-auto text-emerald-300" size={56} />
+        <Trophy className="mx-auto text-success" size={56} />
         <h2 className="mt-5 font-outfit text-3xl font-semibold text-ink">Quiz submitted</h2>
         <p className="mt-2 text-ink-muted">Score: {Number(result.score || 0)} / {Number(result.max_score || 0)} ({Number(result.percentage || 0)}%)</p>
       </div>
@@ -96,7 +96,7 @@ export function StudentQuizAttemptClient({ quiz }: { quiz: any }) {
           </div>
         </div>
         {error && (
-          <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-200">
+          <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-danger">
             <AlertCircle size={16} /> {error}
           </div>
         )}

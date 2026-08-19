@@ -37,7 +37,7 @@ export function RegistrationStatusCard({ state, config, onStart }: Props) {
        color: "emerald",
        bg: "bg-emerald-500/10",
        border: "border-emerald-500/30",
-       text: "text-emerald-400",
+       text: "text-success",
        title: "Registration Approved",
        description: `You are officially registered for ${config.currentSemester} classes.`,
        action: "View Schedule"
@@ -47,7 +47,7 @@ export function RegistrationStatusCard({ state, config, onStart }: Props) {
        color: "red",
        bg: "bg-red-500/10",
        border: "border-red-500/30",
-       text: "text-red-400",
+       text: "text-danger",
        title: "Registration Action Required",
        description: "Your advisor has requested changes to your registration.",
        action: "Edit Registration"

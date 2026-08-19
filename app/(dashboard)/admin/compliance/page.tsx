@@ -13,7 +13,7 @@ export default async function AdminCompliancePage() {
   const universityId = session.profile.university_id!;
 
   const overview = await readOr(new ComplianceService(supabase as any).getOverview(universityId), {
-    totals: { active: 0, overdue: 0, dueSoon: 0, completed: 0, expiring: 0, compliantPercent: 100 },
+    totals: { active: 0, overdue: 0, dueSoon: 0, completed: 0, expiring: 0, compliantPercent: null },
     overdue: [],
     dueSoon: [],
     expiring: [],

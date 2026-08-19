@@ -61,7 +61,7 @@ export default async function LecturerOverviewPage() {
   const name = toDisplayName(session.profile.first_name, session.profile.last_name, "Lecturer");
   const statCards: LecturerStatCard[] = [
     { label: "Students", value: data.stats.totalStudents, Icon: Users, colorClass: "text-primary bg-primary-soft" },
-    { label: "Attendance", value: `${data.stats.averageAttendance}%`, Icon: TrendingUp, colorClass: "text-emerald-400 bg-emerald-500/10" },
+    { label: "Attendance", value: `${data.stats.averageAttendance}%`, Icon: TrendingUp, colorClass: "text-success bg-emerald-500/10" },
     { label: "To Grade", value: data.stats.assignmentsToGrade, Icon: CheckCircle, colorClass: "text-orange-400 bg-orange-500/10" },
     { label: "Questions", value: data.stats.unansweredQuestions, Icon: HelpCircle, colorClass: "text-primary bg-primary-soft" },
   ];

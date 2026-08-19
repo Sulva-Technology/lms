@@ -61,11 +61,15 @@ describe('ComplianceService.getOverview', () => {
     expect(overview.totals.compliantPercent).toBe(33);
   });
 
-  it('reports full compliance rather than zero when nothing is assigned', async () => {
+  it('reports no rate at all when nothing is assigned', async () => {
     const { client } = createSupabaseStub({ training_assignments: [], certificates: [] });
 
     const overview = await new ComplianceService(client).getOverview('uni1', NOW);
 
-    expect(overview.totals.compliantPercent).toBe(100);
+    // Not 100: an organisation with no assigned training has not achieved
+    // full compliance, and telling an administrator it has is worse than
+    // telling them there is nothing to measure.
+    expect(overview.totals.compliantPercent).toBeNull();
+    expect(overview.totals.active).toBe(0);
   });
 });

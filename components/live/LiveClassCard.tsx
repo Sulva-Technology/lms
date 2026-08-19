@@ -33,7 +33,7 @@ export function LiveClassCard({ session, role }: Props) {
         <div className="flex justify-between items-start mb-4">
           <div className="flex gap-2 items-center">
             <span className={`px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider rounded-lg border ${
-              isLive ? 'bg-red-500/10 border-red-500/30 text-red-400' :
+              isLive ? 'bg-red-500/10 border-red-500/30 text-danger' :
               isCompleted ? 'bg-slate-500/10 border-slate-500/30 text-ink-muted' :
               'bg-primary-soft border-primary/25 text-primary'
             }`}>

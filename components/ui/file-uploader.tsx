@@ -129,7 +129,7 @@ export function FileUploader({
       />
 
       {error && (
-        <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">{error}</p>
+        <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-danger">{error}</p>
       )}
 
       {value.length > 0 && (
@@ -148,7 +148,7 @@ export function FileUploader({
                 type="button"
                 onClick={() => remove(file.path)}
                 disabled={disabled}
-                className="rounded-lg bg-status-soft p-1.5 text-ink-muted transition hover:bg-red-500/20 hover:text-red-300"
+                className="rounded-lg bg-status-soft p-1.5 text-ink-muted transition hover:bg-red-500/20 hover:text-danger"
                 aria-label={`Remove ${file.fileName}`}
               >
                 <X size={14} />

@@ -50,12 +50,12 @@ export default async function AdminRegistrationPage() {
                 <form action={setStatus}>
                   <input type="hidden" name="registrationId" value={item.id} />
                   <input type="hidden" name="status" value="approved" />
-                  <button className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-xs font-medium hover:bg-emerald-500/20">Approve</button>
+                  <button className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-success border border-emerald-500/20 text-xs font-medium hover:bg-emerald-500/20">Approve</button>
                 </form>
                 <form action={setStatus}>
                   <input type="hidden" name="registrationId" value={item.id} />
                   <input type="hidden" name="status" value="rejected" />
-                  <button className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-300 border border-red-500/20 text-xs font-medium hover:bg-red-500/20">Reject</button>
+                  <button className="px-3 py-1.5 rounded-lg bg-red-500/10 text-danger border border-red-500/20 text-xs font-medium hover:bg-red-500/20">Reject</button>
                 </form>
               </div>
             )},
