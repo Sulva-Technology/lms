@@ -39,28 +39,28 @@ export default async function DocsPage({ params }: { params: Promise<{ slug: str
   const title = file.replace(".md", "").replaceAll("_", " ");
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
+    <main className="min-h-screen bg-surface px-6 py-10 text-ink">
       <div className="mx-auto max-w-5xl">
-        <Link href="/design-system" className="inline-flex items-center gap-2 text-sm font-medium text-blue-300 hover:text-blue-200">
+        <Link href="/design-system" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary">
           <ArrowLeft size={16} />
           Back to design system
         </Link>
 
-        <section className="mt-8 overflow-hidden rounded-[28px] border border-white/10 bg-slate-900/70 shadow-2xl shadow-black/30 backdrop-blur-2xl">
-          <header className="border-b border-white/10 bg-white/[0.03] px-6 py-5">
+        <section className="mt-8 overflow-hidden rounded-[28px] border border-line bg-surface shadow-2xl shadow-black/30 backdrop-blur-2xl">
+          <header className="border-b border-line bg-status-soft px-6 py-5">
             <div className="flex items-center gap-3">
-              <span className="rounded-2xl border border-blue-400/20 bg-blue-500/10 p-3 text-blue-300">
+              <span className="rounded-2xl border border-primary/25 bg-primary-soft p-3 text-primary">
                 <FileText size={22} />
               </span>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">VUI LMS Documentation</p>
-                <h1 className="font-outfit text-2xl font-semibold text-white">{title}</h1>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink-subtle">VUI LMS Documentation</p>
+                <h1 className="font-outfit text-2xl font-semibold text-ink">{title}</h1>
               </div>
             </div>
           </header>
 
           <article className="max-h-[75vh] overflow-auto p-6">
-            <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-7 text-slate-300">{content}</pre>
+            <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-7 text-ink-muted">{content}</pre>
           </article>
         </section>
       </div>

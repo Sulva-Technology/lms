@@ -17,8 +17,8 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
     return (
       <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">
         <ShieldX className="h-12 w-12 text-red-400" aria-hidden />
-        <h1 className="font-outfit text-2xl font-semibold text-white">No certificate with that serial</h1>
-        <p className="text-sm text-slate-400">
+        <h1 className="font-outfit text-2xl font-semibold text-ink">No certificate with that serial</h1>
+        <p className="text-sm text-ink-muted">
           Check the serial exactly as printed. Serials look like ABCD-EFGH-JKLM.
         </p>
       </main>
@@ -41,35 +41,35 @@ export default async function CertificatePage({ params }: { params: Promise<{ se
           <ShieldAlert className="mx-auto h-14 w-14 text-red-400" aria-hidden />
         )}
 
-        <p className="mt-6 text-xs uppercase tracking-[0.3em] text-slate-400">
+        <p className="mt-6 text-xs uppercase tracking-[0.3em] text-ink-muted">
           {snapshot.organisationName || "Certificate of completion"}
         </p>
 
-        <h1 className="mt-4 font-outfit text-3xl font-semibold text-white print:text-slate-900">
+        <h1 className="mt-4 font-outfit text-3xl font-semibold text-ink print:text-slate-900">
           {snapshot.studentName || "Learner"}
         </h1>
 
-        <p className="mt-3 text-sm text-slate-400">has completed</p>
+        <p className="mt-3 text-sm text-ink-muted">has completed</p>
 
-        <p className="mt-2 font-outfit text-xl font-medium text-white print:text-slate-900">
+        <p className="mt-2 font-outfit text-xl font-medium text-ink print:text-slate-900">
           {snapshot.courseTitle || "Course"}
-          {snapshot.courseCode ? <span className="text-slate-500"> ({snapshot.courseCode})</span> : null}
+          {snapshot.courseCode ? <span className="text-ink-subtle"> ({snapshot.courseCode})</span> : null}
         </p>
 
-        <dl className="mt-8 grid gap-3 text-sm text-slate-400 sm:grid-cols-3">
+        <dl className="mt-8 grid gap-3 text-sm text-ink-muted sm:grid-cols-3">
           <div>
-            <dt className="text-xs uppercase tracking-wider text-slate-500">Issued</dt>
-            <dd className="text-slate-200">{new Date(certificate.issued_at).toLocaleDateString()}</dd>
+            <dt className="text-xs uppercase tracking-wider text-ink-subtle">Issued</dt>
+            <dd className="text-ink">{new Date(certificate.issued_at).toLocaleDateString()}</dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wider text-slate-500">Lessons</dt>
-            <dd className="text-slate-200">
+            <dt className="text-xs uppercase tracking-wider text-ink-subtle">Lessons</dt>
+            <dd className="text-ink">
               {certificate.lessons_completed} of {certificate.lessons_total}
             </dd>
           </div>
           <div>
-            <dt className="text-xs uppercase tracking-wider text-slate-500">Serial</dt>
-            <dd className="font-mono text-slate-200">{certificate.serial}</dd>
+            <dt className="text-xs uppercase tracking-wider text-ink-subtle">Serial</dt>
+            <dd className="font-mono text-ink">{certificate.serial}</dd>
           </div>
         </dl>
 
