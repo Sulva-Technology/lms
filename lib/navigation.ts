@@ -20,7 +20,8 @@ import {
   FileCheck2,
   VideoIcon,
   MessageSquare,
-  Megaphone
+  Megaphone,
+  ShieldCheck
 } from "lucide-react"
 import { NavSection, Role, NavItem } from "@/types/navigation"
 import { translateLabel, type Vocabulary } from "@/lib/ui/labels"
@@ -36,6 +37,7 @@ export const navigationConfig: NavSection[] = [
       { id: "s-assign", label: "Assignments", href: "/student/assignments", icon: FileText, role: ["student"] },
       { id: "s-quiz", label: "Quizzes", href: "/student/quizzes", icon: Target, role: ["student"] },
       { id: "s-grades", label: "Grades", href: "/student/grades", icon: Award, role: ["student"] },
+      { id: "s-training", label: "My Training", href: "/student/training", icon: Target, role: ["student"] },
       { id: "s-certs", label: "Certificates", href: "/student/certificates", icon: FileCheck2, role: ["student"] },
       { id: "s-cal", label: "Calendar", href: "/student/calendar", icon: Calendar, role: ["student"] },
       { id: "s-notif", label: "Notifications", href: "/student/notifications", icon: Bell, role: ["student"] },
@@ -66,6 +68,7 @@ export const navigationConfig: NavSection[] = [
     items: [
       { id: "a-dash", label: "Dashboard", href: "/admin", icon: LayoutDashboard, role: ["admin"] },
       { id: "a-users", label: "Users & Invites", href: "/admin/users", icon: Users, role: ["admin"] },
+      { id: "ad-compliance", label: "Compliance", href: "/admin/compliance", icon: ShieldCheck, role: ["admin", "department_admin"] },
       { id: "a-faculties", label: "Faculties", href: "/admin/faculties", icon: Building, role: ["admin"] },
       { id: "a-depts", label: "Departments", href: "/admin/departments", icon: Briefcase, role: ["admin"] },
       { id: "a-programs", label: "Programs", href: "/admin/programs", icon: GraduationCap, role: ["admin"] },
