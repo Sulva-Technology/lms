@@ -3,10 +3,11 @@
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { onboardingSchema } from '@/lib/validation/auth';
-import { getRoleRedirectPath } from '@/lib/auth/redirects';
 import { AuthRole } from '@/types/auth';
 import { normalizeRoleParam } from '@/lib/auth/roles';
 import { accountHasPassword } from '@/lib/auth/password-status';
+import { completeOnboardingProfile } from '@/lib/auth/onboarding-write';
+import type { SupabaseLike } from '@/lib/auth/membership';
 
 export async function completeOnboardingAction(formData: FormData) {
   const parsed = onboardingSchema.safeParse(Object.fromEntries(formData));
@@ -54,30 +55,22 @@ export async function completeOnboardingAction(formData: FormData) {
 
   const adminClient = createAdminClient();
 
-  const redirectTo = getRoleRedirectPath(finalRole);
-
-  // Create the profile using service role to bypass RLS initially during creation
-  const { data: profile, error } = await adminClient
-    .from('profiles')
-    .insert({
-      id: user.id,
-      first_name: parsed.data.firstName,
-      last_name: parsed.data.lastName,
+  // Service role, to write the profile and membership before any policy that
+  // depends on them exists for this person.
+  let redirectTo: string;
+  try {
+    ({ redirectTo } = await completeOnboardingProfile(adminClient as unknown as SupabaseLike, {
+      userId: user.id,
+      email: user.email ?? null,
+      firstName: parsed.data.firstName,
+      lastName: parsed.data.lastName,
+      avatarUrl: parsed.data.avatarUrl || null,
+      studentId: parsed.data.studentId || null,
       role: finalRole,
-      university_id: finalRole === 'super_admin' ? null : finalUniversityId,
-      student_id: finalRole === 'student' ? parsed.data.studentId || null : null,
-      email: user.email,
-      avatar_url: parsed.data.avatarUrl || null,
-    })
-    .select()
-    .single();
-
-  if (error) {
-    // If error code indicates a conflict, it means profile already exists.
-    if (error.code === '23505') {
-      return { success: true, redirectTo };
-    }
-    console.error('Profile creation error:', error);
+      universityId: finalRole === 'super_admin' ? null : finalUniversityId ?? null,
+    }));
+  } catch (thrown) {
+    console.error('Profile creation error:', thrown);
     return { error: 'Failed to complete profile. Try again.' };
   }
 
@@ -91,7 +84,7 @@ export async function completeOnboardingAction(formData: FormData) {
     metadata: { role: finalRole, method: 'invite' },
   });
 
-  return { success: true, redirectTo: getRoleRedirectPath(profile.role as AuthRole) };
+  return { success: true, redirectTo };
 }
 
 export async function updateProfileAction(formData: FormData) {
