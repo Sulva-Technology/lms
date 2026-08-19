@@ -16,6 +16,8 @@ interface ProfileSetupFormProps {
   initialFirstName?: string | null
   initialLastName?: string | null
   inviteError?: string | null
+  /** False once the account already has a password, e.g. set during recovery. */
+  requiresPassword?: boolean
 }
 
 export function ProfileSetupForm({
@@ -25,6 +27,7 @@ export function ProfileSetupForm({
   initialFirstName,
   initialLastName,
   inviteError,
+  requiresPassword = true,
 }: ProfileSetupFormProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
@@ -42,14 +45,16 @@ export function ProfileSetupForm({
       return
     }
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long")
-      return
-    }
+    if (requiresPassword) {
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters long")
+        return
+      }
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match")
-      return
+      if (password !== confirmPassword) {
+        setError("Passwords do not match")
+        return
+      }
     }
 
     setIsLoading(true)
@@ -176,48 +181,52 @@ export function ProfileSetupForm({
             <TextInput id="avatarUrl" name="avatarUrl" type="url" placeholder="https://..." />
           </Field>
 
-          <Field
-            label="Create a password"
-            htmlFor="password"
-            hint="At least 8 characters, with an uppercase letter, a lowercase letter and a number."
-          >
-            <div className="relative">
+          {requiresPassword ? (
+            <>
+            <Field
+              label="Create a password"
+              htmlFor="password"
+              hint="At least 8 characters, with an uppercase letter, a lowercase letter and a number."
+            >
+              <div className="relative">
+                <TextInput
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Your new password"
+                  icon={<Lock size={17} />}
+                  className="pr-11"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-ink-subtle transition-colors hover:text-ink"
+                >
+                  {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                </button>
+              </div>
+            </Field>
+
+            <Field label="Confirm password" htmlFor="confirmPassword">
               <TextInput
-                id="password"
-                name="password"
+                id="confirmPassword"
+                name="confirmPassword"
                 type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="Your new password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                placeholder="Repeat the password"
                 icon={<Lock size={17} />}
-                className="pr-11"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword((visible) => !visible)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-ink-subtle transition-colors hover:text-ink"
-              >
-                {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
-              </button>
-            </div>
-          </Field>
-
-          <Field label="Confirm password" htmlFor="confirmPassword">
-            <TextInput
-              id="confirmPassword"
-              name="confirmPassword"
-              type={showPassword ? "text" : "password"}
-              autoComplete="new-password"
-              required
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              placeholder="Repeat the password"
-              icon={<Lock size={17} />}
-            />
-          </Field>
+            </Field>
+            </>
+          ) : null}
 
           <SubmitButton loading={isLoading} disabled={Boolean(inviteError)}>
             {isLoading ? null : <CheckCircle2 size={17} aria-hidden />}

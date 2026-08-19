@@ -24,13 +24,13 @@ describe('onboarding validation', () => {
     });
   });
 
-  it('requires a password, because an invited account is created without one', () => {
+  it('accepts an omitted password, for an account that already has one', () => {
     const result = onboardingSchema.safeParse({
       firstName: 'Ada',
       lastName: 'Lovelace',
     });
 
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it('rejects a password that does not meet the shared strength rules', () => {

@@ -1,6 +1,7 @@
 import { ProfileSetupForm } from "@/components/auth/ProfileSetupForm"
 import { getRoleRedirectPath } from "@/lib/auth/redirects"
 import { normalizeRoleParam } from "@/lib/auth/roles"
+import { accountHasPassword } from "@/lib/auth/password-status"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
@@ -45,6 +46,10 @@ export default async function ProfilePage() {
       ? "This invite is missing a university assignment. Ask an administrator to resend it."
       : null
 
+  // Someone who set a password through the recovery link is only missing a
+  // profile, so onboarding must not ask them for a password they already have.
+  const hasPassword = await accountHasPassword(supabase)
+
   return (
     <ProfileSetupForm
       assignedRole={assignedRole}
@@ -53,6 +58,7 @@ export default async function ProfilePage() {
       initialFirstName={user.user_metadata?.first_name}
       initialLastName={user.user_metadata?.last_name}
       inviteError={inviteError}
+      requiresPassword={!hasPassword}
     />
   )
 }

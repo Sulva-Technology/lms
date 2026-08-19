@@ -6,6 +6,7 @@ import { onboardingSchema } from '@/lib/validation/auth';
 import { getRoleRedirectPath } from '@/lib/auth/redirects';
 import { AuthRole } from '@/types/auth';
 import { normalizeRoleParam } from '@/lib/auth/roles';
+import { accountHasPassword } from '@/lib/auth/password-status';
 
 export async function completeOnboardingAction(formData: FormData) {
   const parsed = onboardingSchema.safeParse(Object.fromEntries(formData));
@@ -36,12 +37,19 @@ export async function completeOnboardingAction(formData: FormData) {
 
   // An invited account has no password until now, so set it before the profile
   // exists — otherwise onboarding finishes and the person cannot sign back in.
-  const { error: passwordError } = await supabase.auth.updateUser({
-    password: parsed.data.password,
-  });
+  // Someone who already set one during recovery is only here for the profile.
+  const password = parsed.data.password || null;
 
-  if (passwordError) {
-    return { error: passwordError.message };
+  if (password) {
+    const { error: passwordError } = await supabase.auth.updateUser({ password });
+
+    // Re-submitting the password already on the account is not a failure to
+    // report; the account ends up in the state onboarding wanted either way.
+    if (passwordError && (passwordError as { code?: string }).code !== 'same_password') {
+      return { error: passwordError.message };
+    }
+  } else if (!(await accountHasPassword(supabase))) {
+    return { error: 'Choose a password so you can sign in after this.' };
   }
 
   const adminClient = createAdminClient();

@@ -25,15 +25,17 @@ export const resetPasswordSchema = z.object({
 
 // An invited account is created without a password, so onboarding is the one
 // place it gets set. Without this the invite ends at a login screen the person
-// has no credentials for.
+// has no credentials for. It stays optional here because someone who already
+// set a password — through the recovery link, say — still has to finish their
+// profile, and re-sending the same password is an error to Supabase.
 export const onboardingSchema = z.object({
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
   studentId: z.string().optional(),
   avatarUrl: z.string().url('Profile image must be a valid URL').optional().or(z.literal('')),
-  password: strongPassword,
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
+  password: strongPassword.optional().or(z.literal('')),
+  confirmPassword: z.string().optional(),
+}).refine((data) => !data.password || data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
