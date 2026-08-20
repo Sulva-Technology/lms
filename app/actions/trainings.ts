@@ -85,3 +85,122 @@ export async function createTrainingAction(payload: unknown) {
     return { error: error.message };
   }
 }
+
+const materialIdSchema = z.object({ lessonId: z.string().uuid() });
+
+const addMaterialSchema = z.object({
+  trainingId: z.string().uuid(),
+  title: z.string().min(2, 'Give this step a name.'),
+  kind: z.enum(['written', 'video', 'document']),
+  body: z.string().optional(),
+});
+
+const editMaterialSchema = materialIdSchema.extend({
+  title: z.string().min(2, 'Give this step a name.'),
+  body: z.string().optional(),
+});
+
+/** Confirms the signed-in person runs this training before they may change it. */
+async function requireTrainer(supabase: any, trainingId: string, userId: string) {
+  const { data } = await supabase
+    .from('course_lecturers')
+    .select('id, course_sections!inner(course_id)')
+    .eq('lecturer_id', userId)
+    .eq('course_sections.course_id', trainingId)
+    .maybeSingle();
+  if (!data) throw new Error('Unauthorized: you do not run this training');
+}
+
+export async function addTrainingMaterialAction(payload: unknown) {
+  const parsed = addMaterialSchema.safeParse(payload);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  try {
+    const supabase = await createClient();
+    const session = await requireRole('lecturer');
+    await requireTrainer(supabase, parsed.data.trainingId, session.user!.id);
+
+    const { data: module, error: moduleError } = await supabase
+      .from('course_modules')
+      .select('id')
+      .eq('course_id', parsed.data.trainingId)
+      .order('order_index', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (moduleError) throw moduleError;
+    if (!module) throw new Error('This training has no material section yet.');
+
+    // Appended, so adding a step never reshuffles what people are part way through.
+    const { data: last } = await supabase
+      .from('lessons')
+      .select('order_index')
+      .eq('module_id', module.id)
+      .order('order_index', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const { data, error } = await supabase
+      .from('lessons')
+      .insert({
+        university_id: session.universityId!,
+        module_id: module.id,
+        title: parsed.data.title,
+        content: parsed.data.body || null,
+        resource_type: parsed.data.kind === 'video' ? 'video' : 'document',
+        order_index: (last?.order_index ?? -1) + 1,
+        is_published: true,
+      })
+      .select()
+      .single();
+    if (error) throw error;
+
+    revalidatePath(`/admin/trainings/${parsed.data.trainingId}`);
+    return { success: true, lesson: data };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function editTrainingMaterialAction(payload: unknown) {
+  const parsed = editMaterialSchema.safeParse(payload);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  try {
+    const supabase = await createClient();
+    await requireRole('lecturer');
+
+    const { error } = await supabase
+      .from('lessons')
+      .update({ title: parsed.data.title, content: parsed.data.body || null })
+      .eq('id', parsed.data.lessonId);
+    if (error) throw error;
+
+    revalidatePath('/admin/trainings');
+    return { success: true };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function removeTrainingMaterialAction(payload: unknown) {
+  const parsed = materialIdSchema.safeParse(payload);
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+
+  try {
+    const supabase = await createClient();
+    await requireRole('lecturer');
+
+    // Unpublished rather than deleted: someone may be part way through it, and
+    // their progress rows point at it.
+    const { error } = await supabase
+      .from('lessons')
+      .update({ is_published: false })
+      .eq('id', parsed.data.lessonId);
+    if (error) throw error;
+
+    revalidatePath('/admin/trainings');
+    return { success: true };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}

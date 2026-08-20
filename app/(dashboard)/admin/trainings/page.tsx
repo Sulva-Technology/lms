@@ -62,7 +62,11 @@ export default async function TrainingsPage() {
       ) : (
         <div className="grid gap-3">
           {trainings.map((training) => (
-            <div key={training.id} className="rounded-[24px] border border-line bg-surface p-5">
+            <Link
+              key={training.id}
+              href={`/admin/trainings/${training.id}`}
+              className="block rounded-[24px] border border-line bg-surface p-5 transition hover:border-primary/40"
+            >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="font-outfit text-lg font-semibold text-ink">{training.title}</p>
@@ -97,7 +101,7 @@ export default async function TrainingsPage() {
                   </span>
                 ) : null}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

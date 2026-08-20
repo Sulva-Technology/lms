@@ -68,3 +68,50 @@ describe('the people page', () => {
     expect(people).not.toMatch(/profiles[\s\S]{0,40}\.eq\("role"/);
   });
 });
+
+describe('the training detail page', () => {
+  const page = read('app', '(dashboard)', 'admin', 'trainings', '[id]', 'page.tsx');
+  const panel = read('components', 'training', 'TrainingPeoplePanel.tsx');
+  const editor = read('components', 'training', 'TrainingMaterialEditor.tsx');
+
+  it('puts material, people and certifying in one place', () => {
+    expect(page).toContain('TrainingMaterialEditor');
+    expect(page).toContain('TrainingPeoplePanel');
+  });
+
+  it('says why someone cannot be certified rather than only disabling the button', () => {
+    // Each blocked case names itself, so the trainer knows what is missing.
+    expect(panel).toContain('No material yet');
+    expect(panel).toContain('No score yet');
+    expect(panel).toContain('needs ${person.passMark}%');
+    expect(panel).toContain('blockedReason');
+  });
+
+  it('refuses to certify someone who has not finished', () => {
+    // The button carries the reason and is disabled while one exists.
+    expect(panel).toContain('disabled={pending || Boolean(reason)}');
+  });
+
+  it('unpublishes material rather than deleting it', () => {
+    const actions = read('app', 'actions', 'trainings.ts');
+    // Progress rows point at a lesson; deleting one would orphan them.
+    expect(actions).toContain('is_published: false');
+    expect(actions).not.toMatch(/from\('lessons'\)[\s\S]{0,60}\.delete\(\)/);
+  });
+
+  it('appends new material instead of reshuffling what people are part way through', () => {
+    const actions = read('app', 'actions', 'trainings.ts');
+    expect(actions).toContain('(last?.order_index ?? -1) + 1');
+  });
+
+  it('only lets the person who runs a training change it', () => {
+    const actions = read('app', 'actions', 'trainings.ts');
+    expect(actions).toContain('Unauthorized: you do not run this training');
+  });
+
+  it('offers the editor all three kinds of material', () => {
+    expect(editor).toContain('Written lesson');
+    expect(editor).toContain('Video');
+    expect(editor).toContain('Document');
+  });
+});
