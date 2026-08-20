@@ -22,7 +22,7 @@ interface MobileNavProps {
 
 export function MobileNav({ user, isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname()
-  const navItems = getNavigationForRole(user.role, user.vocabulary)
+  const navItems = getNavigationForRole(user.role, user.vocabulary, user.mode)
   const tabItems = navItems.slice(0, 4)
   const brandName = user.university?.name ?? "Sulva LMS"
 

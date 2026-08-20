@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { toDisplayName } from '@/lib/auth/roles';
 import { createClient } from '@/lib/supabase/server';
 import { getTenantVocabulary } from '@/lib/ui/tenant-vocabulary';
+import { getTenantMode } from '@/lib/tenant/mode';
 
 // Everything under the shell is signed-in, school-private data. Nothing here
 // should ever reach a search index, whatever a stray public link says.
@@ -38,6 +39,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const vocabulary = await getTenantVocabulary(supabase as any, session.universityId);
+  // Decides which menu this organisation gets, not merely what it is called.
+  const mode = await getTenantMode(supabase as any, session.universityId);
 
   const { count: unreadNotifications } = await supabase
     .from('notifications')
@@ -53,6 +56,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     avatarUrl: session.profile.avatar_url,
     unreadNotifications: unreadNotifications ?? 0,
     vocabulary,
+    mode,
     university,
   };
 

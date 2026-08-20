@@ -25,6 +25,7 @@ import {
 } from "lucide-react"
 import { NavSection, Role, NavItem } from "@/types/navigation"
 import { translateLabel, type Vocabulary } from "@/lib/ui/labels"
+import type { TenantMode } from "@/lib/tenant/mode"
 
 export const navigationConfig: NavSection[] = [
   // Student Navigation
@@ -68,6 +69,8 @@ export const navigationConfig: NavSection[] = [
     items: [
       { id: "a-dash", label: "Dashboard", href: "/admin", icon: LayoutDashboard, role: ["admin"] },
       { id: "a-users", label: "Users & Invites", href: "/admin/users", icon: Users, role: ["admin"] },
+      { id: "tr-list", label: "Trainings", href: "/admin/trainings", icon: GraduationCap, role: ["admin", "lecturer"] },
+      { id: "tr-people", label: "People", href: "/admin/people", icon: Users, role: ["admin"] },
       { id: "ad-compliance", label: "Compliance", href: "/admin/compliance", icon: ShieldCheck, role: ["admin", "department_admin"] },
       { id: "a-faculties", label: "Faculties", href: "/admin/faculties", icon: Building, role: ["admin"] },
       { id: "a-depts", label: "Departments", href: "/admin/departments", icon: Briefcase, role: ["admin"] },
@@ -97,16 +100,45 @@ export const navigationConfig: NavSection[] = [
   }
 ]
 
-export const getNavigationForRole = (role: Role, vocabulary: Vocabulary = "academic"): NavItem[] => {
+/**
+ * What a training organisation sees, per role, in order.
+ *
+ * A law firm has no faculties, no semesters and no course registration, so
+ * those items are absent rather than renamed: relabelling a screen an
+ * organisation can never use still leaves it in the way. Ids are listed
+ * explicitly so adding an academic screen later cannot leak into this menu by
+ * accident.
+ */
+const TRAINING_MENU: Partial<Record<Role, string[]>> = {
+  admin: ["a-dash", "tr-list", "tr-people", "ad-compliance", "a-settings"],
+  department_admin: ["a-dash", "ad-compliance", "a-settings"],
+  lecturer: ["l-dash", "tr-list", "l-certs", "l-settings"],
+  student: ["s-dash", "s-training", "s-certs", "s-settings"],
+}
+
+export const getNavigationForRole = (
+  role: Role,
+  vocabulary: Vocabulary = "academic",
+  mode: TenantMode = "academic",
+): NavItem[] => {
   const effectiveRole = role === "department_admin" ? "admin" : role
-  const items: NavItem[] = []
+
+  const visible: NavItem[] = []
   navigationConfig.forEach(section => {
     section.items.forEach(item => {
-      if (item.role.includes(role) || item.role.includes(effectiveRole)) {
-        // Only the label is rewritten; href and id stay as the routes require.
-        items.push(vocabulary === "academic" ? item : { ...item, label: translateLabel(item.label, vocabulary) })
-      }
+      if (item.role.includes(role) || item.role.includes(effectiveRole)) visible.push(item)
     })
   })
-  return items
+
+  const ordered =
+    mode === "training" && TRAINING_MENU[role]
+      ? (TRAINING_MENU[role] as string[])
+          .map(id => visible.find(item => item.id === id))
+          .filter((item): item is NavItem => Boolean(item))
+      : visible
+
+  // Only the label is rewritten; href and id stay as the routes require.
+  return ordered.map(item =>
+    vocabulary === "academic" ? item : { ...item, label: translateLabel(item.label, vocabulary) },
+  )
 }

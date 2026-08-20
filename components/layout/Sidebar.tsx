@@ -33,7 +33,7 @@ const getCollapsedServerSnapshot = () => false
 
 export function Sidebar({ user }: { user: AppShellUser }) {
   const pathname = usePathname()
-  const navItems = getNavigationForRole(user.role, user.vocabulary)
+  const navItems = getNavigationForRole(user.role, user.vocabulary, user.mode)
   const collapsed = React.useSyncExternalStore(
     subscribeCollapsed,
     getCollapsedSnapshot,

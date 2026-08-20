@@ -5,6 +5,7 @@ import { Sidebar } from "./Sidebar"
 import { Topbar } from "./Topbar"
 import { MobileNav } from "./MobileNav"
 import type { Vocabulary } from "@/lib/ui/labels"
+import type { TenantMode } from "@/lib/tenant/mode"
 import { AuthRole } from "@/types/auth"
 
 export interface AppShellUser {
@@ -15,6 +16,7 @@ export interface AppShellUser {
   avatarUrl?: string | null
   unreadNotifications?: number
   vocabulary?: Vocabulary
+  mode?: TenantMode
   university?: {
     id: string
     name: string

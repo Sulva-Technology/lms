@@ -41,7 +41,9 @@ export function createSupabaseStub(seed: Record<string, Row[]>): SupabaseStub {
 
   const record = (bucket: Record<string, Row[]>, table: string, row: Row) => {
     bucket[table] = bucket[table] || [];
-    bucket[table].push(row);
+    // A copy, not the live row: otherwise a later update rewrites history and
+    // "what was inserted" becomes unanswerable.
+    bucket[table].push({ ...row });
   };
 
   function builder(table: string) {

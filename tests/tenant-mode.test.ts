@@ -5,6 +5,7 @@ import { createSupabaseStub } from './helpers/supabase-stub';
 import { getTenantMode, isTrainingTenant } from '@/lib/tenant/mode';
 import { courseSectionSchema as sectionSchema } from '@/lib/validation/admin';
 import { getTenantVocabulary } from '@/lib/ui/tenant-vocabulary';
+import { getNavigationForRole } from '@/lib/navigation';
 
 describe('getTenantMode', () => {
   it('reads the mode a tenant declared', async () => {
@@ -184,5 +185,52 @@ describe('vocabulary override does not silently defeat mode', () => {
 
     const handler = page.slice(page.indexOf('async function updateStatus'));
     expect(handler.slice(0, handler.indexOf('}\n'))).toContain('result?.error');
+  });
+});
+
+describe('training organisations get their own menu', () => {
+  it('hides the academic scaffolding entirely rather than renaming it', () => {
+    const menu = getNavigationForRole('admin', 'organization', 'training').map((item) => item.href);
+
+    // Renaming a screen an organisation can never use still leaves it in the way.
+    expect(menu).not.toContain('/admin/faculties');
+    expect(menu).not.toContain('/admin/departments');
+    expect(menu).not.toContain('/admin/programs');
+    expect(menu).not.toContain('/admin/registration');
+  });
+
+  it('gives an owner the five things they actually do', () => {
+    const menu = getNavigationForRole('admin', 'organization', 'training').map((item) => item.href);
+
+    expect(menu).toEqual([
+      '/admin',
+      '/admin/trainings',
+      '/admin/people',
+      '/admin/compliance',
+      '/admin/settings',
+    ]);
+  });
+
+  it('scopes a team lead to their team and a trainer to their trainings', () => {
+    const lead = getNavigationForRole('department_admin', 'organization', 'training').map((i) => i.href);
+    const trainer = getNavigationForRole('lecturer', 'organization', 'training').map((i) => i.href);
+
+    expect(lead).toEqual(['/admin', '/admin/compliance', '/admin/settings']);
+    expect(trainer).toContain('/admin/trainings');
+    expect(trainer).not.toContain('/admin/people');
+  });
+
+  it('gives a learner a menu with no administration in it', () => {
+    const menu = getNavigationForRole('student', 'organization', 'training').map((item) => item.href);
+
+    expect(menu).toEqual(['/student', '/student/training', '/student/certificates', '/student/settings']);
+  });
+
+  it('leaves a school exactly as it was', () => {
+    const before = getNavigationForRole('admin', 'academic').map((item) => item.href);
+    const after = getNavigationForRole('admin', 'academic', 'academic').map((item) => item.href);
+
+    expect(after).toEqual(before);
+    expect(after).toContain('/admin/faculties');
   });
 });
