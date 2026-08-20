@@ -21,7 +21,7 @@ const modeValues = [
 export default async function SuperadminUniversitiesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; created?: string }>;
+  searchParams: Promise<{ error?: string; created?: string; saved?: string }>;
 }) {
   await requireRole("super_admin");
   const params = await searchParams;
@@ -48,17 +48,28 @@ export default async function SuperadminUniversitiesPage({
 
   async function updateStatus(formData: FormData) {
     "use server";
-    await updateUniversityStatusAction({
+    // Swallowing this made a refused write - a column that is not there yet, or
+    // a policy saying no - look exactly like a successful one.
+    const result = await updateUniversityStatusAction({
       universityId: String(formData.get("universityId") || ""),
       status: String(formData.get("status") || "trialing"),
       mode: String(formData.get("mode") || "academic"),
     });
+    if (result?.error) {
+      redirect(`/superadmin/universities?error=${encodeURIComponent(result.error)}`);
+    }
+    redirect('/superadmin/universities?saved=1');
   }
 
   return (
     <GenericList title="Schools" description="Create tenants, manage status and plan posture." icon={Building}>
       {params.error ? (
         <p className="rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-danger">{params.error}</p>
+      ) : null}
+      {params.saved ? (
+        <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-sm text-success">
+          Saved. If the wording did not change, check that the school is not pinned to a vocabulary in its own settings.
+        </p>
       ) : null}
       {params.created ? (
         <p className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-sm text-success">

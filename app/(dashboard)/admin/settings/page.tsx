@@ -22,7 +22,10 @@ export default async function AdminSettingsPage() {
   async function save(formData: FormData) {
     "use server";
     await updateUniversitySettingsAction({
-      vocabulary: String(formData.get("vocabulary") || "academic"),
+      // Empty means follow the tenant mode. Writing "academic" here on every
+      // save is what silently pinned the wording and made changing the mode
+      // look like it did nothing.
+      vocabulary: String(formData.get("vocabulary") || "") || undefined,
       timezone: String(formData.get("timezone") || ""),
       gradingScale: String(formData.get("gradingScale") || ""),
       registrationPolicy: String(formData.get("registrationPolicy") || ""),
@@ -43,9 +46,10 @@ export default async function AdminSettingsPage() {
           Vocabulary
           <select
             name="vocabulary"
-            defaultValue={values.vocabulary || "academic"}
+            defaultValue={values.vocabulary || ""}
             className="rounded-xl border border-line bg-surface px-4 py-3 text-ink outline-none focus:border-primary"
           >
+            <option value="">Follow the organisation type (recommended)</option>
             <option value="academic">Academic — university, lecturer, student, semester</option>
             <option value="organization">Organization — trainer, trainee, programme, cohort</option>
           </select>

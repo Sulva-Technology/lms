@@ -25,8 +25,10 @@ const lecturerSettingsSchema = z.object({
 });
 
 const universitySettingsSchema = z.object({
-  // Chooses the wording the whole app reads in for this tenant.
-  vocabulary: z.enum(["academic", "organization"]).default("academic"),
+  // Chooses the wording the whole app reads in for this tenant. Absent means
+  // follow the tenant's mode, which is the sane default: an organisation should
+  // read as one without anyone finding this setting.
+  vocabulary: z.enum(["academic", "organization"]).optional(),
   timezone: z.string().optional(),
   gradingScale: z.string().optional(),
   registrationPolicy: z.string().optional(),

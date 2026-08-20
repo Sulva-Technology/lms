@@ -153,3 +153,36 @@ describe('activating training mode', () => {
     expect(manager).toContain('(!isTraining && semesters.length === 0)');
   });
 });
+
+describe('vocabulary override does not silently defeat mode', () => {
+  it('treats an absent setting as follow-the-mode', async () => {
+    const { client } = createSupabaseStub({
+      universities: [{ id: 'uni1', mode: 'training' }],
+      university_settings: [{ university_id: 'uni1', settings: { timezone: 'Africa/Lagos' } }],
+    });
+
+    // Saving an unrelated setting must not pin the wording.
+    expect(await getTenantVocabulary(client, 'uni1')).toBe('organization');
+  });
+
+  it('offers a way to stop overriding, not only a way to start', () => {
+    const settings = fs.readFileSync(
+      path.join(process.cwd(), 'app', '(dashboard)', 'admin', 'settings', 'page.tsx'),
+      'utf8',
+    );
+
+    expect(settings).toContain('<option value="">');
+    // Writing a concrete default on every save is what pinned it before.
+    expect(settings).not.toContain('formData.get("vocabulary") || "academic"');
+  });
+
+  it('tells a platform admin when the mode write is refused', () => {
+    const page = fs.readFileSync(
+      path.join(process.cwd(), 'app', '(dashboard)', 'superadmin', 'universities', 'page.tsx'),
+      'utf8',
+    );
+
+    const handler = page.slice(page.indexOf('async function updateStatus'));
+    expect(handler.slice(0, handler.indexOf('}\n'))).toContain('result?.error');
+  });
+});
